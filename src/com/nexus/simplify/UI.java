@@ -10,6 +10,8 @@ public class UI implements IUI {
 	
 	Scanner scanner;
 	
+	private String userInput;
+	
 	private static final String PROMPT = "command: ";
 	
 	//-------------//
@@ -30,11 +32,22 @@ public class UI implements IUI {
 		
 	}
 	
+	//-------------------------//
+	// Accepting User Commands //
+	//-------------------------//
+	
+	@Override
+	public String getUserInput() {
+		promptUserForCommand();
+		userInput = scanner.nextLine();
+		return userInput;
+	}
+	
 	//-----------------//
 	// Display Methods //
 	//-----------------//
 	
-	public void promptForCommand() {
+	public void promptUserForCommand() {
 		displayMessage(PROMPT);
 	}
 	
