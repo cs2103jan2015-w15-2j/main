@@ -29,7 +29,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void run() {
-		
+
 	}
 	
 	//-------------------------//
@@ -42,7 +42,7 @@ public class UI implements IUI {
 		userInput = scanner.nextLine();
 		return userInput;
 	}
-	
+
 	//-----------------//
 	// Display Methods //
 	//-----------------//
@@ -52,8 +52,8 @@ public class UI implements IUI {
 	}
 	
 	@Override
-	public void displayFeedback() {
-		
+	public void displayFeedback(String resultantFeedback) {
+		System.out.println(resultantFeedback);
 	}
 	
 	public void displayMessage(String message, Object... args) {
