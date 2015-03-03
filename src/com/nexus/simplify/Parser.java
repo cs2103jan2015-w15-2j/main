@@ -78,11 +78,17 @@ public class Parser implements IParser {
 	}
 
 	private String[] getParameterArray(String[] tokenList) {
-		String[] parameters = new String[tokenList.length -1];
-		for (int i = 0; i < parameters.length; i++) {
-			parameters[i] = tokenList[i+1];
+		// Check for user input where there are no parameters, only operation
+		if (tokenList.length == 1) {
+			return new String[1];
+		} else {
+			String[] parameters = new String[tokenList.length -1];
+			for (int i = 0; i < parameters.length; i++) {
+				parameters[i] = tokenList[i+1];
+			}
+			return parameters;
 		}
-		return parameters;
+
 	}
 
 	public String parseInput(String userInput) {
