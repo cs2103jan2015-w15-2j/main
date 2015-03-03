@@ -54,25 +54,29 @@ public class Parser implements IParser {
 
 	private Command parseTokens(String[] tokenList){
 		String[] parameterArray = getParameterArray(tokenList);
-		switch (cmdHash.get(tokenList[0])) {
+		try {
+			switch (cmdHash.get(tokenList[0])) {
 
-		case ADD : 
-			return new Command(OperationType.ADD, parameterArray);
+			case ADD : 
+				return new Command(OperationType.ADD, parameterArray);
 
-		case DELETE :
-			return new Command(OperationType.DELETE, parameterArray);
+			case DELETE :
+				return new Command(OperationType.DELETE, parameterArray);
 
-		case MODIFY :
-			return new Command(OperationType.MODIFY, parameterArray);
+			case MODIFY :
+				return new Command(OperationType.MODIFY, parameterArray);
 
-		case ARCHIVE :
-			return new Command(OperationType.ARCHIVE, parameterArray);
+			case ARCHIVE :
+				return new Command(OperationType.ARCHIVE, parameterArray);
 
-		case CLEAR :
-			return new Command(OperationType.CLEAR, parameterArray);
+			case CLEAR :
+				return new Command(OperationType.CLEAR, parameterArray);
 
-		default : 
-			return new Command(OperationType.INVALID, new String[1]);
+			default : 
+				return new Command(OperationType.INVALID, new String[]{"switch failure"});
+			}
+		} catch (Exception e) {
+			return new Command(OperationType.INVALID, new String[]{tokenList[0]});
 		}
 
 	}
@@ -93,8 +97,9 @@ public class Parser implements IParser {
 
 	public String parseInput(String userInput) {
 		String[] userTokens = tokeniser(userInput);
-		Command userCommand = parseTokens(userTokens);		
-		return Logic.executeCommand(userCommand);
+		Command userCommand = parseTokens(userTokens);	
+		Logic logic = new Logic();
+		return logic.executeCommand(userCommand);
 	}
 
 }
