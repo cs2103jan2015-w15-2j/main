@@ -1,11 +1,10 @@
 package com.nexus.simplify;
 
+import com.nexus.simplify.Parser.OperationType;
+
 public class Command {
-	enum OperationType {
-		ADD, DELETE, MODIFY, ARCHIVE, INVALID
-	};
 	
-	OperationType operation;
+	final OperationType operation;
 	
 	final String[] parameter;
 
@@ -15,12 +14,16 @@ public class Command {
 	 * @param parameter
 	 */
 	public Command(OperationType operation, String[] parameter) {
-		super();
+		this.operation = operation;
 		this.parameter = parameter;
 	}
 
 	// Getters
-	public String[] getParamter() {
+	public OperationType getOperation() {
+		return operation;		
+	}
+	
+	public String[] getParameter() {
 		return parameter;
 	}
 	
