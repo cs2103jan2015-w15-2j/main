@@ -30,10 +30,20 @@ public class UI implements IUI {
 		
 	}
 	
+	//-----------------//
+	// Display Methods //
+	//-----------------//
 	
+	public void promptForCommand() {
+		displayMessage(PROMPT);
+	}
 	
 	@Override
 	public void displayFeedback() {
 		
+	}
+	
+	public void displayMessage(String message, Object... args) {
+		System.out.println(String.format(message, args));
 	}
 }
