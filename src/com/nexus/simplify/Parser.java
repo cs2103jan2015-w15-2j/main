@@ -86,7 +86,7 @@ public class Parser implements IParser {
 	}
 
 	public String parseInput(String userInput) {
-		Token[] userTokens = tokeniser(userInput);
+		String[] userTokens = tokeniser(userInput);
 		Command userCommand = parseTokens(userTokens);		
 		return Logic.executeCommand(userCommand);
 	}
