@@ -8,7 +8,6 @@ public class Main {
 	
 	private UI ui;
 	
-	private static final String USER_INPUT_EXIT = "exit";
 	private static final int SYSTEM_EXIT_CODE = 0;
 	
 	//---------------//
@@ -21,30 +20,9 @@ public class Main {
 
 	}
 	
-	
 	private int launchUI() {
 		ui = new UI();
-		listenForCommandUntilExit(ui);
-		return SYSTEM_EXIT_CODE;
-		
+		ui.listenForCommandUntilExit(ui);
+		return SYSTEM_EXIT_CODE;		
 	}
-	
-	//--------------//
-	// Program Loop //
-	//--------------//
-	
-	private void listenForCommandUntilExit(UI ui) {
-		Parser parser = new Parser();
-		String userInput = ui.getUserInput();
-		while (!shouldExit(userInput)) {
-			ui.displayFeedback(parser.parseInput(userInput));
-			userInput = ui.getUserInput();
-		}
-		
-	}
-	
-	private boolean shouldExit(String userInput) {
-		return userInput.equalsIgnoreCase(USER_INPUT_EXIT);
-	}
-
 }

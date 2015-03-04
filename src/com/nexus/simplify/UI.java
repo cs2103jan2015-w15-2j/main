@@ -14,6 +14,7 @@ public class UI implements IUI {
 	
 	private static final String MESSAGE_PROMPT = "command: ";
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+	private static final String USER_INPUT_EXIT = "exit";
 	
 	//-------------//
 	// Constructor //
@@ -43,7 +44,24 @@ public class UI implements IUI {
 		userInput = scanner.nextLine();
 		return userInput;
 	}
-
+	
+	//--------------//
+	// Program Loop //
+	//--------------//
+	
+	public void listenForCommandUntilExit(UI ui) {
+		Parser parser = new Parser();
+		String userInput = getUserInput();
+		while (!shouldExit(userInput)) {
+			displayFeedback(parser.parseInput(userInput));
+			userInput = getUserInput();
+		}		
+	}
+	
+	private boolean shouldExit(String userInput) {
+		return userInput.equalsIgnoreCase(USER_INPUT_EXIT);
+	}
+	
 	//-----------------//
 	// Display Methods //
 	//-----------------//
