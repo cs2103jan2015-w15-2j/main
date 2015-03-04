@@ -12,7 +12,8 @@ public class UI implements IUI {
 	
 	private String userInput;
 	
-	private static final String PROMPT = "command: ";
+	private static final String MESSAGE_PROMPT = "command: ";
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
 	//-------------//
 	// Constructor //
@@ -29,7 +30,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void run() {
-
+		displayWelcomeMessage();
 	}
 	
 	//-------------------------//
@@ -48,7 +49,11 @@ public class UI implements IUI {
 	//-----------------//
 	
 	public void promptUserForCommand() {
-		displayMessage(PROMPT);
+		displayMessage(MESSAGE_PROMPT);
+	}
+	
+	public void displayWelcomeMessage() {
+		displayMessage(MESSAGE_WELCOME);
 	}
 	
 	@Override
