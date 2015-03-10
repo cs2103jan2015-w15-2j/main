@@ -22,6 +22,16 @@ public class TaskList {
 	public Task get(int i) { return this.arr.get(i); }
 	public boolean isEmpty() { return this.arr.isEmpty(); }
 	public void add(Task task) { this.arr.add(task); }
+	public void delete(int i){ this.arr.remove(i); }
+	public void delete(String name){
+		int i = 0
+		for(; i<this.size; i++){
+			if(name.equals(arr.get(i).getName()){
+				break;
+			}
+		}
+		delete(i);
+	}
 	
 	public void SortBy(SORT_TYPE sortType){
 		switch(sortType){

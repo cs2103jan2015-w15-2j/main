@@ -1,4 +1,5 @@
 package com.nexus.simplify;
+import ParameterType;
 
 public class Add {
 	private static final int NAME_POS = 0;

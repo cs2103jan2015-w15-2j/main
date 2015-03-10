@@ -7,5 +7,5 @@ public interface IParser {
 	 * @param userInput
 	 * @return string feedback for user
 	 */
-	public String parseInput(String userInput);
+	public CommandResult parseInput(String userInput);
 }
