@@ -10,7 +10,7 @@ public class Add {
 	
 	public CommandResult execute(String[] parameter){
 		String name = parameter[NAME_POS];
-		DueDate deadline = parameter[DEADLINE_POS];
+		String deadline = parameter[DEADLINE_POS];
 		String workload = parameter[WORKLOAD_POS];
 		String feedback;
 		if(deadline == null && workload == null){
@@ -18,13 +18,13 @@ public class Add {
 			feedback = "successfully added " + name + "."; 
 		}
 		else{
-			taskToAdd = new Task(name,deadline,workload)
+			taskToAdd = new Task(name,deadline,workload);
+			feedback = "successfully added " + name + " " + deadline + " " + workload + ".";
 		}
-		TaskList tempList = Logic.getTempList.add(taskToAdd);
-		Logic.getDataBase.writeToFile(tempList);
-		String feedback = "successfully added " + name + " " + deadline + " " + workload + " "
-		CommandResult result = new CommandResult(tempList, )
-		return ;
+		TaskList tempList = Logic.getTempList().add(taskToAdd);
+		Logic.getDatabase().writeToFile(tempList);
 		
+		CommandResult result = new CommandResult(tempList, feedback);
+		return result;
 	}
 }
