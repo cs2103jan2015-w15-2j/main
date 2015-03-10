@@ -2,21 +2,25 @@ package com.nexus.simplify;
 import com.nexus.simplify.ParameterType;
 
 public class Delete {
-	public Delete(){}
+	
+	private static final int TASK_INDEX_OFFSET = 1;
+	
+	public Delete() {
+		
+	}
 	
 	public CommandResult execute(String[] parameter){
 		TaskList tempList = Logic.getTempList();
 		Database database = Logic.getDatabase();
 		
-		if(isNumeric(parameter[0])){
-			int index = Integer.parseInt(parameter[ParameterType.CURRENT_NAME_POS]);
+		if(isNumeric(parameter[0])) {
+			int index = Integer.parseInt(parameter[ParameterType.CURRENT_NAME_POS]) - TASK_INDEX_OFFSET;
 			tempList.delete(index);
 			database.writeToFile(tempList);
 			String feedback = "successfully deleted entry #" + parameter[ParameterType.CURRENT_NAME_POS];
 			CommandResult result = new CommandResult(tempList, feedback);
 			return result;
-		}
-		else{
+		} else {
 			String name = parameter[ParameterType.CURRENT_NAME_POS];
 			tempList.delete(name);
 			database.writeToFile(tempList);
