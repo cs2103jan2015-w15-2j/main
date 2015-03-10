@@ -2,13 +2,18 @@ package com.nexus.simplify;
 
 import java.util.*;
 import java.io.*;
-import org.json.simple.*;
+import org.json.*;
 
-public class Database {
+public class Database implements IDatabase {
 	private File file;
 	private ArrayList<String> list = new ArrayList<String>();
 	private TaskList taskList = new TaskList();
-	private JSONArray jsonArrayOfTasks;
+	
+	JSONObject jsonTask;
+	
+	public Database(String fileName) {
+		setUpFile(fileName);
+	}
 	
 	public void setUpFile(String fileName) {
 		file = new File(fileName);
@@ -33,36 +38,50 @@ public class Database {
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
+		taskList = convertToTask(list);
 		return taskList;
 	}
 	
 	public void writeToFile(TaskList tasklist) {
-		StringWriter sw = new StringWriter();
-		// add constructor for TaskList
-		/*
-		while (!tasklist.isEmpty()) {
-			for (int i = 0; i < tasklist.size(); i ++) {
-				JSONObject task = new JSONObject();
-				task.put("name", tasklist.get(i).getName());
-				task.put("due date", tasklist.get(i).getDueDate());
-				task.put("workload", tasklist.get(i).getWorkload());
-				task.put("id", tasklist.get(i).getId());
-				
-				task.writeJSONString(sw);
-				
-				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
-				String jsonText = sw.toString();
-				bw.write(jsonText);
-				bw.close();
-			}*/
+		try {
+			StringWriter sw = new StringWriter();
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
+			while (!list.isEmpty()) {
+				for (int i = 0; i < list.size(); i++) {
+					bw.write(list.get(i));
+				}
+			}
+			bw.close();
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 		}
 	}
-	/*
-	private TaskList convertToTask() {
-		
+	
+	private TaskList convertToTask(ArrayList<String> array) {
+		TaskList tempList = new TaskList();
+		Task task;
+		for (int i = 0; i < list.size(); i++) {
+			jsonTask = new JSONObject(list.get(i));
+			task = new Task(jsonTask.getString("name"));
+			// task.setDueDate(jsonTask.getString("due date"));
+			task.setWorkload(jsonTask.getString("workload"));
+			task.setId(jsonTask.getString("id"));
+			tempList.add(task);
+		}
+		return tempList;
 	}
 	
-	private JSONArray convertToStore(TaskList tasklist) {
-		
-	}*/
+	private ArrayList<String> convertToStore(TaskList tasklist) {
+		while (!tasklist.isEmpty()) {
+			for (int i = 0; i < tasklist.size(); i++) {
+				jsonTask = new JSONObject();
+				jsonTask.put("name", tasklist.get(i).getName());
+				jsonTask.put("due date", tasklist.get(i).getDueDate());
+				jsonTask.put("workload", tasklist.get(i).getWorkload());
+				jsonTask.put("id", tasklist.get(i).getId());
+				list.add(jsonTask.toString());
+			}
+		}
+		return list;
+	}
 }
