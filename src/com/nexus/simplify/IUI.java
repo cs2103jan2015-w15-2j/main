@@ -5,5 +5,5 @@ public interface IUI {
 	
 	public String getUserInput();
 	
-	public void displayFeedback(String resultantFeedback);
+	public void displayFeedback(CommandResult result);
 }

@@ -16,6 +16,8 @@ public class UI implements IUI {
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	private static final String USER_INPUT_EXIT = "exit";
 	
+	private static final int MAX_NUM_OF_TASKS_TO_DISPLAY = 5;
+	private static final int LIST_NUMBER_OFFSET = 1;
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -75,11 +77,34 @@ public class UI implements IUI {
 	}
 	
 	@Override
-	public void displayFeedback(String resultantFeedback) {
-		System.out.println(resultantFeedback);
+	public void displayFeedback(CommandResult result) {
+		displayMessage(buildShortTaskList(result.getModifiedTaskList()));
+		displayMessage(result.getResultantFeedback());
 	}
 	
 	public void displayMessage(String message, Object... args) {
 		System.out.println(String.format(message, args));
+	}
+	
+	public void displayCurrentTaskList(TaskList taskList) {
+		displayMessage(buildShortTaskList(taskList));
+	}
+	
+	public String buildShortTaskList(TaskList taskList) {
+		StringBuilder shortTaskList = new StringBuilder();
+		
+		for (int i = 0; i < MAX_NUM_OF_TASKS_TO_DISPLAY; i++) {
+			Task currentTask = taskList.get(i);
+			
+			int currentTaskIndex = i + LIST_NUMBER_OFFSET;
+			shortTaskList.append(currentTaskIndex);
+			shortTaskList.append(". ");
+			shortTaskList.append(currentTask.getName());
+			shortTaskList.append(" ");
+			shortTaskList.append(currentTask.getDueDate());
+			shortTaskList.append("\n");
+		}
+		
+		return shortTaskList.toString();
 	}
 }
