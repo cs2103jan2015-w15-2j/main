@@ -1,7 +1,8 @@
 package com.nexus.simplify;
 
 import java.util.HashMap;
-
+import com.nexus.simplify.ParameterType;
+import com.nexus.simplify.OperationType;
 
 public class Parser implements IParser {
 
@@ -11,17 +12,10 @@ public class Parser implements IParser {
 	 * 
 	 */
 
-	// String Messages
+	// String Messages?
 
-	// List of all possible tokens?
-	//	enum Token {
-	//		COMMAND, NAME, DUEDATE, WORKLOAD, INVALID_PARAMETER
-	//	}
-
-	enum OperationType {
-		ADD, DELETE, MODIFY, ARCHIVE, CLEAR, INVALID
-	};
-
+	Logic logic = new Logic();
+	
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
 
 	/**
@@ -94,11 +88,18 @@ public class Parser implements IParser {
 		}
 
 	}
+	
+	private DateTime parseDeadline () {
+		
+	}
+	
+	private int parseWorkload () {
+		return -1
+	}
 
 	public String parseInput(String userInput) {
 		String[] userTokens = tokeniser(userInput);
 		Command userCommand = parseTokens(userTokens);	
-		Logic logic = new Logic();
 		return logic.executeCommand(userCommand);
 	}
 

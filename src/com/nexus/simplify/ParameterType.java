@@ -1,0 +1,5 @@
+package com.nexus.simplify;
+
+public enum ParameterType {
+		CURRENT_STRING, NEW_STRING, CURRENT_DEADLINE, NEW_DEADLINE, CURRENT_WORKLOAD, NEW_WORKLOAD, NEW_FILELOCATIO
+}
