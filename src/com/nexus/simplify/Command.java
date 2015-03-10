@@ -26,9 +26,20 @@ public class Command {
 		return parameter;
 	}
 	
-	public Result executeSpecificCommand(OperationType operation, String[] parameter){
+	public CommandResult executeSpecificCommand(OperationType operation, String[] parameter){
 		switch(operation){
-			case : ADD
+			case ADD: 
+				Add addOperation = new Add();
+				return addOperation.execute(parameter);
+			case DISPLAY:
+				Display displayOperation = new Display();
+				return displayOperation.execute(parameter);
+			case MODIFY:
+				Modify modifyOperation = new Modify();
+				return modifyOperation.execute(parameter);
+			case DELETE:
+				Delete deleteOperation = new Delete();
+				return deleteOperation.execute(parameter);
 		}
 	}
 		

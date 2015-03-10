@@ -40,13 +40,15 @@ public class TaskList {
 	};
 	
 	private static Comparator<Task> taskDueDateComparator = new Comparator<Task>(){
-		private int compare(Task t1, Task t2){
-			
+		public int compare(Task t1, Task t2){
+			String t1DueDate = t1.getDueDate().toUpperCase();
+			String t2DueDate = t2.getDueDate().toUpperCase();
+			return t1DueDate.compareTo(t2DueDate);
 		}
 	};
 
 	private static Comparator<Task> taskWorkloadComparator = new Comparator<Task>(){
-		private int compare(Task t1, Task t2){
+		public int compare(Task t1, Task t2){
 			int t1Workload = t1.getWorkload();
 			int t2Workload = t2.getWorkload();
 			return t1Workload - t2Workload;
@@ -54,7 +56,7 @@ public class TaskList {
 	};
 	
 	private static Comparator<Task> taskIDComparator = new Comparator<Task>(){
-		private int compare(Task t1, Task t2){
+		public int compare(Task t1, Task t2){
 			int t1ID = t1.getID();
 			int t2ID = t2.getID();
 			return t1ID - t2ID;
