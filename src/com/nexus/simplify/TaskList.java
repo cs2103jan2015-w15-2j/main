@@ -1,10 +1,19 @@
+/*
+ * @author David Zhao Han
+ * */
+
 package com.nexus.simplify;
+
 import java.util.*;
 
 public class TaskList {
-	// instance variables
-	int size;
-	ArrayList<Task> arr;
+	
+	//------------------//
+	// Class Attributes //
+	//------------------//
+	
+	private int size;
+	private ArrayList<Task> arr;
 	
 	private static final int APPROPRIATE_TASKLIST_SIZE = 1000;
 	private ArrayList<Task> taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
@@ -12,25 +21,52 @@ public class TaskList {
 		NAME, DUE_DATE, WORKLOAD, ID
 	};
 	
+	//-------------//
+	// Constructor //
+	//-------------//
 	
 	public TaskList() {
 		this.arr = taskArray;
 		this.size = taskArray.size();
 	}
 	
-	public int size() { return this.size; }
-	public Task get(int i) { return this.arr.get(i); }
-	public boolean isEmpty() { return this.arr.isEmpty(); }
-	public void add(Task task) { this.arr.add(task); }
-	public void delete(int i){ this.arr.remove(i); }
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	public Task get(int i) { 
+		return this.arr.get(i); 
+	}
+	
+	public int size() { 
+		return this.size; 
+	}
+	
+	//--------------------//
+	// Attribute Mutators //
+	//--------------------//
+	
+	public void set(int index, Task newTask){ 
+		arr.set(index, newTask); 
+	}
+	
+	public void add(Task task) { 
+		this.arr.add(task);
+	}
+	
+	public void delete(int i){ 
+		this.arr.remove(i);
+	}
+	
 	public void delete(String name){
 		int i = 0;
 		for(; i<this.size; i++){
-			if(name.equals(arr.get(i).getName())){ break; }
+			if(name.equals(arr.get(i).getName())) { 
+				break; 
+			}
 		}
 		delete(i);
 	}
-	public void set(int index, Task newTask){ arr.set(index, newTask); }
 	
 	public void SortBy(SORT_TYPE sortType){
 		switch(sortType){
@@ -49,7 +85,11 @@ public class TaskList {
 		}
 	}
 	
-	private static Comparator<Task> taskNameComparator = new Comparator<Task>(){
+	//--------------------//
+	// Comparison Methods //
+	//--------------------//
+	
+	private static Comparator<Task> taskNameComparator = new Comparator<Task>() {
 		public int compare(Task t1, Task t2){
 			String t1Name = t1.getName().toUpperCase();
 			String t2Name = t2.getName().toUpperCase();
@@ -57,7 +97,7 @@ public class TaskList {
 		}
 	};
 	
-	private static Comparator<Task> taskDueDateComparator = new Comparator<Task>(){
+	private static Comparator<Task> taskDueDateComparator = new Comparator<Task>() {
 		public int compare(Task t1, Task t2){
 			String t1DueDate = t1.getDueDate().toUpperCase();
 			String t2DueDate = t2.getDueDate().toUpperCase();
@@ -65,7 +105,7 @@ public class TaskList {
 		}
 	};
 	
-	private static Comparator<Task> taskWorkloadComparator = new Comparator<Task>(){
+	private static Comparator<Task> taskWorkloadComparator = new Comparator<Task>() {
 		public int compare(Task t1, Task t2){
 			int t1Workload = t1.getWorkload();
 			int t2Workload = t2.getWorkload();
@@ -73,12 +113,20 @@ public class TaskList {
 		}
 	};
 	
-	private static Comparator<Task> taskIDComparator = new Comparator<Task>(){
+	private static Comparator<Task> taskIDComparator = new Comparator<Task>() {
 		public int compare(Task t1, Task t2){
-			int t1ID = t1.getID();
-			int t2ID = t2.getID();
+			int t1ID = Integer.parseInt(t1.getId());
+			int t2ID = Integer.parseInt(t2.getId());
 			return t1ID - t2ID;
 		}
 	};
+	
+	//--------------//
+	// Misc Methods //
+	//--------------//
+	
+	public boolean isEmpty() { 
+		return this.arr.isEmpty(); 
+	}
 
 }
