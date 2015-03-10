@@ -2,15 +2,17 @@ package com.nexus.simplify;
 import java.util.*;
 
 public class TaskList {
-<<<<<<< HEAD
-	
-=======
+
 	private static final int APPROPRIATE_TASKLIST_SIZE = 1000;
 	
-	private ArrayList<Task> taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
+	private ArrayList<Task> taskArray;
 	private enum SORT_TYPE{
 		NAME, DUE_DATE, WORKLOAD, ID
 	};
+	
+	public TaskList(){
+		taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
+	}
 	
 	public void SortBy(SORT_TYPE sortType){
 		switch(sortType){
@@ -58,5 +60,5 @@ public class TaskList {
 			return t1ID - t2ID;
 		}
 	}
->>>>>>> 6aae177612c7ab8fc112d36b96f57a24917782eb
+
 }
