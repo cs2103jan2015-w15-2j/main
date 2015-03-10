@@ -18,7 +18,6 @@ public class Command {
 		this.parameter = parameter;
 	}
 
-	// Getters
 	public OperationType getOperation() {
 		return operation;		
 	}
@@ -27,7 +26,10 @@ public class Command {
 		return parameter;
 	}
 	
-	
-	
-	
+	public Result executeSpecificCommand(OperationType operation, String[] parameter){
+		switch(operation){
+			case : ADD
+		}
+	}
+		
 }
