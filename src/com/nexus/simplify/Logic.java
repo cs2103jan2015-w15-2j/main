@@ -28,8 +28,13 @@ public class Logic implements ILogic {
 	public CommandResult initialise(String fileName){
 		database = new Database(fileName);
 		tempList = database.readFromFile();
-		String feedback = null;
-		CommandResult result = new CommandResult(tempList, feedback);
-		return result;
+		if(tempList == null){
+			return null;
+		}
+		else{
+			String feedback = null;
+			CommandResult result = new CommandResult(tempList, feedback);
+			return result;
+		}
 	}
 }
