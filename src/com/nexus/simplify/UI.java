@@ -77,8 +77,9 @@ public class UI implements IUI {
 	}
 	
 	@Override
-	public void displayFeedback(String resultantFeedback) {
-		System.out.println(resultantFeedback);
+	public void displayFeedback(CommandResult result) {
+		displayMessage(buildShortTaskList(result.getModifiedTaskList()));
+		displayMessage(result.getResultantFeedback());
 	}
 	
 	public void displayMessage(String message, Object... args) {
@@ -100,7 +101,7 @@ public class UI implements IUI {
 			shortTaskList.append(". ");
 			shortTaskList.append(currentTask.getName());
 			shortTaskList.append(" ");
-			shortTaskList.append(currentTask.getDueDate().toString());
+			shortTaskList.append(currentTask.getDueDate());
 			shortTaskList.append("\n");
 		}
 		
