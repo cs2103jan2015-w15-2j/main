@@ -51,7 +51,7 @@ public class Parser implements IParser {
 	private Command parseTokens(String[] tokenList){
 		String opString = tokenList[0];
 		String[] rawParam = getParameterArray(tokenList);
-		String[] parameterArray = parseParam
+		String[] parameterArray = parseParam(rawParam);
 		try {
 			switch (cmdHash.get(opString)) {
 
