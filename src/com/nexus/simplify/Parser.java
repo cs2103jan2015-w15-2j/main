@@ -7,6 +7,13 @@ import com.nexus.simplify.OperationType;
 public class Parser implements IParser {
 
 	/*
+	 * 	
+	 * For V0.1, the input is fixed to be 
+	 * 
+	 * <command> "name" <name> "deadline" <deadline> "workload"
+	 *
+	 * 
+	 * 
 	 * Need identify Keywords in enum or hash, etc
 	 * http://stackoverflow.com/questions/717588/writing-a-cleaner-and-more-modular-command-parser
 	 * 
@@ -14,9 +21,9 @@ public class Parser implements IParser {
 
 	// Logic component to exceute parsed command
 	Logic logic = new Logic();
-	
+
 	//Parameter constants
-	
+
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
 
 	/**
@@ -42,7 +49,7 @@ public class Parser implements IParser {
 	 */
 	private String[] tokeniser(String userInput){
 		initCommandHash();
-		String[] stringArray = userInput.split("\\s", 2);
+		String[] stringArray = userInput.split("\\s");
 		//		Token[] tokenList = new Token[stringArray.length];
 
 		return stringArray;
@@ -57,7 +64,7 @@ public class Parser implements IParser {
 
 			case DISPLAY : 
 				return new Command(OperationType.DISPLAY, parameterArray);
-				
+
 			case ADD : 
 				return new Command(OperationType.ADD, parameterArray);
 
@@ -66,7 +73,7 @@ public class Parser implements IParser {
 
 			case CLEAR :
 				return new Command(OperationType.CLEAR, parameterArray);
-			
+
 			case ARCHIVE :
 				return new Command(OperationType.ARCHIVE, parameterArray);
 
@@ -94,17 +101,31 @@ public class Parser implements IParser {
 			return parameters;
 		}
 	}
-	
+
 	private String[] parseParam (String[] rawParam) {
 		String [] param = new String[ParameterType.MAX_SIZE];
-		return rawParam;
-		
+		for (int i = 0; i<= param.length; i++) {
+			if (rawParam[i] == "name") {
+				param[ParameterType.CURRENT_NAME_POS] = rawParam[i+1];
+			}
+			if (rawParam[i] == "new_name") {
+				param[ParameterType.NEW_NAME_POS] = rawParam[i+1];
+			}
+			if (rawParam[i] == "deadline") {
+				param[ParameterType.NEW_DEADLINE_POS] = rawParam[i+1];
+			}
+			if (rawParam[i] == "workload") {
+				param[ParameterType.NEW_WORKLOAD_POS] = rawParam[i+1];
+			}
 	}
-	
-	public CommandResult parseInput(String userInput) {
-		String[] userTokens = tokeniser(userInput);
-		Command userCommand = parseTokens(userTokens);	
-		return logic.executeCommand(userCommand);
-	}
+	return param;
+
+}
+
+public CommandResult parseInput(String userInput) {
+	String[] userTokens = tokeniser(userInput);
+	Command userCommand = parseTokens(userTokens);	
+	return logic.executeCommand(userCommand);
+}
 
 }
