@@ -1,4 +1,5 @@
 package com.nexus.simplify;
+import com.nexus.simplify.ParameterType;
 
 public class Delete {
 	public Delete(){}
@@ -8,15 +9,15 @@ public class Delete {
 		Database database = Logic.getDatabase();
 		
 		if(isNumeric(parameter[0])){
-			int index = Integer.parseInt(parameter[0]);
+			int index = Integer.parseInt(parameter[ParameterType.CURRENT_NAME_POS]);
 			tempList.delete(index);
 			database.writeToFile(tempList);
-			String feedback = "successfully deleted entry #" + parameter[0];
+			String feedback = "successfully deleted entry #" + parameter[ParameterType.CURRENT_NAME_POS];
 			CommandResult result = new CommandResult(tempList, feedback);
 			return result;
 		}
 		else{
-			String name = parameter[0];
+			String name = parameter[ParameterType.CURRENT_NAME_POS];
 			tempList.delete(name);
 			database.writeToFile(tempList);
 			String feedback = "successfully deleted " + name;

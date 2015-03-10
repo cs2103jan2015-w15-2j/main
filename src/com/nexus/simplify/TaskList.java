@@ -24,14 +24,13 @@ public class TaskList {
 	public void add(Task task) { this.arr.add(task); }
 	public void delete(int i){ this.arr.remove(i); }
 	public void delete(String name){
-		int i = 0
+		int i = 0;
 		for(; i<this.size; i++){
-			if(name.equals(arr.get(i).getName()){
-				break;
-			}
+			if(name.equals(arr.get(i).getName())){ break; }
 		}
 		delete(i);
 	}
+	public void set(int index, Task newTask){ arr.set(index, newTask); }
 	
 	public void SortBy(SORT_TYPE sortType){
 		switch(sortType){
