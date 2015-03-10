@@ -33,7 +33,7 @@ public class Command {
 				return addOperation.execute(parameter);
 			case DISPLAY:
 				Display displayOperation = new Display();
-				return displayOperation.execute(parameter);
+				return displayOperation.execute();
 			case MODIFY:
 				Modify modifyOperation = new Modify();
 				return modifyOperation.execute(parameter);
