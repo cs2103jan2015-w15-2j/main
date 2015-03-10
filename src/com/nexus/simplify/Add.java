@@ -21,7 +21,8 @@ public class Add {
 			taskToAdd = new Task(name,deadline,workload);
 			feedback = "successfully added " + name + " " + deadline + " " + workload + ".";
 		}
-		TaskList tempList = Logic.getTempList().add(taskToAdd);
+		TaskList tempList = Logic.getTempList();
+		tempList.add(taskToAdd);
 		Logic.getDatabase().writeToFile(tempList);
 		
 		CommandResult result = new CommandResult(tempList, feedback);

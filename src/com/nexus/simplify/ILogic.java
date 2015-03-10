@@ -2,5 +2,5 @@ package com.nexus.simplify;
 
 public interface ILogic {
 	public String executeCommand(Command comd);
-	public TaskList initialise();
+	public CommandResult initialise(String filename);
 }

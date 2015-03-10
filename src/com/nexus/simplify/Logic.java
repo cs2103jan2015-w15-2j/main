@@ -25,8 +25,11 @@ public class Logic implements ILogic {
 		return database;
 	}
 	
-	public TaskList initialise(String fileName){
+	public CommandResult initialise(String fileName){
 		database = new Database(fileName);
-		return database.readFromFile();
+		tempList = database.readFromFile();
+		String feedback = null;
+		CommandResult result = new CommandResult(tempList, feedback);
+		return result;
 	}
 }
