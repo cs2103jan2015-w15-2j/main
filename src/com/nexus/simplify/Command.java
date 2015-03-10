@@ -27,7 +27,9 @@ public class Command {
 	}
 	
 	public Result executeSpecificCommand(OperationType operation, String[] parameter){
-		
+		switch(operation){
+			case : ADD
+		}
 	}
 		
 }
