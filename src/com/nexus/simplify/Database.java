@@ -2,6 +2,10 @@ package com.nexus.simplify;
 
 import java.util.*;
 import java.io.*;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.*;
 
 public class Database implements IDatabase {
@@ -15,10 +19,10 @@ public class Database implements IDatabase {
 		setUpFile(fileName);
 	}
 	
-	public void setUpFile(String fileName) {
+	private void setUpFile(String fileName) {
 		file = new File(fileName);
 		if (file.exists()) {
-			readFromFile();
+			getDataFromFile();
 		} else {
 			try {
 				file.createNewFile();
@@ -28,27 +32,22 @@ public class Database implements IDatabase {
 	}
 	
 	public TaskList readFromFile() {
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String text;
-			while ((text = br.readLine()) != null) {
-				list.add(text);
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
+		if (list.isEmpty()) {
+			return null;
+		} else {
+			taskList = convertToTask(list);
+			return taskList;
 		}
-		taskList = convertToTask(list);
-		return taskList;
 	}
 	
 	public void writeToFile(TaskList tasklist) {
 		try {
-			StringWriter sw = new StringWriter();
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
+			convertToStore(taskList);
 			while (!list.isEmpty()) {
 				for (int i = 0; i < list.size(); i++) {
 					bw.write(list.get(i));
+					bw.newLine();
 				}
 			}
 			bw.close();
@@ -63,7 +62,7 @@ public class Database implements IDatabase {
 		for (int i = 0; i < list.size(); i++) {
 			jsonTask = new JSONObject(list.get(i));
 			task = new Task(jsonTask.getString("name"));
-			// task.setDueDate(jsonTask.getString("due date"));
+			task.setDueDate(parseDueDate(jsonTask.getString("due date")));
 			task.setWorkload(jsonTask.getString("workload"));
 			task.setId(jsonTask.getString("id"));
 			tempList.add(task);
@@ -71,7 +70,13 @@ public class Database implements IDatabase {
 		return tempList;
 	}
 	
-	private ArrayList<String> convertToStore(TaskList tasklist) {
+	private DateTime parseDueDate(String date) {
+		DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+		DateTime dueDate = format.parseDateTime(date);
+		return dueDate;
+	}
+	
+	public ArrayList<String> convertToStore(TaskList tasklist) {
 		while (!tasklist.isEmpty()) {
 			for (int i = 0; i < tasklist.size(); i++) {
 				jsonTask = new JSONObject();
@@ -83,5 +88,18 @@ public class Database implements IDatabase {
 			}
 		}
 		return list;
+	}
+	
+	private void getDataFromFile() {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String text;
+			while ((text = br.readLine()) != null) {
+				list.add(text);
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
 	}
 }
