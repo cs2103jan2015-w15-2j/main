@@ -22,7 +22,7 @@ public class Main {
 	
 	private int launchUI() {
 		ui = new UI();
-		ui.listenForCommandUntilExit(ui);
+		ui.listenForCommandUntilExit();
 		return SYSTEM_EXIT_CODE;		
 	}
 }

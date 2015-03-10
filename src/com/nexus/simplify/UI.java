@@ -49,7 +49,7 @@ public class UI implements IUI {
 	// Program Loop //
 	//--------------//
 	
-	public void listenForCommandUntilExit(UI ui) {
+	public void listenForCommandUntilExit() {
 		Parser parser = new Parser();
 		String userInput = getUserInput();
 		while (!shouldExit(userInput)) {
