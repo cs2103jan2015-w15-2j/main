@@ -100,7 +100,10 @@ public class UI implements IUI {
 	}
 	
 	public void displayCurrentTaskList(TaskList taskList) {
-		displayMessage(buildShortTaskList(taskList));
+		String listToBeDisplayed = buildShortTaskList(taskList);
+		if (listToBeDisplayed != null) {
+			displayMessage(buildShortTaskList(taskList));
+		}
 	}
 	
 	
@@ -111,20 +114,24 @@ public class UI implements IUI {
 	 * */
 	
 	public String buildShortTaskList(TaskList taskList) {
-		StringBuilder shortTaskList = new StringBuilder();
-		
-		for (int i = 0; i < MAX_NUM_OF_TASKS_TO_DISPLAY; i++) {
-			Task currentTask = taskList.get(i);
+		if (taskList.isEmpty()) {
+			return null;
+		} else {
+			StringBuilder shortTaskList = new StringBuilder();
 			
-			int currentTaskIndex = i + LIST_NUMBER_OFFSET;
-			shortTaskList.append(currentTaskIndex);
-			shortTaskList.append(". ");
-			shortTaskList.append(currentTask.getName());
-			shortTaskList.append(" ");
-			shortTaskList.append(currentTask.getDueDate());
-			shortTaskList.append("\n");
+			for (int i = 0; i < MAX_NUM_OF_TASKS_TO_DISPLAY; i++) {
+				Task currentTask = taskList.get(i);
+				
+				int currentTaskIndex = i + LIST_NUMBER_OFFSET;
+				shortTaskList.append(currentTaskIndex);
+				shortTaskList.append(". ");
+				shortTaskList.append(currentTask.getName());
+				shortTaskList.append(" ");
+				shortTaskList.append(currentTask.getDueDate());
+				shortTaskList.append("\n");
+			}
+			
+			return shortTaskList.toString();
 		}
-		
-		return shortTaskList.toString();
 	}
 }
