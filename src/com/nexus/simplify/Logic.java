@@ -4,24 +4,29 @@ import com.nexus.simplify.Parser.OperationType;
 
 public class Logic implements ILogic {
 	
-	private TaskList tempList;
+	private static TaskList tempList;
+	private static Database database;
 	
 	public Logic(){
 		tempList = new TaskList();
 	}
 	
-	public Result executeCommand(Command command){
+	public CommandResult executeCommand(Command command){
 		OperationType operation = command.getOperation();
 		String[] parameter = command.getParameter();
 		return command.executeSpecificCommand(operation, parameter);
 	}
 	
-	public TaskList getTempList(){
+	public static TaskList getTempList(){
 		return tempList;
 	}
 	
+	public static Database getDatabase(){
+		return database;
+	}
+	
 	public TaskList initialise(String fileName){
-		Database database = new Database(fileName);
+		database = new Database(fileName);
 		return database.readFromFile();
 	}
 }
