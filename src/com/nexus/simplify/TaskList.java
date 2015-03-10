@@ -2,17 +2,26 @@ package com.nexus.simplify;
 import java.util.*;
 
 public class TaskList {
-
-	private static final int APPROPRIATE_TASKLIST_SIZE = 1000;
+	// instance variables
+	int size;
+	ArrayList<Task> arr;
 	
-	private ArrayList<Task> taskArray;
+	private static final int APPROPRIATE_TASKLIST_SIZE = 1000;
+	private ArrayList<Task> taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
 	private enum SORT_TYPE{
 		NAME, DUE_DATE, WORKLOAD, ID
 	};
 	
-	public TaskList(){
-		taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
+	
+	public TaskList() {
+		this.arr = taskArray;
+		this.size = taskArray.size();
 	}
+	
+	public int size() { return this.size; }
+	public Task get(int i) { return this.arr.get(i); }
+	public boolean isEmpty() { return this.arr.isEmpty(); }
+	public void add(Task task) { this.arr.add(task); }
 	
 	public void SortBy(SORT_TYPE sortType){
 		switch(sortType){
@@ -32,9 +41,9 @@ public class TaskList {
 	}
 	
 	private static Comparator<Task> taskNameComparator = new Comparator<Task>(){
-		public int compare(Task t1, Task t2){
-			String t1Name = t1.getName().toUpperCase();
-			String t2Name = t2.getName().toUpperCase();
+		private int compare(Task t1, Task t2){
+			String t1Name = t1.getTaskName().toUpperCase();
+			String t2Name = t2.getTaskName().toUpperCase();
 			return t1Name.compareTo(t2Name);
 		}
 	};
@@ -45,8 +54,8 @@ public class TaskList {
 			String t2DueDate = t2.getDueDate().toUpperCase();
 			return t1DueDate.compareTo(t2DueDate);
 		}
-	};
-
+	}
+	
 	private static Comparator<Task> taskWorkloadComparator = new Comparator<Task>(){
 		public int compare(Task t1, Task t2){
 			int t1Workload = t1.getWorkload();
