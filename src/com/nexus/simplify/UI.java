@@ -1,3 +1,7 @@
+/*
+ * @author Toh Jian Feng
+ * */
+
 package com.nexus.simplify;
 
 import java.util.Scanner;
@@ -19,6 +23,7 @@ public class UI implements IUI {
 	
 	private static final int MAX_NUM_OF_TASKS_TO_DISPLAY = 5;
 	private static final int LIST_NUMBER_OFFSET = 1;
+	
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -97,6 +102,13 @@ public class UI implements IUI {
 	public void displayCurrentTaskList(TaskList taskList) {
 		displayMessage(buildShortTaskList(taskList));
 	}
+	
+	
+	/*
+	 * @return a displayable task list built from 
+	 * @param taskList
+	 * 
+	 * */
 	
 	public String buildShortTaskList(TaskList taskList) {
 		StringBuilder shortTaskList = new StringBuilder();
