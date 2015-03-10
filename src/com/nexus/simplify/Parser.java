@@ -1,7 +1,8 @@
 package com.nexus.simplify;
 
 import java.util.HashMap;
-
+import com.nexus.simplify.ParameterType;
+import com.nexus.simplify.OperationType;
 
 public class Parser implements IParser {
 
@@ -11,17 +12,11 @@ public class Parser implements IParser {
 	 * 
 	 */
 
-	// String Messages
-
-	// List of all possible tokens?
-	//	enum Token {
-	//		COMMAND, NAME, DUEDATE, WORKLOAD, INVALID_PARAMETER
-	//	}
-
-	enum OperationType {
-		ADD, DELETE, MODIFY, ARCHIVE, CLEAR, INVALID
-	};
-
+	// Logic component to exceute parsed command
+	Logic logic = new Logic();
+	
+	//Parameter constants
+	
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
 
 	/**
@@ -29,15 +24,16 @@ public class Parser implements IParser {
 	 * adding all recognised command strings as keys to their operation type
 	 */
 	private void initCommandHash() {
+		// adding support for all supported commands 
+		cmdHash.put("display", OperationType.DISPLAY);
 		cmdHash.put("add", OperationType.ADD);
+		cmdHash.put("modify", OperationType.MODIFY);
+		cmdHash.put("update", OperationType.MODIFY);
 		cmdHash.put("clear", OperationType.CLEAR);
 		cmdHash.put("done", OperationType.ARCHIVE);
-		cmdHash.put("modify", OperationType.MODIFY);
-		cmdHash.put("update", OperationType.ADD);
 		cmdHash.put("delete", OperationType.DELETE);
+		cmdHash.put("filelocation", OperationType.FILELOCATION);
 	}
-
-
 
 	/**
 	 * Lexical analyser which takes in a string and produces a list of tokens
@@ -53,24 +49,29 @@ public class Parser implements IParser {
 	}
 
 	private Command parseTokens(String[] tokenList){
-		String[] parameterArray = getParameterArray(tokenList);
+		String opString = tokenList[0];
+		String[] rawParam = getParameterArray(tokenList);
+		String[] parameterArray = parseParam(rawParam);
 		try {
-			switch (cmdHash.get(tokenList[0])) {
+			switch (cmdHash.get(opString)) {
 
+			case DISPLAY : 
+				return new Command(OperationType.DISPLAY, parameterArray);
+				
 			case ADD : 
 				return new Command(OperationType.ADD, parameterArray);
-
-			case DELETE :
-				return new Command(OperationType.DELETE, parameterArray);
 
 			case MODIFY :
 				return new Command(OperationType.MODIFY, parameterArray);
 
+			case CLEAR :
+				return new Command(OperationType.CLEAR, parameterArray);
+			
 			case ARCHIVE :
 				return new Command(OperationType.ARCHIVE, parameterArray);
 
-			case CLEAR :
-				return new Command(OperationType.CLEAR, parameterArray);
+			case DELETE :
+				return new Command(OperationType.DELETE, parameterArray);
 
 			default : 
 				return new Command(OperationType.INVALID, new String[]{"switch failure"});
@@ -82,7 +83,7 @@ public class Parser implements IParser {
 	}
 
 	private String[] getParameterArray(String[] tokenList) {
-		// Check for user input where there are no parameters, only operation
+		// Return null string if there are no parameters provided
 		if (tokenList.length == 1) {
 			return new String[1];
 		} else {
@@ -92,13 +93,17 @@ public class Parser implements IParser {
 			}
 			return parameters;
 		}
-
 	}
-
-	public String parseInput(String userInput) {
+	
+	private String[] parseParam (String[] rawParam) {
+		String [] param = new String[ParameterType.MAX_SIZE];
+		return rawParam;
+		
+	}
+	
+	public CommandResult parseInput(String userInput) {
 		String[] userTokens = tokeniser(userInput);
 		Command userCommand = parseTokens(userTokens);	
-		Logic logic = new Logic();
 		return logic.executeCommand(userCommand);
 	}
 
