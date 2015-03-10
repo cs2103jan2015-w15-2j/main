@@ -1,6 +1,6 @@
 package com.nexus.simplify;
 
-import com.nexus.simplify.Parser.OperationType;
+import com.nexus.simplify.OperationType;
 
 public class Logic implements ILogic {
 	

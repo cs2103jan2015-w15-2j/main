@@ -7,6 +7,8 @@ package com.nexus.simplify;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
 
 public class Task {	
 	
@@ -19,9 +21,14 @@ public class Task {
 	int workload;
 	private String id;
 	
+	// http://stackoverflow.com/questions/3307330/using-joda-date-time-api-to-parse-multiple-formats
+	DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("dd/M/yyyy km").toFormatter();
+
 	//--------------//
 	// constructors //
 	//--------------//
+	
+	
 	
 	// default constructor
 	public Task(String name) {
@@ -32,14 +39,22 @@ public class Task {
 	
 	public Task(String name, int day, int month, int year, int hour, int minute, String workload, String id) {
 		this.name = name;
-		this.workload = Integer.valueOf(workload);
+		this.workload = Integer.parseInt(workload);
 		this.id = id;
 		this.dueDate = new DateTime(year, month, day, hour, minute);
 	}
 	
+	public Task(String name, String deadline, String workload) {
+		this.name = name;
+		this.workload = Integer.parseInt(workload);
+		this.dueDate = formatter.parseDateTime(deadline);
+		
+	}
+
 	//---------------------//
 	// Attribute Accessors //
 	//---------------------//
+	
 	
 	public void setName(String name) { 
 		this.name = name; 

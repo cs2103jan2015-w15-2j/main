@@ -1,18 +1,15 @@
 package com.nexus.simplify;
-import ParameterType;
+import com.nexus.simplify.ParameterType;
 
 public class Add {
-	private static final int NAME_POS = 0;
-	private static final int DEADLINE_POS = 1;
-	private static final int WORKLOAD_POS = 2;
 	private Task taskToAdd;
 	
 	public Add(){}
 	
 	public CommandResult execute(String[] parameter){
-		String name = parameter[NAME_POS];
-		String deadline = parameter[DEADLINE_POS];
-		String workload = parameter[WORKLOAD_POS];
+		String name = parameter[ParameterType.CURRENT_NAME_POS];
+		String deadline = parameter[ParameterType.NEW_DEADLINE_POS];
+		String workload = parameter[ParameterType.NEW_WORKLOAD_POS];
 		String feedback;
 		if(deadline == null && workload == null){
 			taskToAdd = new Task(name);

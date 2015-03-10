@@ -50,9 +50,9 @@ public class TaskList {
 	}
 	
 	private static Comparator<Task> taskNameComparator = new Comparator<Task>(){
-		private int compare(Task t1, Task t2){
-			String t1Name = t1.getTaskName().toUpperCase();
-			String t2Name = t2.getTaskName().toUpperCase();
+		public int compare(Task t1, Task t2){
+			String t1Name = t1.getName().toUpperCase();
+			String t2Name = t2.getName().toUpperCase();
 			return t1Name.compareTo(t2Name);
 		}
 	};
@@ -63,7 +63,7 @@ public class TaskList {
 			String t2DueDate = t2.getDueDate().toUpperCase();
 			return t1DueDate.compareTo(t2DueDate);
 		}
-	}
+	};
 	
 	private static Comparator<Task> taskWorkloadComparator = new Comparator<Task>(){
 		public int compare(Task t1, Task t2){

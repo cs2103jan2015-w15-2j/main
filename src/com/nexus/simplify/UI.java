@@ -111,18 +111,25 @@ public class UI implements IUI {
 	 * */
 	
 	public String buildShortTaskList(TaskList taskList) {
+		if (taskList == null) {
+			return "";
+		}
 		StringBuilder shortTaskList = new StringBuilder();
 		
 		for (int i = 0; i < MAX_NUM_OF_TASKS_TO_DISPLAY; i++) {
-			Task currentTask = taskList.get(i);
-			
-			int currentTaskIndex = i + LIST_NUMBER_OFFSET;
-			shortTaskList.append(currentTaskIndex);
-			shortTaskList.append(". ");
-			shortTaskList.append(currentTask.getName());
-			shortTaskList.append(" ");
-			shortTaskList.append(currentTask.getDueDate());
-			shortTaskList.append("\n");
+			try {
+				Task currentTask = taskList.get(i);
+				
+				int currentTaskIndex = i + LIST_NUMBER_OFFSET;
+				shortTaskList.append(currentTaskIndex);
+				shortTaskList.append(". ");
+				shortTaskList.append(currentTask.getName());
+				shortTaskList.append(" ");
+				shortTaskList.append(currentTask.getDueDate());
+				shortTaskList.append("\n");
+			} catch (Exception e) {
+				
+			}
 		}
 		
 		return shortTaskList.toString();

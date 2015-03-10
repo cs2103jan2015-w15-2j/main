@@ -57,8 +57,8 @@ public class Parser implements IParser {
 
 	private Command parseTokens(String[] tokenList){
 		String opString = tokenList[0];
-		String[] rawParam = getParameterArray(tokenList);
-		String[] parameterArray = parseParam(rawParam);
+		String[] parameterArray = getParameterArray(tokenList);
+
 		try {
 			switch (cmdHash.get(opString)) {
 
@@ -98,34 +98,42 @@ public class Parser implements IParser {
 			for (int i = 0; i < parameters.length; i++) {
 				parameters[i] = tokenList[i+1];
 			}
-			return parameters;
+			return parseParam(parameters);
 		}
 	}
 
 	private String[] parseParam (String[] rawParam) {
 		String [] param = new String[ParameterType.MAX_SIZE];
-		for (int i = 0; i<= param.length; i++) {
-			if (rawParam[i] == "name") {
-				param[ParameterType.CURRENT_NAME_POS] = rawParam[i+1];
+		int index = 0;
+		for (int i = 0; i < rawParam.length; i++) {
+
+			if (rawParam[i].equalsIgnoreCase("name")) {
+				index = ParameterType.CURRENT_NAME_POS;
 			}
-			if (rawParam[i] == "new_name") {
-				param[ParameterType.NEW_NAME_POS] = rawParam[i+1];
+			else if (rawParam[i].equalsIgnoreCase("new_name")) {
+				index = ParameterType.NEW_NAME_POS;
 			}
-			if (rawParam[i] == "deadline") {
-				param[ParameterType.NEW_DEADLINE_POS] = rawParam[i+1];
+			else if (rawParam[i].equalsIgnoreCase("deadline")) {
+				index = ParameterType.NEW_DEADLINE_POS;
 			}
-			if (rawParam[i] == "workload") {
-				param[ParameterType.NEW_WORKLOAD_POS] = rawParam[i+1];
+			else if (rawParam[i].equalsIgnoreCase("workload")) {
+				index = ParameterType.NEW_WORKLOAD_POS;
+			} else {
+				if (param[index] == null) {
+					param[index] = rawParam[i];
+				} else {
+					param[index] += " " + rawParam[i];
+				}
 			}
+		}
+		return param;
+
 	}
-	return param;
 
-}
-
-public CommandResult parseInput(String userInput) {
-	String[] userTokens = tokeniser(userInput);
-	Command userCommand = parseTokens(userTokens);	
-	return logic.executeCommand(userCommand);
-}
+	public CommandResult parseInput(String userInput) {
+		String[] userTokens = tokeniser(userInput);
+		Command userCommand = parseTokens(userTokens);	
+		return logic.executeCommand(userCommand);
+	}
 
 }
