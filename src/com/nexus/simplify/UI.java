@@ -15,6 +15,7 @@ public class UI implements IUI {
 	private static final String MESSAGE_PROMPT = "command: ";
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	private static final String USER_INPUT_EXIT = "exit";
+	private static final String INPUT_FILE_NAME = "input.json";
 	
 	private static final int MAX_NUM_OF_TASKS_TO_DISPLAY = 5;
 	private static final int LIST_NUMBER_OFFSET = 1;
@@ -34,6 +35,11 @@ public class UI implements IUI {
 	@Override
 	public void run() {
 		displayWelcomeMessage();
+		Logic logic = new Logic();
+		CommandResult initialFeedback = logic.initialise(INPUT_FILE_NAME);
+		if (initialFeedback != null) {
+			displayFeedback(initialFeedback);
+		}
 	}
 	
 	//-------------------------//
@@ -79,7 +85,9 @@ public class UI implements IUI {
 	@Override
 	public void displayFeedback(CommandResult result) {
 		displayMessage(buildShortTaskList(result.getModifiedTaskList()));
-		displayMessage(result.getResultantFeedback());
+		if (result.getResultantFeedback() != null) {
+			displayMessage(result.getResultantFeedback());
+		}
 	}
 	
 	public void displayMessage(String message, Object... args) {
