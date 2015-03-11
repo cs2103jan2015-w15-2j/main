@@ -7,11 +7,11 @@ public class Logic implements ILogic {
 	private static TaskList tempList;
 	private static Database database;
 	
-	public Logic(){
+	public Logic() {
 		tempList = new TaskList();
 	}
 	
-	public CommandResult executeCommand(Command command){
+	public CommandResult executeCommand(Command command) {
 		OperationType operation = command.getOperation();
 		String[] parameter = command.getParameter();
 		return command.executeSpecificCommand(operation, parameter);
@@ -25,7 +25,7 @@ public class Logic implements ILogic {
 		return database;
 	}
 	
-	public CommandResult initialise(String fileName){
+	public CommandResult initialise(String fileName) {
 		database = new Database(fileName);
 		tempList = database.readFromFile();
 		if(tempList == null){

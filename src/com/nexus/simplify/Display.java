@@ -1,12 +1,28 @@
+/*
+ * @author David Zhao
+ * */
+
 package com.nexus.simplify;
 
 public class Display {
-	public Display(){}
+	
+	private static final String MESSAGE_DISPLAY_SUCCESS = "successfully displayed.";
+
+	//---------------------//
+	// Default Constructor //
+	//---------------------//
+	
+	public Display() {
+		
+	}
+	
+	//---------------------------//
+	// Executing Display Command //
+	//---------------------------//
 	
 	public CommandResult execute(){
 		TaskList updatedList = Logic.getTempList();
-		String feedback = "successfully displayed.";
-		CommandResult result = new CommandResult(updatedList, feedback);
+		CommandResult result = new CommandResult(updatedList, MESSAGE_DISPLAY_SUCCESS);
 		return result;
 	}
 }
