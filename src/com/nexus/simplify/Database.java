@@ -76,11 +76,11 @@ public class Database implements IDatabase {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(TaskList tasklist) {
+	public void writeToFile(TaskList inputTL) {
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
-			convertToStore(taskList);
-			while (!tempList.isEmpty()) {
+			convertToStore(inputTL);
+			if (!tempList.isEmpty()) {
 				for (int i = 0; i < tempList.size(); i++) {
 					bw.write(tempList.get(i));
 					bw.newLine();
@@ -124,7 +124,7 @@ public class Database implements IDatabase {
 	public ArrayList<String> convertToStore(TaskList tasklist) {
 		JSONObject jsonTask;
 		
-		while (!tasklist.isEmpty()) {
+		if (!tasklist.isEmpty()) {
 			for (int i = 0; i < tasklist.size(); i++) {
 				jsonTask = new JSONObject();
 				jsonTask.put("name", tasklist.get(i).getName());
@@ -136,5 +136,12 @@ public class Database implements IDatabase {
 		}
 		
 		return tempList;
+	}
+	
+	public static void main(String[] args) {
+		Database db = new Database("test_db");
+		TaskList tl = new TaskList();
+		tl.add(new Task("please write this task!"));
+		db.writeToFile(tl);
 	}
 }

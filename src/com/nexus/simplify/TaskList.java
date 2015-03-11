@@ -12,9 +12,6 @@ public class TaskList {
 	// Class Attributes //
 	//------------------//
 	
-	private int size;
-	private ArrayList<Task> arr;
-	
 	private static final int APPROPRIATE_TASKLIST_SIZE = 1000;
 	private ArrayList<Task> taskArray = new ArrayList<Task>(APPROPRIATE_TASKLIST_SIZE);
 	private enum SORT_TYPE{
@@ -26,8 +23,6 @@ public class TaskList {
 	//-------------//
 	
 	public TaskList() {
-		this.arr = taskArray;
-		this.size = taskArray.size();
 	}
 	
 	//---------------------//
@@ -35,11 +30,11 @@ public class TaskList {
 	//---------------------//
 	
 	public Task get(int i) { 
-		return this.arr.get(i); 
+		return taskArray.get(i); 
 	}
 	
 	public int size() { 
-		return this.size; 
+		return taskArray.size(); 
 	}
 	
 	//--------------------//
@@ -51,17 +46,17 @@ public class TaskList {
 	}
 	
 	public void add(Task task) { 
-		this.arr.add(task);
+		taskArray.add(task);
 	}
 	
 	public void delete(int i){ 
-		this.arr.remove(i);
+		taskArray.remove(i);
 	}
 	
 	public void delete(String name){
 		int i = 0;
-		for(; i<this.size; i++){
-			if(name.equals(arr.get(i).getName())) { 
+		for(; i<taskArray.size(); i++){
+			if(name.equals(taskArray.get(i).getName())) { 
 				break; 
 			}
 		}
@@ -126,7 +121,7 @@ public class TaskList {
 	//--------------//
 	
 	public boolean isEmpty() { 
-		return this.arr.isEmpty(); 
+		return taskArray.isEmpty(); 
 	}
 
 }
