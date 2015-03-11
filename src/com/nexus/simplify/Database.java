@@ -109,8 +109,8 @@ public class Database implements IDatabase {
 			
 			task = new Task(jsonTask.getString("name"));
 			task.setDueDate(parseDueDate(jsonTask.getString("due date")));
-			task.setWorkload(jsonTask.getString("workload"));
-			task.setId(jsonTask.getString("id"));
+			task.setWorkload(jsonTask.getInt("workload"));
+			// task.setId(jsonTask.getString("id"));
 			
 			resultantTaskList.add(task);
 		}
@@ -133,7 +133,7 @@ public class Database implements IDatabase {
 				jsonTask.put("name", tasklist.get(i).getName());
 				jsonTask.put("due date", tasklist.get(i).getDueDate());
 				jsonTask.put("workload", tasklist.get(i).getWorkload());
-				jsonTask.put("id", tasklist.get(i).getId());
+				// jsonTask.put("id", tasklist.get(i).getId());
 				tempList.add(jsonTask.toString());
 			}
 		}
