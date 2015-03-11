@@ -137,11 +137,4 @@ public class Database implements IDatabase {
 		
 		return tempList;
 	}
-	
-	public static void main(String[] args) {
-		Database db = new Database("test_db");
-		TaskList tl = new TaskList();
-		tl.add(new Task("please write this task!"));
-		db.writeToFile(tl);
-	}
 }
