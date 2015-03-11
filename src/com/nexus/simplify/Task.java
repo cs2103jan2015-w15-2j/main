@@ -85,8 +85,8 @@ public class Task {
 		return this.workload; 
 	}
 	
-	public void setWorkload(String workload) { 
-		this.workload = Integer.valueOf(workload); 
+	public void setWorkload(int workload) { 
+		this.workload = workload; 
 	}
 	
 	public String getId() { 

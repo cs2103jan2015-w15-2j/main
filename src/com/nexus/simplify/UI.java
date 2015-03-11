@@ -124,8 +124,10 @@ public class UI implements IUI {
 				shortTaskList.append(currentTaskIndex);
 				shortTaskList.append(". ");
 				shortTaskList.append(currentTask.getName());
-				shortTaskList.append(" ");
-				shortTaskList.append(currentTask.getDueDate());
+				if (!currentTask.isFloatingTask()) {
+					shortTaskList.append(" ");
+					shortTaskList.append(currentTask.getDueDate());
+				}
 				shortTaskList.append("\n");
 			} catch (Exception e) {
 				
