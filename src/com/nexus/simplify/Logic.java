@@ -17,11 +17,11 @@ public class Logic implements ILogic {
 		return command.executeSpecificCommand(operation, parameter);
 	}
 	
-	public static TaskList getTempList(){
+	public static TaskList getTempList() {
 		return tempList;
 	}
 	
-	public static Database getDatabase(){
+	public static Database getDatabase() {
 		return database;
 	}
 	
@@ -30,8 +30,7 @@ public class Logic implements ILogic {
 		tempList = database.readFromFile();
 		if(tempList == null){
 			return null;
-		}
-		else{
+		} else {
 			String feedback = null;
 			CommandResult result = new CommandResult(tempList, feedback);
 			return result;

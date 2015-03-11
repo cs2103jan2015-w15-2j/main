@@ -1,3 +1,7 @@
+/*
+ * @author Tan Qian Yi
+ * */
+
 package com.nexus.simplify;
 
 import java.util.*;
@@ -9,15 +13,26 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.*;
 
 public class Database implements IDatabase {
+	
+	//------------------//
+	// Class Attributes //
+	//------------------//
+	
 	private File file;
-	private ArrayList<String> list = new ArrayList<String>();
+	private ArrayList<String> tempList = new ArrayList<String>();
 	private TaskList taskList = new TaskList();
 	
-	JSONObject jsonTask;
+	//-------------//
+	// Constructor //
+	//-------------//
 	
 	public Database(String fileName) {
 		setUpFile(fileName);
 	}
+	
+	//----------------//
+	// Initialization //
+	//----------------//
 	
 	private void setUpFile(String fileName) {
 		file = new File(fileName);
@@ -31,22 +46,43 @@ public class Database implements IDatabase {
 		}
 	}
 	
+	//--------------//
+	// File Reading //
+	//--------------//
+	
 	public TaskList readFromFile() {
-		if (list.isEmpty()) {
+		if (tempList.isEmpty()) {
 			return null;
 		} else {
-			taskList = convertToTask(list);
+			taskList = convertToTaskList(tempList);
 			return taskList;
 		}
 	}
+	
+	private void getDataFromFile() {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String text;
+			while ((text = br.readLine()) != null) {
+				tempList.add(text);
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+		}
+	}
+	
+	//--------------//
+	// File Writing //
+	//--------------//
 	
 	public void writeToFile(TaskList tasklist) {
 		try {
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
 			convertToStore(taskList);
-			while (!list.isEmpty()) {
-				for (int i = 0; i < list.size(); i++) {
-					bw.write(list.get(i));
+			while (!tempList.isEmpty()) {
+				for (int i = 0; i < tempList.size(); i++) {
+					bw.write(tempList.get(i));
 					bw.newLine();
 				}
 			}
@@ -56,18 +92,27 @@ public class Database implements IDatabase {
 		}
 	}
 	
-	private TaskList convertToTask(ArrayList<String> array) {
-		TaskList tempList = new TaskList();
+	//---------------------//
+	// Variable Conversion //
+	//---------------------//
+	
+	private TaskList convertToTaskList(ArrayList<String> array) {
+		TaskList resultantTaskList = new TaskList();
 		Task task;
-		for (int i = 0; i < list.size(); i++) {
-			jsonTask = new JSONObject(list.get(i));
+		JSONObject jsonTask;
+		
+		for (int i = 0; i < tempList.size(); i++) {
+			jsonTask = new JSONObject(tempList.get(i));
+			
 			task = new Task(jsonTask.getString("name"));
 			task.setDueDate(parseDueDate(jsonTask.getString("due date")));
 			task.setWorkload(jsonTask.getString("workload"));
 			task.setId(jsonTask.getString("id"));
-			tempList.add(task);
+			
+			resultantTaskList.add(task);
 		}
-		return tempList;
+		
+		return resultantTaskList;
 	}
 	
 	private DateTime parseDueDate(String date) {
@@ -77,6 +122,8 @@ public class Database implements IDatabase {
 	}
 	
 	public ArrayList<String> convertToStore(TaskList tasklist) {
+		JSONObject jsonTask;
+		
 		while (!tasklist.isEmpty()) {
 			for (int i = 0; i < tasklist.size(); i++) {
 				jsonTask = new JSONObject();
@@ -84,22 +131,10 @@ public class Database implements IDatabase {
 				jsonTask.put("due date", tasklist.get(i).getDueDate());
 				jsonTask.put("workload", tasklist.get(i).getWorkload());
 				jsonTask.put("id", tasklist.get(i).getId());
-				list.add(jsonTask.toString());
+				tempList.add(jsonTask.toString());
 			}
 		}
-		return list;
-	}
-	
-	private void getDataFromFile() {
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String text;
-			while ((text = br.readLine()) != null) {
-				list.add(text);
-			}
-			br.close();
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
-		}
+		
+		return tempList;
 	}
 }
