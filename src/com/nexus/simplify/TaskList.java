@@ -42,7 +42,7 @@ public class TaskList {
 	//--------------------//
 	
 	public void set(int index, Task newTask){ 
-		arr.set(index, newTask); 
+		taskArray.set(index, newTask); 
 	}
 	
 	public void add(Task task) { 

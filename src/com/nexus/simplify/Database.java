@@ -78,6 +78,9 @@ public class Database implements IDatabase {
 	
 	public void writeToFile(TaskList inputTL) {
 		try {
+			String fileName = file.getName();
+			file.delete();
+			file = new File(fileName);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
 			convertToStore(inputTL);
 			if (!tempList.isEmpty()) {
