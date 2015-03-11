@@ -14,14 +14,15 @@ public class UI implements IUI {
 	
 	Scanner scanner;
 	
+	Logic logic;
+	
 	private String userInput;
 	
 	private static final String MESSAGE_PROMPT = "command: ";
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	private static final String USER_INPUT_EXIT = "exit";
 	private static final String INPUT_FILE_NAME = "input.json";
-	
-	private static final int MAX_NUM_OF_TASKS_TO_DISPLAY = 5;
+
 	private static final int LIST_NUMBER_OFFSET = 1;
 	
 	//-------------//
@@ -40,7 +41,7 @@ public class UI implements IUI {
 	@Override
 	public void run() {
 		displayWelcomeMessage();
-		Logic logic = new Logic();
+		logic = new Logic();
 		CommandResult initialFeedback = logic.initialise(INPUT_FILE_NAME);
 		if (initialFeedback != null) {
 			displayFeedback(initialFeedback);
@@ -66,7 +67,7 @@ public class UI implements IUI {
 		Parser parser = new Parser();
 		String userInput = getUserInput();
 		while (!shouldExit(userInput)) {
-			displayFeedback(parser.parseInput(userInput));
+			displayFeedback(parser.parseInput(userInput, logic));
 			userInput = getUserInput();
 		}		
 	}
@@ -116,7 +117,7 @@ public class UI implements IUI {
 		}
 		StringBuilder shortTaskList = new StringBuilder();
 		
-		for (int i = 0; i < MAX_NUM_OF_TASKS_TO_DISPLAY; i++) {
+		for (int i = 0; i < taskList.size(); i++) {
 			try {
 				Task currentTask = taskList.get(i);
 				

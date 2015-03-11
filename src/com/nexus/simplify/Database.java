@@ -52,7 +52,7 @@ public class Database implements IDatabase {
 	
 	public TaskList readFromFile() {
 		if (tempList.isEmpty()) {
-			return null;
+			return new TaskList();
 		} else {
 			taskList = convertToTaskList(tempList);
 			return taskList;
@@ -126,7 +126,7 @@ public class Database implements IDatabase {
 	
 	public ArrayList<String> convertToStore(TaskList tasklist) {
 		JSONObject jsonTask;
-		
+		tempList.clear();
 		if (!tasklist.isEmpty()) {
 			for (int i = 0; i < tasklist.size(); i++) {
 				jsonTask = new JSONObject();

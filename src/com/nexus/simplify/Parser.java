@@ -19,9 +19,6 @@ public class Parser implements IParser {
 	 * 
 	 */
 
-	// Logic component to exceute parsed command
-	Logic logic = new Logic();
-
 	//Parameter constants
 
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
@@ -130,7 +127,7 @@ public class Parser implements IParser {
 
 	}
 
-	public CommandResult parseInput(String userInput) {
+	public CommandResult parseInput(String userInput, Logic logic) {
 		String[] userTokens = tokeniser(userInput);
 		Command userCommand = parseTokens(userTokens);	
 		return logic.executeCommand(userCommand);
