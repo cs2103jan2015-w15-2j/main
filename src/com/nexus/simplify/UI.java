@@ -98,7 +98,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void displayFeedback(CommandResult result) {
-		displayMessage(buildShortTaskList(result.getModifiedTaskList()));
+		displayCurrentTaskList(result.getModifiedTaskList());
 		if (result.getResultantFeedback() != null) {
 			displayMessage(result.getResultantFeedback());
 		}
