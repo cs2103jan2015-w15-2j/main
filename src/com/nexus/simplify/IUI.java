@@ -6,4 +6,6 @@ public interface IUI {
 	public String getUserInput();
 	
 	public void displayFeedback(CommandResult result);
+	
+	public void listenForCommandUntilExit();
 }
