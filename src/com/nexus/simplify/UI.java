@@ -78,6 +78,7 @@ public class UI implements IUI {
 		String userInput = getUserInput();
 		while (!shouldExit(userInput)) {
 			displayFeedback(parser.parseInput(userInput, logic));
+			displayMessage(FORMATTING_NEWLINE);
 			userInput = getUserInput();
 		}		
 	}
@@ -91,7 +92,7 @@ public class UI implements IUI {
 	//-----------------//
 	
 	private void promptUserForCommand() {
-		displayMessage(MESSAGE_PROMPT);
+		System.out.print(MESSAGE_PROMPT);
 	}
 	
 	private void displayWelcomeMessage() {
@@ -139,6 +140,7 @@ public class UI implements IUI {
 		}
 		StringBuilder shortTaskList = new StringBuilder();
 		
+		shortTaskList.append(FORMATTING_NEWLINE);
 		shortTaskList.append(FORMATTING_HEADER_BORDER);
 		shortTaskList.append(FORMATTING_HEADERS);
 		shortTaskList.append(FORMATTING_HEADER_BORDER);
@@ -158,7 +160,7 @@ public class UI implements IUI {
 			} catch (Exception e) {
 				
 			}
-			shortTaskList.append("-------------------------------------------------------------------\n");
+			shortTaskList.append(FORMATTING_HEADER_BORDER);
 		}
 		
 
