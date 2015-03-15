@@ -8,6 +8,14 @@ import java.util.Scanner;
 
 public class UI implements IUI {
 	
+	private static final String FORMATTING_WHITESPACE = " 	";
+
+	private static final String FORMATTING_NEWLINE = "\n";
+
+	private static final String FORMATTING_HEADERS = "No. 	Task					Due\n";
+
+	private static final String FORMATTING_HEADER_BORDER = "===================================================================\n";
+
 	//-----------------//
 	// Class Variables //
 	//-----------------//
@@ -19,7 +27,7 @@ public class UI implements IUI {
 	private String userInput;
 	
 	private static final String MESSAGE_PROMPT = "command: ";
-	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!\n";
 	private static final String USER_INPUT_EXIT = "exit";
 	private static final String INPUT_FILE_NAME = "input.json";
 
@@ -80,11 +88,11 @@ public class UI implements IUI {
 	// Display Methods //
 	//-----------------//
 	
-	public void promptUserForCommand() {
+	private void promptUserForCommand() {
 		displayMessage(MESSAGE_PROMPT);
 	}
 	
-	public void displayWelcomeMessage() {
+	private void displayWelcomeMessage() {
 		displayMessage(MESSAGE_WELCOME);
 	}
 	
@@ -96,14 +104,26 @@ public class UI implements IUI {
 		}
 	}
 	
-	public void displayMessage(String message, Object... args) {
+	private void displayMessage(String message, Object... args) {
 		System.out.println(String.format(message, args));
 	}
 	
-	public void displayCurrentTaskList(TaskList taskList) {
+	private void displayCurrentTaskList(TaskList taskList) {
 		displayMessage(buildShortTaskList(taskList));
 	}
 	
+	//----------------------//
+	// Task List Formatting //
+	//----------------------//
+	
+	private String padSpaces(String strToBePadded) {
+		StringBuilder resultString = new StringBuilder();
+		resultString.append(strToBePadded);
+		for (int i = 0; i < 40 - strToBePadded.length(); i++) {
+			resultString.append(" ");
+	    }
+		return resultString.toString();
+	}
 	
 	/*
 	 * @return a displayable task list built from 
@@ -111,11 +131,15 @@ public class UI implements IUI {
 	 * 
 	 * */
 	
-	public String buildShortTaskList(TaskList taskList) {
+	private String buildShortTaskList(TaskList taskList) {
 		if (taskList == null) {
 			return "";
 		}
 		StringBuilder shortTaskList = new StringBuilder();
+		
+		shortTaskList.append(FORMATTING_HEADER_BORDER);
+		shortTaskList.append(FORMATTING_HEADERS);
+		shortTaskList.append(FORMATTING_HEADER_BORDER);
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			try {
@@ -123,17 +147,19 @@ public class UI implements IUI {
 				
 				int currentTaskIndex = i + LIST_NUMBER_OFFSET;
 				shortTaskList.append(currentTaskIndex);
-				shortTaskList.append(". ");
-				shortTaskList.append(currentTask.getName());
+				shortTaskList.append(FORMATTING_WHITESPACE);
+				shortTaskList.append(padSpaces(currentTask.getName()));
 				if (!currentTask.isFloatingTask()) {
-					shortTaskList.append(" ");
 					shortTaskList.append(currentTask.getDueDate());
 				}
-				shortTaskList.append("\n");
+				shortTaskList.append(FORMATTING_NEWLINE);
 			} catch (Exception e) {
 				
 			}
+			shortTaskList.append("-------------------------------------------------------------------\n");
 		}
+		
+
 		
 		return shortTaskList.toString();
 	}
