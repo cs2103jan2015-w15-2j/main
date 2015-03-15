@@ -23,6 +23,7 @@ public class UI implements IUI {
 	Scanner scanner;
 	
 	Logic logic;
+	Parser parser;
 	
 	private String userInput;
 	
@@ -73,7 +74,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void listenForCommandUntilExit() {
-		Parser parser = new Parser();
+		parser = new Parser();
 		String userInput = getUserInput();
 		while (!shouldExit(userInput)) {
 			displayFeedback(parser.parseInput(userInput, logic));

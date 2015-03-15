@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
-  associations="true" dependencies="false" nesting-relationships="true">  
+<class-diagram version="1.1.8" icons="true" automaticImage="JPEG" always-add-relationships="false" 
+  generalizations="true" realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
   <class id="1" language="java" name="com.nexus.simplify.Main" project="CS2103-NEXUS" 
     file="/CS2103-NEXUS/src/com/nexus/simplify/Main.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="180" width="195" x="45" y="113"/>    
+    <position height="-1" width="-1" x="139" y="289"/>    
     <background red="255" green="250" blue="129"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -13,8 +13,8 @@
   </class>  
   <class id="2" language="java" name="com.nexus.simplify.Logic" project="CS2103-NEXUS" 
     file="/CS2103-NEXUS/src/com/nexus/simplify/Logic.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="691" y="187"/>    
-    <background red="251" green="246" blue="127"/>    
+    <position height="-1" width="-1" x="588" y="125"/>    
+    <background red="181" green="225" blue="174"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="false"/>      
@@ -23,8 +23,8 @@
   </class>  
   <class id="3" language="java" name="com.nexus.simplify.UI" project="CS2103-NEXUS" 
     file="/CS2103-NEXUS/src/com/nexus/simplify/UI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="363" y="234"/>    
-    <background red="255" green="250" blue="129"/>    
+    <position height="-1" width="-1" x="298" y="141"/>    
+    <background red="154" green="206" blue="223"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false" static="false"/>      
@@ -33,36 +33,69 @@
   </class>  
   <class id="4" language="java" name="com.nexus.simplify.Database" project="CS2103-NEXUS" 
     file="/CS2103-NEXUS/src/com/nexus/simplify/Database.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="684" y="364"/>    
-    <background red="255" green="250" blue="129"/>    
+    <position height="-1" width="-1" x="626" y="282"/>    
+    <background red="251" green="182" blue="209"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="false" static="true"/>      
       <operations public="true" package="true" protected="true" private="false" static="true"/>    
     </display>  
   </class>  
-  <association id="5">    
+  <class id="5" language="java" name="com.nexus.simplify.Parser" project="CS2103-NEXUS" 
+    file="/CS2103-NEXUS/src/com/nexus/simplify/Parser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="371" y="299"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="false" static="true"/>      
+      <operations public="true" package="true" protected="true" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="6">    
+    <end type="SOURCE" refId="2" navigable="false" variant="ASSOCIATION">      
+      <attribute id="7" name="database">        
+        <position height="0" width="0" x="59" y="85"/>      
+      </attribute>      
+      <multiplicity id="8" minimum="0" maximum="1">        
+        <position height="0" width="0" x="59" y="85"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="9">    
+    <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
+      <attribute id="10" name="parser"/>      
+      <multiplicity id="11" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true" variant="ASSOCIATION"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="12">    
     <end type="SOURCE" refId="1" navigable="false" variant="ASSOCIATION">      
-      <attribute id="6" name="ui"/>      
-      <multiplicity id="7" minimum="0" maximum="1"/>    
+      <attribute id="13" name="ui">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="8">    
+  <dependency id="15">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <association id="16">    
     <end type="SOURCE" refId="3" navigable="false" variant="ASSOCIATION">      
-      <attribute id="9" name="logic"/>      
-      <multiplicity id="10" minimum="0" maximum="1"/>    
+      <attribute id="17" name="logic">        
+        <position height="0" width="0" x="-2" y="48"/>      
+      </attribute>      
+      <multiplicity id="18" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-2" y="48"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true" variant="ASSOCIATION"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="11">    
-    <end type="SOURCE" refId="2" navigable="false" variant="ASSOCIATION">      
-      <attribute id="12" name="database"/>      
-      <multiplicity id="13" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true" variant="ASSOCIATION"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
