@@ -77,6 +77,7 @@ public class UI implements IUI {
 		String userInput = getUserInput();
 		while (!shouldExit(userInput)) {
 			displayFeedback(parser.parseInput(userInput, logic));
+			displayMessage(FORMATTING_NEWLINE);
 			userInput = getUserInput();
 		}		
 	}
@@ -90,7 +91,7 @@ public class UI implements IUI {
 	//-----------------//
 	
 	private void promptUserForCommand() {
-		displayMessage(MESSAGE_PROMPT);
+		System.out.print(MESSAGE_PROMPT);
 	}
 	
 	private void displayWelcomeMessage() {
