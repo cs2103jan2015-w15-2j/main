@@ -139,6 +139,7 @@ public class UI implements IUI {
 		}
 		StringBuilder shortTaskList = new StringBuilder();
 		
+		shortTaskList.append(FORMATTING_NEWLINE);
 		shortTaskList.append(FORMATTING_HEADER_BORDER);
 		shortTaskList.append(FORMATTING_HEADERS);
 		shortTaskList.append(FORMATTING_HEADER_BORDER);
@@ -158,7 +159,7 @@ public class UI implements IUI {
 			} catch (Exception e) {
 				
 			}
-			shortTaskList.append("-------------------------------------------------------------------\n");
+			shortTaskList.append(FORMATTING_HEADER_BORDER);
 		}
 		
 
