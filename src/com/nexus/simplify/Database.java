@@ -124,7 +124,7 @@ public class Database implements IDatabase {
 		return dueDate;
 	}
 	
-	public ArrayList<String> convertToStore(TaskList tasklist) {
+	private ArrayList<String> convertToStore(TaskList tasklist) {
 		JSONObject jsonTask;
 		tempList.clear();
 		if (!tasklist.isEmpty()) {

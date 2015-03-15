@@ -96,7 +96,7 @@ public class UI implements IUI {
 		}
 	}
 	
-	public void displayMessage(String message, Object... args) {
+	private void displayMessage(String message, Object... args) {
 		System.out.println(String.format(message, args));
 	}
 	
