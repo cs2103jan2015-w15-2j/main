@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class UI implements IUI {
 	
+
 	private static final String FORMATTING_SINGLE_WHITESPACE = " ";
 	private static final String FORMATTING_THREE_WHITESPACES = " 	";
 	private static final String FORMATTING_NEWLINE = "\n";
@@ -22,7 +23,7 @@ public class UI implements IUI {
 	private static final String INPUT_FILE_NAME = "input.json";
 	
 	private static final int LIST_NUMBER_OFFSET = 1;
-	
+	private static final int HEADER_TASKNAME_TO_DUEDATE_OFFSET = 40;
 
 	//-----------------//
 	// Class Variables //
@@ -123,7 +124,7 @@ public class UI implements IUI {
 	private String padSpaces(String strToBePadded) {
 		StringBuilder resultString = new StringBuilder();
 		resultString.append(strToBePadded);
-		for (int i = 0; i < 40 - strToBePadded.length(); i++) {
+		for (int i = 0; i < HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length(); i++) {
 			resultString.append(FORMATTING_SINGLE_WHITESPACE);
 	    }
 		return resultString.toString();
@@ -140,6 +141,7 @@ public class UI implements IUI {
 		taskList.append(currentTaskIndex);
 		taskList.append(FORMATTING_THREE_WHITESPACES);
 		taskList.append(padSpaces(currentTask.getName()));
+		
 		if (!currentTask.isFloatingTask()) {
 			taskList.append(currentTask.getDueDate());
 		} else {
@@ -159,23 +161,25 @@ public class UI implements IUI {
 	private String buildShortTaskList(TaskList taskList) {
 		if (taskList == null) {
 			return "";
-		}
-		StringBuilder shortTaskList = new StringBuilder();
-		
-		buildDisplayTLHeader(shortTaskList);
-		
-		for (int i = 0; i < taskList.size(); i++) {
-			try {
-				Task currentTask = taskList.get(i);
-				int currentTaskIndex = i + LIST_NUMBER_OFFSET;
-				
-				addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
-			} catch (Exception e) {
-				
+		} else {
+			StringBuilder shortTaskList = new StringBuilder();
+			
+			buildDisplayTLHeader(shortTaskList);
+			
+			for (int i = 0; i < taskList.size(); i++) {
+				try {
+					Task currentTask = taskList.get(i);
+					int currentTaskIndex = i + LIST_NUMBER_OFFSET;
+					
+					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					System.out.println("Index out of bounds: " + e.getMessage());
+				}
+				shortTaskList.append(FORMATTING_TABLE_DIVIDER);
 			}
-			shortTaskList.append(FORMATTING_TABLE_DIVIDER);
+		
+			return shortTaskList.toString();
 		}
-	
-		return shortTaskList.toString();
+
 	}
 }
