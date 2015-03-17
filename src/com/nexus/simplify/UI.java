@@ -8,11 +8,21 @@ import java.util.Scanner;
 
 public class UI implements IUI {
 	
-	private static final String FORMATTING_WHITESPACE = " 	";
+	private static final String FORMATTING_SINGLE_WHITESPACE = " ";
+	private static final String FORMATTING_THREE_WHITESPACES = " 	";
 	private static final String FORMATTING_NEWLINE = "\n";
-	private static final String FORMATTING_HEADERS = "No. 	Task					Due\n";
-	private static final String FORMATTING_HEADER_BORDER = "===================================================================\n";
-	private static final String FORMATTING_TABLE_BORDER = "-------------------------------------------------------------------\n";
+	private static final String FORMATTING_HEADERS = "No.  	Task					Due                 WorkLoad    \n";
+	private static final String FORMATTING_HEADER_BORDER = "==============================================================================\n";
+	private static final String FORMATTING_TABLE_DIVIDER = "------------------------------------------------------------------------------\n";
+	private static final String FORMATTING_DUE_DATE_BUFFER = "                 ";
+	
+	private static final String MESSAGE_PROMPT = "command: ";
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!\n";
+	private static final String USER_INPUT_EXIT = "exit";
+	private static final String INPUT_FILE_NAME = "input.json";
+	
+	private static final int LIST_NUMBER_OFFSET = 1;
+	
 
 	//-----------------//
 	// Class Variables //
@@ -24,13 +34,6 @@ public class UI implements IUI {
 	Parser parser;
 	
 	private String userInput;
-	
-	private static final String MESSAGE_PROMPT = "command: ";
-	private static final String MESSAGE_WELCOME = "Welcome to Simplify!\n";
-	private static final String USER_INPUT_EXIT = "exit";
-	private static final String INPUT_FILE_NAME = "input.json";
-
-	private static final int LIST_NUMBER_OFFSET = 1;
 	
 	//-------------//
 	// Constructor //
@@ -121,48 +124,58 @@ public class UI implements IUI {
 		StringBuilder resultString = new StringBuilder();
 		resultString.append(strToBePadded);
 		for (int i = 0; i < 40 - strToBePadded.length(); i++) {
-			resultString.append(" ");
+			resultString.append(FORMATTING_SINGLE_WHITESPACE);
 	    }
 		return resultString.toString();
 	}
 	
+	private void buildDisplayTLHeader(StringBuilder taskList) {
+		taskList.append(FORMATTING_NEWLINE);
+		taskList.append(FORMATTING_HEADER_BORDER);
+		taskList.append(FORMATTING_HEADERS);
+		taskList.append(FORMATTING_HEADER_BORDER);
+	}
+	
+	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, Task currentTask) {
+		taskList.append(currentTaskIndex);
+		taskList.append(FORMATTING_THREE_WHITESPACES);
+		taskList.append(padSpaces(currentTask.getName()));
+		if (!currentTask.isFloatingTask()) {
+			taskList.append(currentTask.getDueDate());
+		} else {
+			taskList.append(FORMATTING_DUE_DATE_BUFFER);
+		}
+		
+		taskList.append(FORMATTING_THREE_WHITESPACES);
+		taskList.append(currentTask.getWorkload());
+		taskList.append(FORMATTING_NEWLINE);
+	}
+	
 	/*
-	 * @return a displayable task list built from 
+	 * @return a pretty-formatted task list built from 
 	 * @param taskList
 	 * 
 	 * */
-	
 	private String buildShortTaskList(TaskList taskList) {
 		if (taskList == null) {
 			return "";
 		}
 		StringBuilder shortTaskList = new StringBuilder();
 		
-		shortTaskList.append(FORMATTING_NEWLINE);
-		shortTaskList.append(FORMATTING_HEADER_BORDER);
-		shortTaskList.append(FORMATTING_HEADERS);
-		shortTaskList.append(FORMATTING_HEADER_BORDER);
+		buildDisplayTLHeader(shortTaskList);
 		
 		for (int i = 0; i < taskList.size(); i++) {
 			try {
 				Task currentTask = taskList.get(i);
-				
 				int currentTaskIndex = i + LIST_NUMBER_OFFSET;
-				shortTaskList.append(currentTaskIndex);
-				shortTaskList.append(FORMATTING_WHITESPACE);
-				shortTaskList.append(padSpaces(currentTask.getName()));
-				if (!currentTask.isFloatingTask()) {
-					shortTaskList.append(currentTask.getDueDate());
-				}
-				shortTaskList.append(FORMATTING_NEWLINE);
+				
+				addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
 			} catch (Exception e) {
 				
 			}
-			shortTaskList.append(FORMATTING_TABLE_BORDER);
+			shortTaskList.append(FORMATTING_TABLE_DIVIDER);
 		}
-		
-
-		
+	
 		return shortTaskList.toString();
 	}
 }
