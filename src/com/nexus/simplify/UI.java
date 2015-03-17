@@ -9,12 +9,10 @@ import java.util.Scanner;
 public class UI implements IUI {
 	
 	private static final String FORMATTING_WHITESPACE = " 	";
-
 	private static final String FORMATTING_NEWLINE = "\n";
-
 	private static final String FORMATTING_HEADERS = "No. 	Task					Due\n";
-
 	private static final String FORMATTING_HEADER_BORDER = "===================================================================\n";
+	private static final String FORMATTING_TABLE_BORDER = "-------------------------------------------------------------------\n";
 
 	//-----------------//
 	// Class Variables //
@@ -160,7 +158,7 @@ public class UI implements IUI {
 			} catch (Exception e) {
 				
 			}
-			shortTaskList.append(FORMATTING_HEADER_BORDER);
+			shortTaskList.append(FORMATTING_TABLE_BORDER);
 		}
 		
 
