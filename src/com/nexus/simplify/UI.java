@@ -124,6 +124,7 @@ public class UI implements IUI {
 	private String padSpaces(String strToBePadded) {
 		StringBuilder resultString = new StringBuilder();
 		resultString.append(strToBePadded);
+		assert HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length() > 0;
 		for (int i = 0; i < HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length(); i++) {
 			resultString.append(FORMATTING_SINGLE_WHITESPACE);
 	    }
