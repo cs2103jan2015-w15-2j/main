@@ -21,7 +21,7 @@ public class Main {
 	}
 	
 	private int launchUI() {
-		ui = new UI();
+		ui = UI.getUiInstance();
 		ui.listenForCommandUntilExit();
 		return SYSTEM_EXIT_CODE;		
 	}

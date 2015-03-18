@@ -31,6 +31,8 @@ public class UI implements IUI {
 	
 	Scanner scanner;
 	
+	private static UI uiInstance;
+	
 	Logic logic;
 	Parser parser;
 	
@@ -40,9 +42,20 @@ public class UI implements IUI {
 	// Constructor //
 	//-------------//
 	
-	public UI() {
+	private UI() {
 		scanner = new Scanner(System.in);
 		run();
+	}
+	
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	public static UI getUiInstance() {
+		if (uiInstance == null) {
+			uiInstance = new UI();
+		}
+		return uiInstance;
 	}
 	
 	//------------------------//
