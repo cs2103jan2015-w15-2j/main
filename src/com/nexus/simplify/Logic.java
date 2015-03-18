@@ -1,6 +1,7 @@
 package com.nexus.simplify;
 
 import com.nexus.simplify.OperationType;
+import java.io.*;
 
 public class Logic implements ILogic {
 	
@@ -26,14 +27,19 @@ public class Logic implements ILogic {
 	}
 	
 	public CommandResult initialise(String fileName) {
-		database = new Database(fileName);
-		tempList = database.readFromFile();
-		if(tempList == null){
+		try {
+			database = new Database(fileName);
+			tempList = database.readFromFile();
+			if(tempList == null){
+				return null;
+			} else {
+				String feedback = null;
+				CommandResult result = new CommandResult(tempList, feedback);
+				return result;
+			}
+		} catch (IOException ioe){
+			// return error message
 			return null;
-		} else {
-			String feedback = null;
-			CommandResult result = new CommandResult(tempList, feedback);
-			return result;
 		}
 	}
 }
