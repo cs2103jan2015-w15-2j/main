@@ -201,7 +201,7 @@ public class UI implements IUI {
 					
 					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println("Index out of bounds: " + e.getMessage());
+					System.err.println("Index out of bounds: " + e.getMessage());
 				}
 				shortTaskList.append(FORMATTING_TABLE_DIVIDER);
 			}
