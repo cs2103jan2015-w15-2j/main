@@ -34,15 +34,12 @@ public class Database implements IDatabase {
 	// Initialization //
 	//----------------//
 	
-	private void setUpFile(String fileName) {
+	private void setUpFile(String fileName) throws IOException {
 		file = new File(fileName);
 		if (file.exists()) {
 			getDataFromFile();
 		} else {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-			}
+			file.createNewFile();
 		}
 	}
 	
