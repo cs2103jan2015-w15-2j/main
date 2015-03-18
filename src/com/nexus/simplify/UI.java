@@ -103,9 +103,12 @@ public class UI implements IUI {
 	
 	@Override
 	public void displayFeedback(CommandResult result) {
-		displayCurrentTaskList(result.getModifiedTaskList());
-		if (result.getResultantFeedback() != null) {
-			displayMessage(result.getResultantFeedback());
+		TaskList modifiedTaskList = result.getModifiedTaskList();
+		displayCurrentTaskList(modifiedTaskList);
+		
+		String resultantFeedback = result.getResultantFeedback();
+		if (resultantFeedback != null) {
+			displayMessage(resultantFeedback);
 		}
 	}
 	
@@ -124,7 +127,7 @@ public class UI implements IUI {
 	private String padSpaces(String strToBePadded) {
 		StringBuilder resultString = new StringBuilder();
 		resultString.append(strToBePadded);
-		assert HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length() > 0;
+		assert HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length() >= 0;
 		for (int i = 0; i < HEADER_TASKNAME_TO_DUEDATE_OFFSET - strToBePadded.length(); i++) {
 			resultString.append(FORMATTING_SINGLE_WHITESPACE);
 	    }
@@ -141,16 +144,26 @@ public class UI implements IUI {
 	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, Task currentTask) {
 		taskList.append(currentTaskIndex);
 		taskList.append(FORMATTING_THREE_WHITESPACES);
-		taskList.append(padSpaces(currentTask.getName()));
+		
+		String taskName = currentTask.getName();
+		assert taskName instanceof String;
+		
+		String taskDueDate = currentTask.getDueDate();
+		assert taskDueDate instanceof String;
+		
+		Integer taskWorkload = currentTask.getWorkload();
+		assert taskWorkload instanceof Integer;
+		
+		taskList.append(padSpaces(taskName));
 		
 		if (!currentTask.isFloatingTask()) {
-			taskList.append(currentTask.getDueDate());
+			taskList.append(taskDueDate);
 		} else {
 			taskList.append(FORMATTING_DUE_DATE_BUFFER);
 		}
 		
 		taskList.append(FORMATTING_THREE_WHITESPACES);
-		taskList.append(currentTask.getWorkload());
+		taskList.append(taskWorkload.intValue());
 		taskList.append(FORMATTING_NEWLINE);
 	}
 	
@@ -170,6 +183,7 @@ public class UI implements IUI {
 			for (int i = 0; i < taskList.size(); i++) {
 				try {
 					Task currentTask = taskList.get(i);
+					assert currentTask instanceof Task;
 					int currentTaskIndex = i + LIST_NUMBER_OFFSET;
 					
 					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
