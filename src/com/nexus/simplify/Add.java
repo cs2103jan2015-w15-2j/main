@@ -10,6 +10,8 @@ public class Add {
 		String name = parameter[ParameterType.CURRENT_NAME_POS];
 		String deadline = parameter[ParameterType.NEW_DEADLINE_POS];
 		String workload = parameter[ParameterType.NEW_WORKLOAD_POS];
+		assert isNumeric(workload);		// assertion for tut8
+		
 		String feedback;
 		if(deadline == null && workload == null){
 			taskToAdd = new Task(name);
@@ -25,5 +27,9 @@ public class Add {
 		
 		CommandResult result = new CommandResult(tempList, feedback);
 		return result;
+	}
+	
+	private static boolean isNumeric(String str){
+	  return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
 	}
 }
