@@ -26,7 +26,7 @@ public class Database implements IDatabase {
 	// Constructor //
 	//-------------//
 	
-	public Database(String fileName) {
+	public Database(String fileName) throws IOException {
 		setUpFile(fileName);
 	}
 	
