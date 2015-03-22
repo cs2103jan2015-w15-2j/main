@@ -7,6 +7,8 @@ package com.nexus.simplify;
 
 import java.io.IOException;
 
+import com.nexus.simplify.UI.view.BillboardOverviewController;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -45,15 +47,19 @@ public class MainApp extends Application {
 		}	
 	}
 	
-	public void showInterfaceOverview() {
+	public void showBillboardOverview() {
 		try {
 			// loads main interface from FXML file.
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("UI/view/InterfaceOverview.fxml"));
-			AnchorPane interfaceOverview = (AnchorPane) loader.load();
+			AnchorPane billboardOverview = (AnchorPane) loader.load();
 			
 			// sets main interface onto the center of root layout.
-			rootLayout.setCenter(interfaceOverview);
+			rootLayout.setCenter(billboardOverview);
+			
+			// gives controllers access to main app.
+			BillboardOverviewController bbController = loader.getController();
+			bbController.initBillboard(this, listPackage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -74,7 +80,7 @@ public class MainApp extends Application {
 		
 		initRootLayout();
 		
-		showInterfaceOverview();
+		showBillboardOverview();
 	}
 	
 	//---------------------//

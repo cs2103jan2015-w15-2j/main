@@ -1,4 +1,4 @@
-package com.nexus.simplify.UI.controller;
+package com.nexus.simplify.UI.view;
 
 import com.nexus.simplify.MainApp;
 
@@ -12,7 +12,7 @@ import javafx.scene.control.TableView;
  * @author Toh Jian Feng
  * */
 
-public class BillboardController {
+public class BillboardOverviewController {
 	//------------------//
 	// Class Attributes //
 	//------------------//
@@ -72,7 +72,7 @@ public class BillboardController {
 	// Constructor //
 	//-------------//
 	
-	public BillboardController() {
+	public BillboardOverviewController() {
 		
 	}
 	
@@ -80,8 +80,8 @@ public class BillboardController {
 	// Initialization //
 	//----------------//
 	
-	private void initBillboard(MainApp mainApp, TaskListPackage listPackage) {
-		setMainApp();
+	public void initBillboard(MainApp mainApp, TaskListPackage listPackage) {
+		setMainApp(mainApp);
 		
 		initDeadlineTaskTable();
 		initTimedTaskTable();
@@ -111,7 +111,7 @@ public class BillboardController {
 		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
 	}
 	
-	public void setMainApp(MainApp mainApp) {
+	private void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;		
 	}
 
