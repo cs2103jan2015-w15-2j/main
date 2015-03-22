@@ -68,6 +68,10 @@ public class BillboardOverviewController {
 	@FXML
 	private TableColumn<FloatingTask, Integer> floatingTaskWorkloadColumn;
 	
+	// Feedback listener
+	@FXML
+	private Label feedbackLabel;
+	
 	//-------------//
 	// Constructor //
 	//-------------//
