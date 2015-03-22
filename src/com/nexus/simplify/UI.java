@@ -6,6 +6,11 @@ package com.nexus.simplify;
 
 import java.util.Scanner;
 
+import com.nexus.simplify.logic.CommandResult;
+import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.Task;
+import com.nexus.simplify.logic.TaskList;
+
 public class UI implements IUI {
 	
 
@@ -201,7 +206,7 @@ public class UI implements IUI {
 					
 					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
 				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println("Index out of bounds: " + e.getMessage());
+					System.err.println("Index out of bounds: " + e.getMessage());
 				}
 				shortTaskList.append(FORMATTING_TABLE_DIVIDER);
 			}

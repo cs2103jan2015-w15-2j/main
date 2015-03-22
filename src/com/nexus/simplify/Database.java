@@ -12,6 +12,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.*;
 
+import com.nexus.simplify.logic.Task;
+import com.nexus.simplify.logic.TaskList;
+
 public class Database implements IDatabase {
 	
 	//------------------//
