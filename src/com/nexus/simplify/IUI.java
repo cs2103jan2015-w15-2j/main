@@ -1,5 +1,7 @@
 package com.nexus.simplify;
 
+import com.nexus.simplify.logic.CommandResult;
+
 public interface IUI {
 	public void run();
 	

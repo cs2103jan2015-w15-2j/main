@@ -6,6 +6,11 @@ package com.nexus.simplify;
 
 import java.util.Scanner;
 
+import com.nexus.simplify.logic.CommandResult;
+import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.Task;
+import com.nexus.simplify.logic.TaskList;
+
 public class UI implements IUI {
 	
 
