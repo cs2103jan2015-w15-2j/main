@@ -1,4 +1,6 @@
-package com.nexus.simplify;
+package com.nexus.simplify.UI;
+
+import com.nexus.simplify.CommandResult;
 
 public interface IUI {
 	public void run();
