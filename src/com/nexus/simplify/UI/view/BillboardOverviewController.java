@@ -4,8 +4,11 @@ import com.nexus.simplify.MainApp;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 /**
  * 
@@ -17,6 +20,8 @@ public class BillboardOverviewController {
 	// Class Attributes //
 	//------------------//
 	
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+
 	// reference to MainApp
 	MainApp mainApp;
 	
@@ -70,7 +75,10 @@ public class BillboardOverviewController {
 	
 	// Feedback listener
 	@FXML
-	private Label feedbackLabel;
+	private TextArea feedbackDisplay;
+	
+	@FXML
+	private TextField userInputField;
 	
 	//-------------//
 	// Constructor //
@@ -92,6 +100,17 @@ public class BillboardOverviewController {
 		initFloatingTaskTable();
 		
 		fillTablesWithData(listPackage);
+		
+		feedbackDisplay.setText(MESSAGE_WELCOME);
+		
+		userInputField.setOnAction((event) -> {
+			String feedback = processInputAndReceiveFeedback(mainApp.getLogic());
+			feedbackDisplay.setText(feedback);
+		});
+		
+		feedbackDisplay.textProperty().addListener((observable, oldvalue, newvalue) -> {
+			
+		});
 	}
 
 	private void initFloatingTaskTable() {
@@ -128,4 +147,14 @@ public class BillboardOverviewController {
 		timedTaskTable.setItems(timedTaskList);
 		floatingTaskTable.setItems(floatingTaskList);
 	}
+	
+	//-----------------------//
+	// Processing User Input //
+	//-----------------------//
+	
+	private String processInputAndReceiveFeedback(Logic logic) {
+		String resultantFeedback = logic.processInput();
+		return resultantFeedback;
+	}
+	
 }
