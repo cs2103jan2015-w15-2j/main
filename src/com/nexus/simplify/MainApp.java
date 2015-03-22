@@ -29,9 +29,10 @@ public class MainApp extends Application {
 	// Interface Initialization //
 	//--------------------------//
 	
-	private void initRootLayout(FXMLLoader loader) {
+	private void initRootLayout() {
 		try {
 			// load root layout from FXML file.
+			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("UI/view/RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
 			
@@ -44,9 +45,10 @@ public class MainApp extends Application {
 		}	
 	}
 	
-	public void showInterfaceOverview(FXMLLoader loader) {
+	public void showInterfaceOverview() {
 		try {
 			// loads main interface from FXML file.
+			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("UI/view/InterfaceOverview.fxml"));
 			AnchorPane interfaceOverview = (AnchorPane) loader.load();
 			
@@ -66,15 +68,21 @@ public class MainApp extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		FXMLLoader loader = new FXMLLoader();
-		
+	public void start(Stage primaryStage) throws Exception {		
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Simplify");
 		
-		initRootLayout(loader);
+		initRootLayout();
 		
-		showInterfaceOverview(loader);
+		showInterfaceOverview();
+	}
+	
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	public Stage getPrimaryStage() {
+		return primaryStage;
 	}
 
 }
