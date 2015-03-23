@@ -13,9 +13,12 @@ public class ObservableGenericTL {
 	// Class Attributes //
 	//------------------//
 	
+	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();;
+	
 	private int numOfDisplayItems = 5;
-	private GenericTaskList tempTaskList;
-	private ObservableList<GenericTask> observableGeneric;
+	private String name;
+	private int workload;
+	private String id;
 	
 	//-------------//
 	// Constructor //
@@ -23,9 +26,11 @@ public class ObservableGenericTL {
 	
 	public ObservableGenericTL(GenericTaskList taskList) {
 		for (int i = 0; i < numOfDiplayItems; i++) {
-			tempTaskList.add(taskList.get(i));
+			name = taskList.get(i).getName();
+			workload = taskList.get(i).getWorkload();
+			id = taskList.get(i).getId();
+			observableGeneric.add(new ObservableGenericTask(name, workload, id));
 		}
-		observableGeneric = FXCollections.observableList(tempTaskList);
 	}
 	
 	//---------//

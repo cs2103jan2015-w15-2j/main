@@ -48,4 +48,8 @@ public class DeadlineTask extends GenericTask {
 		DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yyyy");
 		return format.print(this.dueDate);
 	}
+	
+	public DateTime getDeadlineDT() {
+		return dueDate;
+	}
 }
