@@ -2,7 +2,7 @@
  * @author Tan Qian Yi
  * */
 
-package com.nexus.simplify;
+package Database;
 
 import java.util.*;
 import java.io.*;
