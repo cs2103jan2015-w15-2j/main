@@ -8,4 +8,12 @@ public class UserCommand {
 		this.operation = operation;
 		this.parameterType = parameterType;
 	}
+	
+	public OperationType getOperationType(){
+		return operation;
+	}
+	
+	public int getParameterType(){
+		return parameterType;
+	}
 }

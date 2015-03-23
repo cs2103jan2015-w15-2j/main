@@ -5,55 +5,30 @@ import com.nexus.simplify.usercommand.*;
 
 public class Command {
 	
-	final OperationType operation;
-	
-	final String[] parameter;
-
-	/**
-	 * Constructor. Takes in a string array containing all parameters
-	 * 
-	 * @param parameter
-	 */
-	public Command(OperationType operation, String[] parameter) {
-		this.operation = operation;
-		this.parameter = parameter;
-	}
-
-	public OperationType getOperation() {
-		return operation;		
-	}
-	
-	public String[] getParameter() {
-		return parameter;
-	}
+	public Command() {}
 	
 	public String executeCommand(String userInput){
-		UserCommand command = parseInput(userInput)
-	}
-	public CommandResult executeSpecificCommand(OperationType operation, String[] parameter){
-		switch(operation){
-		
-			case ADD: 
-				Add addOperation = new Add();
-				return addOperation.execute(parameter);
-				
+		Parser parser = new Parser();
+		UserCommand command = parser.parseInput(userInput);
+		switch(command.getOperationType()){
+			case ADD:
+				Add addOp = new Add();
+				return addOp.execute(command);
 			case DISPLAY:
-				Display displayOperation = new Display();
-				return displayOperation.execute();
-				
+				Display displayOp = new Display();
+				return displayOp.execute(command);
 			case MODIFY:
-				Modify modifyOperation = new Modify();
-				return modifyOperation.execute(parameter);
-				
+				Modify modifyOp = new Modify();
+				return modifyOp.execute(command);
 			case DELETE:
-				Delete deleteOperation = new Delete();
-				return deleteOperation.execute(parameter);
-				
-		default:
-			// need to return invalid operation here?
-			return new CommandResult(Logic.getTempList(), "Invalid Command");
-				
+				Delete deleteOp = new Delete();
+				return deleteOp.execute(command);
+			case DONE:
+				Done doneOp = new Done();
+				return doneOp.execute(command);
+			default INVALID:
+				Invalid invalidOp = new Invalid();
+				return invalidOp.execute();
 		}
-	}
-		
+	}		
 }
