@@ -121,7 +121,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void displayFeedback(CommandResult result) {
-		TaskList modifiedTaskList = result.getModifiedTaskList();
+		GenericTaskList modifiedTaskList = result.getModifiedTaskList();
 		displayCurrentTaskList(modifiedTaskList);
 		
 		String resultantFeedback = result.getResultantFeedback();
@@ -134,7 +134,7 @@ public class UI implements IUI {
 		System.out.println(String.format(message, args));
 	}
 	
-	private void displayCurrentTaskList(TaskList taskList) {
+	private void displayCurrentTaskList(GenericTaskList taskList) {
 		displayMessage(buildShortTaskList(taskList));
 	}
 	
@@ -159,7 +159,7 @@ public class UI implements IUI {
 		taskList.append(FORMATTING_HEADER_BORDER);
 	}
 	
-	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, Task currentTask) {
+	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, GenericTask currentTask) {
 		taskList.append(currentTaskIndex);
 		taskList.append(FORMATTING_THREE_WHITESPACES);
 		
@@ -190,7 +190,7 @@ public class UI implements IUI {
 	 * @param taskList
 	 * 
 	 * */
-	private String buildShortTaskList(TaskList taskList) {
+	private String buildShortTaskList(GenericTaskList taskList) {
 		if (taskList == null) {
 			return "";
 		} else {
@@ -200,8 +200,8 @@ public class UI implements IUI {
 			
 			for (int i = 0; i < taskList.size(); i++) {
 				try {
-					Task currentTask = taskList.get(i);
-					assert currentTask instanceof Task;
+					GenericTask currentTask = taskList.get(i);
+					assert currentTask instanceof GenericTask;
 					int currentTaskIndex = i + LIST_NUMBER_OFFSET;
 					
 					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);

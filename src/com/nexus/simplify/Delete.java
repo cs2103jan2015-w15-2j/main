@@ -1,5 +1,6 @@
 package com.nexus.simplify;
 import com.nexus.simplify.ParameterType;
+import com.nexus.simplify.database.Database;
 
 public class Delete {
 	
@@ -10,7 +11,7 @@ public class Delete {
 	}
 	
 	public CommandResult execute(String[] parameter){
-		TaskList tempList = Logic.getTempList();
+		GenericTaskList tempList = Logic.getTempList();
 		Database database = Logic.getDatabase();
 		
 		if(isNumeric(parameter[0])) {
