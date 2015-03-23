@@ -23,9 +23,10 @@ public class MainApp extends Application {
 	//-----------------//
 	
 	private Stage primaryStage;
-	
-	// 
 	private BorderPane rootLayout;
+	
+	private Logic logic = new Logic();
+	private Database database = new Database();
 	
 	//--------------------------//
 	// Interface Initialization //
@@ -57,9 +58,10 @@ public class MainApp extends Application {
 			// sets main interface onto the center of root layout.
 			rootLayout.setCenter(billboardOverview);
 			
-			// gives controllers access to main app.
+			// gives the controller access to the main app.
 			BillboardOverviewController bbController = loader.getController();
-			bbController.initBillboard(this, listPackage);
+			bbController.setMainApp(this);
+			bbController.initBillboard(listPackage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,5 +92,12 @@ public class MainApp extends Application {
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
-
+	
+	public Logic getLogic() {
+		return logic;
+	}
+	
+	public Database getDatabase() {
+		return database;
+	}
 }
