@@ -1,8 +1,8 @@
 /*
  * @author Tan Qian Yi
- * */
+ */
 
-package Database;
+package com.nexus.simplify.database;
 
 import java.util.*;
 import java.io.*;
@@ -12,8 +12,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.*;
 
-import com.nexus.simplify.logic.Task;
-import com.nexus.simplify.logic.TaskList;
+import com.nexus.simplify.database.*;
+
+@SuppressWarnings("unused")
 
 public class Database implements IDatabase {
 	
@@ -23,8 +24,55 @@ public class Database implements IDatabase {
 	
 	private File file;
 	private ArrayList<String> tempList = new ArrayList<String>();
-	private TaskList taskList = new TaskList();
+	private GenericTaskList taskList = new GenericTaskList();
+	private TimedTaskList timedTaskList = new TimedTaskList();
+	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
 	
+	//---------------//
+	// API for Logic //
+	//---------------//
+	
+	public void addTimed(String name, int year, int month, int day, int hour, int minute, String workload) {
+		timedTaskList.add(new TimedTask(name, year, month, day, hour, minute, workload));
+	}
+	
+	public void addDeadline(String name, String deadline, String workload) {
+		deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
+	}
+	
+	public void addFloating(String name, String workload) {
+		taskList.add(new GenericTask(name, workload));
+	}
+	
+	public void delete(int index) {
+		taskList.delete(index);
+	}
+	
+	public void display(String option) {
+		
+	}
+	
+	// check if string is workload or name
+	public void modify(int index, String string) {
+		int integerValue = Integer.parseInt(string);
+		if (integerValue >= 5 || integerValue <= 1) {
+			taskList.get(index).setWorkload(integerValue);
+		} else {
+			taskList.get(index).setName(string);
+		}
+	}
+	
+	//------------//
+	// API for UI //
+	//------------//
+	
+	public ObservableAllTL displayALLObservable() {
+		ObservableGenericTL obsGeneric = new ObservableGenericTL(taskList);
+		ObservableTimedTL obsTimed = new ObservableTimedTL(timedTaskList);
+		ObservableDeadlineTL obsDeadline = new ObservableDeadlineTL(deadlineTaskList);
+		return new ObservableAllTL(obsGeneric, obsTimed, obsDeadline);
+	}
+
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -50,9 +98,9 @@ public class Database implements IDatabase {
 	// File Reading //
 	//--------------//
 	
-	public TaskList readFromFile() {
+	public GenericTaskList readFromFile() {
 		if (tempList.isEmpty()) {
-			return new TaskList();
+			return new GenericTaskList();
 		} else {
 			taskList = convertToTaskList(tempList);
 			return taskList;
@@ -76,7 +124,7 @@ public class Database implements IDatabase {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(TaskList inputTL) {
+	public void writeToFile(GenericTaskList inputTL) {
 		try {
 			String fileName = file.getName();
 			file.delete();
@@ -99,16 +147,16 @@ public class Database implements IDatabase {
 	// Variable Conversion //
 	//---------------------//
 	
-	private TaskList convertToTaskList(ArrayList<String> array) {
-		TaskList resultantTaskList = new TaskList();
-		Task task;
+	private GenericTaskList convertToTaskList(ArrayList<String> array) {
+		GenericTaskList resultantTaskList = new GenericTaskList();
+		GenericTask task;
 		JSONObject jsonTask;
 		
 		for (int i = 0; i < tempList.size(); i++) {
 			jsonTask = new JSONObject(tempList.get(i));
 			
-			task = new Task(jsonTask.getString("name"));
-			task.setDueDate(parseDueDate(jsonTask.getString("due date")));
+			task = new GenericTask(jsonTask.getString("name"));
+			// task.setDueDate(parseDueDate(jsonTask.getString("due date")));
 			task.setWorkload(jsonTask.getInt("workload"));
 			// task.setId(jsonTask.getString("id"));
 			
@@ -124,14 +172,14 @@ public class Database implements IDatabase {
 		return dueDate;
 	}
 	
-	private ArrayList<String> convertToStore(TaskList tasklist) {
+	private ArrayList<String> convertToStore(GenericTaskList tasklist) {
 		JSONObject jsonTask;
 		tempList.clear();
 		if (!tasklist.isEmpty()) {
 			for (int i = 0; i < tasklist.size(); i++) {
 				jsonTask = new JSONObject();
 				jsonTask.put("name", tasklist.get(i).getName());
-				jsonTask.put("due date", tasklist.get(i).getDueDate());
+				// jsonTask.put("due date", tasklist.get(i).getDueDate());
 				jsonTask.put("workload", tasklist.get(i).getWorkload());
 				// jsonTask.put("id", tasklist.get(i).getId());
 				tempList.add(jsonTask.toString());

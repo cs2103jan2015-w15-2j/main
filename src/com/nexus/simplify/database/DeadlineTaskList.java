@@ -1,7 +1,7 @@
 /*
  * @author Tan Qian Yi
  */
-package Database;
+package com.nexus.simplify.database;
 
 import java.util.*;
 

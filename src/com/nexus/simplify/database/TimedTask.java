@@ -2,7 +2,7 @@
  * @author Tan Qian Yi
  */
 
-package Database;
+package com.nexus.simplify.database;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.*;
