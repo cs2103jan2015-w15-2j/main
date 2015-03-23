@@ -1,10 +1,9 @@
-package com.nexus.simplify;
+package com.nexus.simplify.usercommand;
 
 public class ParameterType {
 	/**
 	 * An object to hold properties of parameter array passed from parser to logic
 	 */
-
 	final static int CURRENT_NAME_POS = 0;
 	final static int NEW_NAME_POS = 1;
 	final static int NEW_DEADLINE_POS = 2; 

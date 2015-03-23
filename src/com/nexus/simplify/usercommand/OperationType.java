@@ -1,4 +1,4 @@
-package com.nexus.simplify;
+package com.nexus.simplify.usercommand;
 
 
 public enum OperationType {
