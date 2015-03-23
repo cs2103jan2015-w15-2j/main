@@ -6,6 +6,8 @@ package com.nexus.simplify;
 
 import java.util.Scanner;
 
+import com.nexus.simplify.parser.api.Parser;
+
 public class UI implements IUI {
 	
 

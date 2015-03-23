@@ -1,4 +1,7 @@
-package com.nexus.simplify;
+package com.nexus.simplify.parser.api;
+
+import com.nexus.simplify.CommandResult;
+import com.nexus.simplify.Logic;
 
 public interface IParser {
 	/**
