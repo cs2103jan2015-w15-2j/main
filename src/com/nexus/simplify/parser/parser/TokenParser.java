@@ -43,7 +43,11 @@ public abstract class TokenParser {
 	}
 
 	protected boolean isTokenListEmpty(String[] tokenList) {
-		if (tokenList.length == 1 & tokenList[0].equals("")) {
+		// Case when all tokens are used up by the parsers
+		if (tokenList.length == 0) {
+			return true;
+		// Case when empty string "" is entered by user
+		} else if (tokenList.length == 1 & tokenList[0].equals("")) {
 			return true;
 		} else {
 			return false;

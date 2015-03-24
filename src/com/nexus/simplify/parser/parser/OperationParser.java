@@ -44,6 +44,7 @@ public class OperationParser extends TokenParser {
 					return indexParser.parseTokens(remainingTokens);
 
 				default : 
+					commandData.setOp(userOp);
 					return remainingTokens;
 				}
 			} catch (Exception e) {
