@@ -6,8 +6,9 @@ public class ParameterType {
 	 */
 	public final static int INDEX_POS = 0;
 	public final static int NEW_NAME_POS = 1;
-	public final static int NEW_DEADLINE_POS = 2; 
-	public final static int NEW_WORKLOAD_POS = 3;
-	public final static int NEW_FILELOCATION_POS = 4;
-	public final static int MAX_SIZE = 5; 
+	public final static int NEW_STARTTME_POS = 2;
+	public final static int NEW_ENDTIME_POS = 3;
+	public final static int NEW_WORKLOAD_POS = 4;
+	public final static int NEW_FILELOCATION_POS = 5;
+	public final static int MAX_SIZE = 6;
 }
