@@ -1,4 +1,6 @@
-package com.nexus.simplify;
+package com.nexus.simplify.UI;
+
+import com.nexus.simplify.CommandResult;
 
 import com.nexus.simplify.logic.CommandResult;
 
