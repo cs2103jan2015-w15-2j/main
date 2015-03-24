@@ -102,7 +102,6 @@ public class BillboardOverviewController {
 	@FXML
 	private TextField userInputField;
 	
-	private int currentGenericTLSize = 0;
 	private int currentDeadlineTLSize = 0;
 	private int currentTimedTLSize = 0;
 	
@@ -192,11 +191,11 @@ public class BillboardOverviewController {
 	private void updateTableIndexValues() {
 		genericTaskIndexColumn.setCellValueFactory(
 				column -> new ReadOnlyObjectWrapper<Integer>(
-						genericTaskTable.getItems().indexOf(column.getValue()) + currDeadLineTLSize + currTimedTLSize)
+						genericTaskTable.getItems().indexOf(column.getValue()) + currentDeadlineTLSize + currentTimedTLSize)
 						);
 		timedTaskIndexColumn.setCellValueFactory(
 				column -> new ReadOnlyObjectWrapper<Integer>(
-						timedTaskTable.getItems().indexOf(column.getValue()) + currDeadlineTLSize)
+						timedTaskTable.getItems().indexOf(column.getValue()) + currentDeadlineTLSize)
 						);
 		deadlineTaskIndexColumn.setCellValueFactory(
 				column -> new ReadOnlyObjectWrapper<Integer>(
@@ -279,16 +278,21 @@ public class BillboardOverviewController {
 		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTL();
 		ObservableList<GenericTask> genericTaskList = listPackage.getGenericTL();
 		
-		updateTableSizes(deadlineTaskList, timedTaskList, genericTaskList);
+		updateTableSizes(deadlineTaskList, timedTaskList);
 		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
 		genericTaskTable.setItems(genericTaskList);
 	}
 	
-	private void updateTableSizes(ObservableList<DeadlineTask> deadlineTaskList, ObservableList<TimedTask> timedTaskList, ObservableList<GenericTask> genericTaskList) {
-		genericTLSize = genericTaskList.size();
-		timedTLSize = timedTaskList.size();
-		deadlineTLSize = deadlineTaskList.size();
+	
+	/**
+	 * updates the refernce size values of the deadline-based task tables
+	 * and the timed task tables.
+	 * 
+	 * */
+	private void updateTableSizes(ObservableList<DeadlineTask> deadlineTaskList, ObservableList<TimedTask> timedTaskList) {
+		currentTimedTLSize = timedTaskList.size();
+		currentDeadlineTLSize = deadlineTaskList.size();
 	}
 }
