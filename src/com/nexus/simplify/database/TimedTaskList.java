@@ -5,6 +5,9 @@ package com.nexus.simplify.database;
 
 import java.util.*;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class TimedTaskList {
 
 	//------------------//
@@ -16,6 +19,10 @@ public class TimedTaskList {
 	private enum SORT_TYPE {
 		NAME, TIMED, WORKLOAD, ID
 	}
+
+	private int numOfDisplayItems = 5;
+	private ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
+	
 		
 	//-------------//
 	// Constructor //
@@ -72,6 +79,18 @@ public class TimedTaskList {
 		return taskArray.isEmpty();
 	}
 	
+	public SORT_TYPE getSortType(String keyword) {
+		if (keyword.equals("name")) {
+			return SORT_TYPE.NAME;
+		} else if (keyword.equals("deadline")) {
+			return SORT_TYPE.TIMED;
+		} else if (keyword.equals("workload")){
+			return SORT_TYPE.WORKLOAD;
+		} else {
+			return SORT_TYPE.ID;
+		}
+	}
+	
 	public void sortBy(SORT_TYPE type) {
 		switch(type) {
 			case NAME:
@@ -87,6 +106,13 @@ public class TimedTaskList {
 				Collections.sort(taskArray, taskIdComparator);
 				break;
 		}
+	}
+	
+	public ObservableList<TimedTask> getObservable() {
+		for (int i = 0; i < numOfDisplayItems; i++) {
+			observableTimed.add(get(i));
+		}
+		return observableTimed;
 	}
 	
 	//--------------------//

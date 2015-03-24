@@ -7,14 +7,16 @@ package com.nexus.simplify.database;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javafx.beans.property.*;
+
 public class GenericTask {
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
-	private String id;
-	private String name;
-	private int workload;
+	private final StringProperty id;
+	private final StringProperty name;
+	private final IntegerProperty workload;
 	
 	//--------------//
 	// Constructors //
@@ -22,15 +24,15 @@ public class GenericTask {
 	
 	// default constructor
 	public GenericTask(String name) {
-		this.name = name;
-		this.workload = 1;
-		this.id = setId();
+		this.name = new SimpleStringProperty(name);
+		this.workload = new SimpleIntegerProperty(1);
+		this.id = new SimpleStringProperty(setId());
 	}
 
 	public GenericTask(String name, String workload) {
-		this.name = name;
-		this.workload = Integer.parseInt(workload);
-		this.id = setId();
+		this.name = new SimpleStringProperty(name);
+		this.workload = new SimpleIntegerProperty(Integer.parseInt(workload));
+		this.id = new SimpleStringProperty(setId());
 	}
 	
 	//--------------------//
@@ -45,11 +47,11 @@ public class GenericTask {
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.name.set(name);
 	}
 	
 	public void setWorkload(int workload) {
-		this.workload = workload;
+		this.workload.set(workload);
 	}
 	
 	//---------------------//
@@ -57,14 +59,14 @@ public class GenericTask {
 	//---------------------//
 	
 	public String getId() {
-		return this.id;
+		return id.get();
 	}
 	
 	public String getName() {
-		return this.name;
+		return name.get();
 	}
 	
 	public int getWorkload() {
-		return this.workload;
+		return workload.get();
 	}
 }

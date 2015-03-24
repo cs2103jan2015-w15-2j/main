@@ -6,6 +6,9 @@ package com.nexus.simplify.database;
 
 import java.util.*;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class GenericTaskList {
 
 	//------------------//
@@ -17,6 +20,9 @@ public class GenericTaskList {
 	private enum SORT_TYPE {
 		NAME, WORKLOAD, ID
 	}
+	
+	private int numOfDisplayItems = 5;
+	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
 	
 	//-------------//
 	// Constructor //
@@ -72,6 +78,16 @@ public class GenericTaskList {
 		return taskArray.isEmpty();
 	}
 	
+	public SORT_TYPE getSortType(String keyword) {
+		if (keyword.equals("name")) {
+			return SORT_TYPE.NAME;
+		} else if (keyword.equals("workload")){
+			return SORT_TYPE.WORKLOAD;
+		} else {
+			return SORT_TYPE.ID;
+		}
+	}
+	
 	public void sortBy(SORT_TYPE type) {
 		switch(type) {
 			case NAME:
@@ -84,6 +100,13 @@ public class GenericTaskList {
 				Collections.sort(taskArray, taskIdComparator);
 				break;
 		}
+	}
+	
+	public ObservableList<GenericTask> getObservable() {
+		for (int i = 0; i < numOfDisplayItems; i++) {
+			observableGeneric.add(get(i));
+		}
+		return observableGeneric;
 	}
 	
 	//--------------------//

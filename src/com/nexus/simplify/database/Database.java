@@ -45,7 +45,14 @@ public class Database implements IDatabase {
 	}
 	
 	public void delete(int index) {
-		taskList.delete(index);
+		// index arrangement: floating, timed, deadline
+		if (index >= 11) {
+			taskList.delete(index - 11);
+		} else if (index >= 6) {
+			timedTaskList.delete(index - 6);
+		} else {
+			deadlineTaskList.delete(index - 1);
+		}
 	}
 	
 	public void display(String option) {
@@ -66,11 +73,8 @@ public class Database implements IDatabase {
 	// API for UI //
 	//------------//
 	
-	public ObservableAllTL displayALLObservable() {
-		ObservableGenericTL obsGeneric = new ObservableGenericTL(taskList);
-		ObservableTimedTL obsTimed = new ObservableTimedTL(timedTaskList);
-		ObservableDeadlineTL obsDeadline = new ObservableDeadlineTL(deadlineTaskList);
-		return new ObservableAllTL(obsGeneric, obsTimed, obsDeadline);
+	public TaskListPackage getTaskListPackage() {
+		return new TaskListPackage(deadlineTaskList, timedTaskList, taskList);
 	}
 
 	//-------------//

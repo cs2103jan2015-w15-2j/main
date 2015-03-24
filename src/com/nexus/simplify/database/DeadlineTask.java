@@ -4,6 +4,8 @@
 
 package com.nexus.simplify.database;
 
+import javafx.beans.property.*;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.*;
 
@@ -16,7 +18,7 @@ public class DeadlineTask extends GenericTask {
 	// Class Attribute //
 	//-----------------//
 	
-	private DateTime dueDate;
+	private final ObjectProperty<DateTime> deadline;
 	
 	//--------------//
 	// Constructors //
@@ -24,12 +26,12 @@ public class DeadlineTask extends GenericTask {
 	
 	public DeadlineTask(String name, String deadline) {
 		super(name);
-		this.dueDate = formatter.parseDateTime(deadline);
+		this.deadline = new SimpleObjectProperty<DateTime>(formatter.parseDateTime(deadline));
 	}
 	
 	public DeadlineTask(String name, String deadline, String workload) {
 		super(name, workload);
-		this.dueDate = formatter.parseDateTime(deadline);
+		this.deadline = new SimpleObjectProperty<DateTime>(formatter.parseDateTime(deadline));
 	}
 	
 	//-------------------//
@@ -37,7 +39,7 @@ public class DeadlineTask extends GenericTask {
 	//-------------------//
 	
 	public void setDeadline(String deadline) {
-		this.dueDate = formatter.parseDateTime(deadline);
+		this.deadline.set(formatter.parseDateTime(deadline));
 	}
 	
 	//--------------------//
@@ -46,10 +48,10 @@ public class DeadlineTask extends GenericTask {
 	
 	public String getDeadline() {
 		DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yyyy");
-		return format.print(this.dueDate);
+		return format.print(deadline.get());
 	}
 	
 	public DateTime getDeadlineDT() {
-		return dueDate;
+		return deadline.get();
 	}
 }
