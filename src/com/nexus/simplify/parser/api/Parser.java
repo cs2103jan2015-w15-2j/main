@@ -1,7 +1,6 @@
 package com.nexus.simplify.parser.api;
 
-import com.nexus.simplify.CommandResult;
-import com.nexus.simplify.Logic;
+import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.data.CommandData;
 import com.nexus.simplify.parser.parser.MainParser;
 import com.nexus.simplify.parser.tokeniser.Tokeniser;
@@ -22,20 +21,19 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  */
 
 public class Parser implements IParser {
-
-
-
+	
 	//Parameter constants
 	Tokeniser tokeniser = new Tokeniser();
 	MainParser parser = new MainParser();
-	CommandData commandCreator = CommandData.getInstance();
+	CommandData commandData = CommandData.getInstance();
 	
-	public CommandResult parseInput(String userInput, Logic logic) {
+	@Override
+	public UserCommand parseInput(String userInput) {
 		String[] userTokens = tokeniser.tokenise(userInput);
 		parser.parseTokens(userTokens);	
-		//Command userCommand = commandCreator.createCommand();
+		UserCommand userCommand = commandData.createCommand();
 		
-		return new CommandResult(null, userInput);
+		return userCommand;
 	}
 
 }

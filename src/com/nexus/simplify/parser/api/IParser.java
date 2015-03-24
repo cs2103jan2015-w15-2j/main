@@ -1,7 +1,7 @@
 package com.nexus.simplify.parser.api;
 
-import com.nexus.simplify.CommandResult;
-import com.nexus.simplify.Logic;
+import com.nexus.simplify.logic.usercommand.UserCommand;
+
 
 public interface IParser {
 	/**
@@ -10,5 +10,5 @@ public interface IParser {
 	 * @param userInput
 	 * @return string feedback for user
 	 */
-	public CommandResult parseInput(String userInput, Logic logic);
+	public UserCommand parseInput(String userInput);
 }

@@ -12,6 +12,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.*;
 
+import com.nexus.simplify.logic.Task;
+import com.nexus.simplify.logic.TaskList;
+
 public class Database implements IDatabase {
 	
 	//------------------//
@@ -26,7 +29,7 @@ public class Database implements IDatabase {
 	// Constructor //
 	//-------------//
 	
-	public Database(String fileName) {
+	public Database(String fileName) throws IOException {
 		setUpFile(fileName);
 	}
 	
@@ -34,15 +37,12 @@ public class Database implements IDatabase {
 	// Initialization //
 	//----------------//
 	
-	private void setUpFile(String fileName) {
+	private void setUpFile(String fileName) throws IOException {
 		file = new File(fileName);
 		if (file.exists()) {
 			getDataFromFile();
 		} else {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-			}
+			file.createNewFile();
 		}
 	}
 	

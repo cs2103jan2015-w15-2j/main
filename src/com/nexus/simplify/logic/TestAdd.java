@@ -1,3 +1,4 @@
+package com.nexus.simplify.logic;
 /* commented out to facilitate tut8
 
 package com.nexus.simplify;

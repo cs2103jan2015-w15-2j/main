@@ -1,10 +1,11 @@
 package com.nexus.simplify.parser.data;
 
-import java.util.Date;
 import java.util.HashMap;
 
-import com.nexus.simplify.OperationType;
-import com.sun.prism.Texture.Usage;
+import com.nexus.simplify.logic.usercommand.OperationType;
+import com.nexus.simplify.logic.usercommand.ParameterType;
+import com.nexus.simplify.logic.usercommand.UserCommand;
+
 
 public class CommandData {
 	private static CommandData instance = null;
@@ -23,41 +24,44 @@ public class CommandData {
 		_userOp = userOp;
 	}
 
-	
 	public void setInvalidOp() {
 		_userOp = OperationType.INVALID;
 	}
 
+	// display preference string takes up the position of index in the parameter array
+	// this is according to logic compoent
 	public void setDisplay(String displayPref) {
-		
+		_paramArray[ParameterType.INDEX_POS] = displayPref;
 	}
 	
 	public void setTaskIndex(String taskIndex) {
-
+		_paramArray[ParameterType.INDEX_POS] = taskIndex;
 	}
 
 	public void setNewName(String name) {
-
+		_paramArray[ParameterType.NEW_NAME_POS] = name;
 	}
 
-	public void setTime(String string) {
-
+	public void setTime(String time) {
+		_paramArray[ParameterType.NEW_STARTTME_POS] = time;
 	}
 
 	public void setTime(String time1, String time2){
-
+		_paramArray[ParameterType.NEW_STARTTME_POS] = time1;
+		_paramArray[ParameterType.NEW_ENDTIME_POS] = time2;
 	}
 	
 	public void setWorkload(String workload) {
-		
+		_paramArray[ParameterType.NEW_WORKLOAD_POS] = workload;
 	}
 	
-	public void setFileLoc(String fileloc) {
-		
-	}
+	// unsupported for V0.2
+//	public void setFileLoc(String fileloc) {
+//		
+//	}
 	
 	public UserCommand createCommand() {
-		return null;
+		return new UserCommand(_userOp, _paramArray);
 	}
 	
 	public OperationType getOperationType(String keyword) {
@@ -75,13 +79,15 @@ public class CommandData {
 	 */
 	private CommandData() {
 		// adding support for all supported commands 
+		// commented lines are commands not supported in V0.2
 		cmdHash.put("display", OperationType.DISPLAY);
 		cmdHash.put("add", OperationType.ADD);
 		cmdHash.put("modify", OperationType.MODIFY);
 		cmdHash.put("update", OperationType.MODIFY);
-		cmdHash.put("clear", OperationType.CLEAR);
-		cmdHash.put("done", OperationType.ARCHIVE);
+		//cmdHash.put("clear", OperationType.CLEAR);
+		//cmdHash.put("done", OperationType.ARCHIVE);
 		cmdHash.put("delete", OperationType.DELETE);
-		cmdHash.put("filelocation", OperationType.FILELOCATION);
+		//cmdHash.put("filelocation", OperationType.FILELOCATION);
+		_paramArray = new String[ParameterType.MAX_SIZE];
 	}
 }
