@@ -80,7 +80,7 @@ public class CommandData {
 	private CommandData() {
 		// adding support for all supported commands 
 		// commented lines are commands not supported in V0.2
-		cmdHash.put("display", OperationType.DISPLAY);
+		//cmdHash.put("display", OperationType.DISPLAY);
 		cmdHash.put("add", OperationType.ADD);
 		cmdHash.put("modify", OperationType.MODIFY);
 		cmdHash.put("update", OperationType.MODIFY);
