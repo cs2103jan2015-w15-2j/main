@@ -150,7 +150,7 @@ public class GenericTaskList {
 	 * */	
 	public ObservableList<GenericTask> getObservable() {
 		int maxNumTasksToAdd;
-		if (isEmpty()) {
+		if (!isEmpty()) {
 			if (taskArray.size() > numOfDisplayItems) {
 				maxNumTasksToAdd = numOfDisplayItems;
 			} else {

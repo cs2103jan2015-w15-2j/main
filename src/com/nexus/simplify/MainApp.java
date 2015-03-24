@@ -20,8 +20,6 @@ import javafx.stage.Stage;
  * */
 public class MainApp extends Application {
 	
-	private static final String NAME_INPUT_FILE = "input.json";
-
 	//-----------------//
 	// Class Variables //
 	//-----------------//
@@ -69,6 +67,9 @@ public class MainApp extends Application {
 	 * displays the scene of the billboard (i.e. 'pasting' the display onto canvas)
 	 * 
 	 * */
+	/**
+	 * 
+	 */
 	public void showBillboardOverview() {
 		try {
 			// loads main interface from FXML file.
@@ -82,7 +83,7 @@ public class MainApp extends Application {
 			// gives the controller access to the main app.
 			BillboardOverviewController bbController = loader.getController();
 			bbController.setMainApp(this);
-		    bbController.initBillboard(database);
+		    bbController.initBillboard();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
