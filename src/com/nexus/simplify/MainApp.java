@@ -38,7 +38,7 @@ public class MainApp extends Application {
 	
 	public MainApp() throws IOException {
 		logic = Logic.getInstance();
-		database = new Database(NAME_INPUT_FILE);
+		database = new Database();
 	}
 	
 	//--------------------------//

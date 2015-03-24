@@ -25,7 +25,7 @@ public class Database implements IDatabase {
 	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
 	private static final String MSG_INDEX_OOR = "Index is out of range.";
 	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
-	private static final String FILENAME = "input.txt";
+	private static final String FILENAME = "input.json";
 	
 	//------------------//
 	// Class Attributes //
