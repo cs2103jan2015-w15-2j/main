@@ -16,14 +16,14 @@ public class Delete {
 		
 		if(isNumeric(parameter[0])) {
 			int index = Integer.parseInt(parameter[ParameterType.CURRENT_NAME_POS]) - TASK_INDEX_OFFSET;
-			tempList.delete(index);
+			tempList.deleteTaskByIndex(index);
 			database.writeToFile(tempList);
 			String feedback = "successfully deleted entry #" + parameter[ParameterType.CURRENT_NAME_POS];
 			CommandResult result = new CommandResult(tempList, feedback);
 			return result;
 		} else {
 			String name = parameter[ParameterType.CURRENT_NAME_POS];
-			tempList.delete(name);
+			tempList.deleteTaskByIndex(name);
 			database.writeToFile(tempList);
 			String feedback = "successfully deleted " + name;
 			CommandResult result = new CommandResult(tempList, feedback);

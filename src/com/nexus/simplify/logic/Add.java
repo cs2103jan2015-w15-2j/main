@@ -15,7 +15,7 @@ public class Add {
 		Database database = new Database();
 		
 		if(deadline == null){
-			database.addFloating(name,workload);
+			database.addGenericTask(name,workload);
 			feedback = "successfully added floating task \"" + name + "\".";
 		}
 		else{
@@ -34,7 +34,7 @@ public class Add {
 				feedback = "successfully added timed task \"" + name + "\".";
 			}
 			else{
-				database.addDeadline(name,deadline,workload);
+				database.addDeadlineTask(name,deadline,workload);
 				feedback = "successfully added dealine task \"" + name + "\".";
 			}
 		}

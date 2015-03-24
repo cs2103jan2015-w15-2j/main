@@ -139,9 +139,9 @@ public class BillboardOverviewController {
 	}
 
 	private void initGenericTaskTable() {
-		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().getId());
-		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName().);
-		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
+		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().getIDAsStringProperty());
+		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty());
 	}
 
 	private void initTimedTaskTable() {
