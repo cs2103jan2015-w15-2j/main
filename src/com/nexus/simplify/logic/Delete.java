@@ -18,8 +18,6 @@ public class Delete {
 		Database database = MainApp.getDatabase();
 
 		database.deleteTaskByIndex(indexToDelete);
-
-		database.delete(indexToDelete);
 		String feedback = "successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
 
 		return feedback; 

@@ -19,7 +19,7 @@ public class Add {
 		String name = parameter[ParameterType.NEW_NAME_POS];
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
-		String workload = parameter[ParameterType.NEW_WORKLOAD_POS];
+		int workload = Integer.parseInt(parameter[ParameterType.NEW_WORKLOAD_POS]);
 		String feedback;
 		Database database = MainApp.getDatabase();
 		

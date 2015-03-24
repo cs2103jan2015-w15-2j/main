@@ -16,30 +16,30 @@ public class Display {
 		String feedback;
 		Database database = MainApp.getDatabase();
 		if(isNumeric(option)){
-			database.display(option);
+			database.toggleDisplay(option);
 			feedback = "displayed " + option + "tasks.";
 			return feedback;
 		}
 		else{
 			switch(option){
 				case "all":
-					database.display(option);
+					database.toggleDisplay(option);
 					feedback = "displayed all tasks.";
 					return feedback;
 				case "week":
-					database.display(option);
+					database.toggleDisplay(option);
 					feedback = "displayed tasks due within a week.";
 					return feedback;
 				case "deadline":
-					database.display(option);
+					database.toggleDisplay(option);
 					feedback = "displayed tasks by deadline";
 					return feedback;
 				case "workload":
-					database.display(option);
+					database.toggleDisplay(option);
 					feedback = "displayed tasks by workload";
 					return feedback;
 				case null:
-					database.display("default");
+					database.toggleDisplay("default");
 					feedback = "displayed tasks by default setting";
 					return feedback;
 				default:

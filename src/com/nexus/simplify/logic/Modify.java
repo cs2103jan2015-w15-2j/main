@@ -1,9 +1,11 @@
 package com.nexus.simplify.logic;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.nexus.simplify.Database;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 /*
@@ -25,24 +27,38 @@ public class Modify {
 			return feedback;
 		}
 		
-		Database database = new Database();
+		Database database = MainApp.getDatabase();
 		int indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
 		if(newName != null){
-			database.modifyName(newName);
+			database.modifyName(indexToModify, newName);
 			feedback += "name ";
 		}
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
 		if(newStartTime != null){
-			Date startTime = df.parse(newStartTime);
-			database.modifyStartTime(startTime);
+			Date startTime;
+			try {
+				startTime = df.parse(newStartTime);
+				database.modifyStartTime(indexToModify, startTime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			feedback += "and start time ";
 		}
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		if(newEndTime != null){
-			Date endTime = df.parse(newEndTime);
-			database.modifyStartTime(endTime);
+			Date endTime;
+			try {
+				endTime = df.parse(newEndTime);
+				database.modifyStartTime(indexToModify, endTime);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			feedback += "and end time ";
 		}
 		if(parameter[ParameterType.NEW_WORKLOAD_POS] != null){
@@ -51,8 +67,18 @@ public class Modify {
 			}catch(NumberFormatException e){
 				return "please enter a valid workload.";
 			}
+			
 			int newWorkload = Integer.parseInt(parameter[ParameterType.NEW_WORKLOAD_POS]);
-			database.modifyWorkload(newWorkload);
+			
+			try {
+				database.modifyWorkload(indexToModify, newWorkload);
+			} catch (IndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			feedback += "and workload ";
 		}
 		feedback += "modified.";

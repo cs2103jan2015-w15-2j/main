@@ -35,9 +35,9 @@ public class OperationParser extends TokenParser {
 					commandData.setOp(userOp);
 					return indexParser.parseTokens(remainingTokens);
 
-				/*case ARCHIVE :
+				case DONE :
 					commandData.setOp(userOp);
-					return indexParser.parseTokens(remainingTokens);*/
+					return indexParser.parseTokens(remainingTokens);
 
 				case DELETE :
 					commandData.setOp(userOp);
