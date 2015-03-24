@@ -7,6 +7,7 @@ import com.nexus.simplify.database.GenericTask;
 import com.nexus.simplify.database.TaskListPackage;
 import com.nexus.simplify.database.TimedTask;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -135,24 +136,26 @@ public class BillboardOverviewController {
 	}
 
 	private void initGenericTaskTable() {
-		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().getIDAsStringProperty());
 		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
 		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(genericTaskTable.getItems().indexOf(column.getValue())));
 	}
 
 	private void initTimedTaskTable() {
-		timedTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
 		timedTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
 		timedTaskStartTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimeAsStringProperty());
 		timedTaskEndTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getEndTimeAsStringProperty());
 		timedTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(timedTaskTable.getItems().indexOf(column.getValue())));
+
 	}
 
 	private void initDeadlineTaskTable() {
-		deadlineTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
 		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
 		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDTAsStringProperty());
 		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(deadlineTaskTable.getItems().indexOf(column.getValue())));
+
 	}
 	
 	/**
@@ -209,9 +212,5 @@ public class BillboardOverviewController {
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
 		genericTaskTable.setItems(genericTaskList);
-	}
-	
-	
-
-	
+	}	
 }
