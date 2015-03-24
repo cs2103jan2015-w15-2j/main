@@ -102,6 +102,10 @@ public class BillboardOverviewController {
 	@FXML
 	private TextField userInputField;
 	
+	private int currentGenericTLSize = 0;
+	private int currentDeadlineTLSize = 0;
+	private int currentTimedTLSize = 0;
+	
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -146,8 +150,10 @@ public class BillboardOverviewController {
 	 * 
 	 * @param listPackage the package of observable lists obtained from database
 	 * */
-	public void initBillboard(Database database) {		
-		fillTablesWithData(database.getTaskListPackage());
+	public void initBillboard(Database database) {
+		TaskListPackage tlPackage = fetchDataFromDatabase(database);
+		fillTablesWithData(tlPackage);
+		updateTableIndexValues();
 		displayWelcomeMessage();
 		listenForCommand(mainApp);
 		updateTables();
@@ -160,7 +166,6 @@ public class BillboardOverviewController {
 	private void initGenericTaskTable() {
 		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
 		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
-		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(genericTaskTable.getItems().indexOf(column.getValue())));
 	}
 
 	/**
@@ -172,7 +177,6 @@ public class BillboardOverviewController {
 		timedTaskStartTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimeAsStringProperty());
 		timedTaskEndTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getEndTimeAsStringProperty());
 		timedTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
-		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(timedTaskTable.getItems().indexOf(column.getValue())));
 	}
 
 	/**
@@ -183,7 +187,21 @@ public class BillboardOverviewController {
 		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
 		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDTAsStringProperty());
 		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
-		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(deadlineTaskTable.getItems().indexOf(column.getValue())));
+	}
+	
+	private void updateTableIndexValues() {
+		genericTaskIndexColumn.setCellValueFactory(
+				column -> new ReadOnlyObjectWrapper<Integer>(
+						genericTaskTable.getItems().indexOf(column.getValue()) + currDeadLineTLSize + currTimedTLSize)
+						);
+		timedTaskIndexColumn.setCellValueFactory(
+				column -> new ReadOnlyObjectWrapper<Integer>(
+						timedTaskTable.getItems().indexOf(column.getValue()) + currDeadlineTLSize)
+						);
+		deadlineTaskIndexColumn.setCellValueFactory(
+				column -> new ReadOnlyObjectWrapper<Integer>(
+						deadlineTaskTable.getItems().indexOf(column.getValue()))
+						);
 	}
 	
 	/**
@@ -261,10 +279,16 @@ public class BillboardOverviewController {
 		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTL();
 		ObservableList<GenericTask> genericTaskList = listPackage.getGenericTL();
 		
+		updateTableSizes(deadlineTaskList, timedTaskList, genericTaskList);
+		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
 		genericTaskTable.setItems(genericTaskList);
 	}
-
-
+	
+	private void updateTableSizes(ObservableList<DeadlineTask> deadlineTaskList, ObservableList<TimedTask> timedTaskList, ObservableList<GenericTask> genericTaskList) {
+		genericTLSize = genericTaskList.size();
+		timedTLSize = timedTaskList.size();
+		deadlineTLSize = deadlineTaskList.size();
+	}
 }
