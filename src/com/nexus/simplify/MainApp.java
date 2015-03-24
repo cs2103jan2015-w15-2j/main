@@ -1,7 +1,5 @@
-package com.nexus.simplify;
-
 /**
- *@author Toh Jian Feng 
+ * @author Toh Jian Feng 
  *
  */
 
@@ -9,6 +7,7 @@ import java.io.IOException;
 
 import com.nexus.simplify.UI.view.BillboardOverviewController;
 import com.nexus.simplify.database.Database;
+import com.nexus.simplify.logic.Logic;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -36,7 +35,7 @@ public class MainApp extends Application {
 	//-------------//
 	
 	public MainApp() throws IOException {
-		logic = new Logic();
+		logic = Logic.getInstance();
 		database = new Database(NAME_INPUT_FILE);
 	}
 	

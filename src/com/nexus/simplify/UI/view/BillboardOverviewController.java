@@ -6,6 +6,7 @@ import com.nexus.simplify.database.DeadlineTask;
 import com.nexus.simplify.database.GenericTask;
 import com.nexus.simplify.database.TaskListPackage;
 import com.nexus.simplify.database.TimedTask;
+import com.nexus.simplify.logic.Logic;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
@@ -177,13 +178,13 @@ public class BillboardOverviewController {
 	
 	private void listenForCommand(MainApp mainApp) {
 		userInputField.setOnAction((event) -> {
-			String feedback = processInputAndReceiveFeedback(mainApp.getLogic());
+			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
 		});
 	}
 	
-	private String processInputAndReceiveFeedback(Logic logic) {
-		String resultantFeedback = logic.processInput();
+	private String processInputAndReceiveFeedback(Logic logic, String userInput) {
+		String resultantFeedback = logic.executeCommand(userInput);
 		return resultantFeedback;
 	}
 	
