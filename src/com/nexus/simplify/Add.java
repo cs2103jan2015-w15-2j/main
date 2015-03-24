@@ -2,7 +2,7 @@ package com.nexus.simplify;
 import com.nexus.simplify.ParameterType;
 
 public class Add {
-	private Task taskToAdd;
+	private GenericTask taskToAdd;
 	
 	public Add(){}
 	
@@ -14,14 +14,14 @@ public class Add {
 		
 		String feedback;
 		if(deadline == null && workload == null){
-			taskToAdd = new Task(name);
+			taskToAdd = new GenericTask(name);
 			feedback = "successfully added " + name + "."; 
 		}
 		else{
-			taskToAdd = new Task(name,deadline,workload);
+			taskToAdd = new GenericTask(name,deadline,workload);
 			feedback = "successfully added " + name + " " + deadline + " " + workload + ".";
 		}
-		TaskList tempList = Logic.getTempList();
+		GenericTaskList tempList = Logic.getTempList();
 		tempList.add(taskToAdd);
 		Logic.getDatabase().writeToFile(tempList);
 		

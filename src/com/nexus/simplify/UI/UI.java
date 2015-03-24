@@ -6,11 +6,18 @@ package com.nexus.simplify.UI;
 
 import java.util.Scanner;
 
+<<<<<<< HEAD:src/com/nexus/simplify/UI/UI.java
 import com.nexus.simplify.CommandResult;
 import com.nexus.simplify.Logic;
 import com.nexus.simplify.Parser;
 import com.nexus.simplify.Task;
 import com.nexus.simplify.TaskList;
+=======
+import com.nexus.simplify.logic.CommandResult;
+import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.Task;
+import com.nexus.simplify.logic.TaskList;
+>>>>>>> 6f2e3832147ef855d6261e6402dc33b96517a985:src/com/nexus/simplify/UI.java
 
 public class UI implements IUI {
 	
@@ -122,7 +129,7 @@ public class UI implements IUI {
 	
 	@Override
 	public void displayFeedback(CommandResult result) {
-		TaskList modifiedTaskList = result.getModifiedTaskList();
+		GenericTaskList modifiedTaskList = result.getModifiedTaskList();
 		displayCurrentTaskList(modifiedTaskList);
 		
 		String resultantFeedback = result.getResultantFeedback();
@@ -135,7 +142,7 @@ public class UI implements IUI {
 		System.out.println(String.format(message, args));
 	}
 	
-	private void displayCurrentTaskList(TaskList taskList) {
+	private void displayCurrentTaskList(GenericTaskList taskList) {
 		displayMessage(buildShortTaskList(taskList));
 	}
 	
@@ -160,7 +167,7 @@ public class UI implements IUI {
 		taskList.append(FORMATTING_HEADER_BORDER);
 	}
 	
-	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, Task currentTask) {
+	private void addTaskToDisplayTL(StringBuilder taskList, int currentTaskIndex, GenericTask currentTask) {
 		taskList.append(currentTaskIndex);
 		taskList.append(FORMATTING_THREE_WHITESPACES);
 		
@@ -191,7 +198,7 @@ public class UI implements IUI {
 	 * @param taskList
 	 * 
 	 * */
-	private String buildShortTaskList(TaskList taskList) {
+	private String buildShortTaskList(GenericTaskList taskList) {
 		if (taskList == null) {
 			return "";
 		} else {
@@ -201,8 +208,8 @@ public class UI implements IUI {
 			
 			for (int i = 0; i < taskList.size(); i++) {
 				try {
-					Task currentTask = taskList.get(i);
-					assert currentTask instanceof Task;
+					GenericTask currentTask = taskList.get(i);
+					assert currentTask instanceof GenericTask;
 					int currentTaskIndex = i + LIST_NUMBER_OFFSET;
 					
 					addTaskToDisplayTL(shortTaskList, currentTaskIndex, currentTask);
