@@ -7,17 +7,26 @@ package com.nexus.simplify.UI;
 import java.util.Scanner;
 
 <<<<<<< HEAD:src/com/nexus/simplify/UI/UI.java
+<<<<<<< HEAD:src/com/nexus/simplify/UI/UI.java
 import com.nexus.simplify.CommandResult;
 import com.nexus.simplify.Logic;
 import com.nexus.simplify.Parser;
 import com.nexus.simplify.Task;
 import com.nexus.simplify.TaskList;
 =======
+<<<<<<< HEAD
+import com.nexus.simplify.parser.api.Parser;
+>>>>>>> 01e5f22a18081f28e0d4fe53426cc3f587ddb958:src/com/nexus/simplify/UI.java
+=======
 import com.nexus.simplify.logic.CommandResult;
 import com.nexus.simplify.logic.Logic;
 import com.nexus.simplify.logic.Task;
 import com.nexus.simplify.logic.TaskList;
+<<<<<<< HEAD:src/com/nexus/simplify/UI/UI.java
 >>>>>>> 6f2e3832147ef855d6261e6402dc33b96517a985:src/com/nexus/simplify/UI.java
+=======
+>>>>>>> a48afdbc8be48586e72b0c7fb156529aa761713f
+>>>>>>> 01e5f22a18081f28e0d4fe53426cc3f587ddb958:src/com/nexus/simplify/UI.java
 
 public class UI implements IUI {
 	

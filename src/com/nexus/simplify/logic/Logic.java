@@ -1,7 +1,7 @@
 package com.nexus.simplify.logic;
 import com.nexus.simplify.Database;
-import com.nexus.simplify.usercommand.OperationType;
-import com.nexus.simplify.usercommand.UserCommand;
+import com.nexus.simplify.logic.usercommand.OperationType;
+import com.nexus.simplify.logic.usercommand.UserCommand;
 
 public class Logic implements ILogic {
 	
@@ -16,6 +16,7 @@ public class Logic implements ILogic {
 		return theOne;
 	}
 	
+	@Override
 	public String executeCommand(String userInput){
 		Parser parser = new Parser();
 		UserCommand command = parser.parseInput(userInput);
@@ -35,7 +36,7 @@ public class Logic implements ILogic {
 			case DONE:
 				Done doneOp = new Done();
 				return doneOp.execute(command.getParameter());
-			default INVALID:
+			default:
 				Invalid invalidOp = new Invalid();
 				return invalidOp.execute();
 		}
