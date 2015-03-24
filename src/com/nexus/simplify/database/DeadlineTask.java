@@ -54,4 +54,12 @@ public class DeadlineTask extends GenericTask {
 	public DateTime getDeadlineDT() {
 		return deadline.get();
 	}
+	
+	/**
+	 * @author tohjianfeng
+	 * */
+	
+	public StringProperty getDTStringProperty() {
+		return new SimpleStringProperty(this.getDeadline());
+	}
 }

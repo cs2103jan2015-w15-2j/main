@@ -69,4 +69,20 @@ public class GenericTask {
 	public int getWorkload() {
 		return workload.get();
 	}
+	
+	/**
+	 * @author tohjianfeng
+	 * */
+	
+	public StringProperty getIDProperty() {
+		return id;
+	}
+	
+	public StringProperty getNameProperty() {
+		return name;
+	}
+	
+	public IntegerProperty getWorkloadProperty() {
+		return workload;
+	}
 }
