@@ -2,6 +2,7 @@ package com.nexus.simplify.parser.parser;
 
 import java.util.Date;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,9 +64,16 @@ public class DateTimeParser extends TokenParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
-
+	}
+	
+	@Override
+	protected String tokenListToStr(String[] strArr) {
+		StringBuilder builder = new StringBuilder();
+		for(String s : strArr) {
+			builder.append(s);
+			builder.append(" ");
+		}
+		return builder.toString().trim();
 	}
 }
 

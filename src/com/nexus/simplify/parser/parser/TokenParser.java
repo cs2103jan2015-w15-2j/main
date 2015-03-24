@@ -19,7 +19,7 @@ public abstract class TokenParser {
 		String[] newTokenList = new String[tokenList.length - usedTokenList.length];
 
 		// Replacing tokens in tokenList with null if they are used
-		for (int i = 0; i < newTokenList.length; i++) {
+		for (int i = 0; i < tokenList.length; i++) {
 			for (int j = 0; j < usedTokenList.length; j++) {
 				if (usedTokenList[j].equals(tokenList[i])) {
 					tokenList[i] = null;
