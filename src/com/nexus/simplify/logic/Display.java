@@ -1,16 +1,16 @@
 /*
- * @author David Zhao
+ * @author David Zhao Han
  * */
 
 package com.nexus.simplify.logic;
-
+import com.nexus.simplify.logic.usercommand.ParameterType;
 
 public class Display {
 	
 	public Display() {}
 		
 	public String execute(String[] parameter){
-		String option = parameter[0];
+		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
 		Database database = new Database();
 		if(isNumeric(option)){
