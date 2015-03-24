@@ -110,9 +110,21 @@ public class Database implements IDatabase {
 	private int totalSizeOfAllLists() {
 		return genericTaskList.size() + deadlineTaskList.size() + timedTaskList.size();
 	}
-
-	public void display(String option) {
-		
+	
+	/**
+	 * toggles the sorting order of the task lists by a keyword
+	 * 
+	 * @param option toggles the sorting order of the task lists
+	 * */
+	public void toggleDisplay(String option) {
+		if (option.equals("deadline")) {
+			deadlineTaskList.sortBy(deadlineTaskList.getSortType(option));
+			timedTaskList.sortBy(timedTaskList.getSortType(option));
+		} else {
+			genericTaskList.sortBy(genericTaskList.getSortType(option));
+			deadlineTaskList.sortBy(deadlineTaskList.getSortType(option));
+			timedTaskList.sortBy(timedTaskList.getSortType(option));
+		}
 	}
 
 	/**
