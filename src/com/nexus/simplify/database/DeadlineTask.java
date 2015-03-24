@@ -46,17 +46,40 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
+	 * constructor without workload
+	 * 
+	 * @param name name of task
+	 * @param deadline due date of task in DateTime 
+	 * */
+	public DeadlineTask(String name, DateTime deadline) {
+		super(name);
+		this.deadline = new SimpleObjectProperty<DateTime>(deadline);
+	}
+	
+	/**
 	 * constructor with workload
 	 * 
 	 * @param name name of task
 	 * @param deadline due date of task
 	 * @param workload amount of effort required to do the task ranging from 1 to 5. 
 	 * */
-	public DeadlineTask(String name, Date deadline, String workload) {
+	public DeadlineTask(String name, Date deadline, int workload) {
 		super(name, workload);
 		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
 	}
 	
+	/**
+	 * constructor with workload and id
+	 * 
+	 * @param name name of task in StringProperty
+	 * @param deadline due date of task
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public DeadlineTask(StringProperty name, Date deadline, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
+	}
 	//-------------------//
 	// Attribute Mutator //
 	//-------------------//
@@ -100,5 +123,21 @@ public class DeadlineTask extends GenericTask {
 	 * */
 	public StringProperty getDTAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableDeadline());
+	}
+	
+	//--------//
+	// Method //
+	//--------//
+	
+	/**
+	 * converts DeadlineTask to GenericTask
+	 * 
+	 * @param name name of DeadlineTask in StringProperty
+	 * @param workload amount of effort required to do the DeadlineTask ranging from 1 to 5 in IntegerProperty
+	 * @param id id of DeadlineTask in StringProperty
+	 * @return GenericTask
+	 * */
+	public GenericTask convertToGeneric(StringProperty name, IntegerProperty workload, StringProperty id) {
+		return new GenericTask(name, workload, id);
 	}
 }

@@ -17,6 +17,16 @@ import com.nexus.simplify.database.*;
 @SuppressWarnings("unused")
 
 public class Database implements IDatabase {
+	
+	/**
+	 * All dates will be shaped according to this format. 
+	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
+	 * */
+	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
+	private static final String MSG_INDEX_OOR = "Index is out of range.";
+	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
+	private static final String FILENAME = "input.txt";
+	
 	//------------------//
 	// Class Attributes //
 	//------------------//
@@ -26,6 +36,9 @@ public class Database implements IDatabase {
 	private GenericTaskList genericTaskList = new GenericTaskList();
 	private TimedTaskList timedTaskList = new TimedTaskList();
 	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
+	private GenericTaskList resultantGenericTL = new GenericTaskList();
+	private DeadlineTaskList resultantDeadlineTL = new DeadlineTaskList();
+	private TimedTaskList resultantTimedTL = new TimedTaskList();
 		
 	//---------------//
 	// API for Logic //
@@ -41,6 +54,7 @@ public class Database implements IDatabase {
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, String workload) {
 		timedTaskList.add(new TimedTask(name, startTime, endTime, workload));
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	/**
@@ -52,6 +66,7 @@ public class Database implements IDatabase {
 	 * */
 	public void addDeadlineTask(String name, Date deadline, String workload) {
 		deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	/**
@@ -62,17 +77,19 @@ public class Database implements IDatabase {
 	 * */
 	public void addGenericTask(String name, String workload) {
 		genericTaskList.add(new GenericTask(name, workload));
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	
 	/**
 	 * Deletes a task from the table based on its index being displayed on the billboard.
+	 * 
 	 * @param index index of task with respect to the billboard
 	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
 	 * */
 	public void deleteTaskByIndex(int index) throws IndexOutOfBoundsException {
 		if (index > this.totalSizeOfAllLists() || index < 1) {
-			throw new IndexOutOfBoundsException("Index is out of range.");
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
 			if (index <= deadlineTaskList.size()) {
 				deadlineTaskList.delete(index - 1);
@@ -82,6 +99,7 @@ public class Database implements IDatabase {
 				genericTaskList.delete(index - 1);
 			}
 		}
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	/**
@@ -95,6 +113,28 @@ public class Database implements IDatabase {
 
 	public void display(String option) {
 		
+	}
+
+	/**
+	 * Modifies the name value of a task.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newName new name to be written to the task
+	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive 
+	 * */
+	public void modifyName(int index, String newName) throws IndexOutOfBoundsException {
+		if (index > this.totalSizeOfAllLists() || index < 1) {
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
+		} else {
+			if (index <= deadlineTaskList.size()) {
+				deadlineTaskList.get(index - 1).setName(newName);
+			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+				timedTaskList.get(index - 1).setName(newName);
+			} else {
+				genericTaskList.get(index - 1).setName(newName);
+			}
+		}
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	/**
@@ -110,7 +150,7 @@ public class Database implements IDatabase {
 			throw new Exception("Invalid workload value entered. Supported workload values range from 1 to 5.");
 		} else {
 			if (index > this.totalSizeOfAllLists() || index < 1) {
-				throw new IndexOutOfBoundsException("Index is out of range.");
+				throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 			} else {
 				if (index <= deadlineTaskList.size()) {
 					deadlineTaskList.get(index - 1).setWorkload(newWorkloadValue);
@@ -120,8 +160,73 @@ public class Database implements IDatabase {
 					genericTaskList.get(index - 1).setWorkload(newWorkloadValue);
 				}
 			}
-
 		}
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+	}
+	
+	/**
+	 * Modifies the start time of a task.
+	 * Changes GenericTask to DeadlineTask when start time is added.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newStartTime new value of start time to be written to the task
+	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * */
+	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+		if (index > this.totalSizeOfAllLists() || index < 1) {
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
+		} else {
+			if (index <= deadlineTaskList.size()) {
+				DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
+				DeadlineTask deadlineTask = deadlineTaskList.get(index - 1);
+				String deadline = deadlineTask.getReadableDeadline();
+				int comparisonValue = format.print(new DateTime(newStartTime)).compareTo(deadline);
+				if (comparisonValue <= 0) {
+					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), newStartTime, deadlineTask.getDeadline(), deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
+				} else {
+					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newStartTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
+				}
+			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+				timedTaskList.get(index - 1).setStartTime(newStartTime);
+			} else {
+				GenericTask task = genericTaskList.get(index - 1);
+				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+			}
+		}
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+	}
+	
+	/**
+	 * Modifies the end time of a task.
+	 * Changes GenericTask to DeadlineTask when end time is added
+	 * Changes DeadlineTask to TimedTask when end time is added
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newEndTime new value of end time to be written to the task
+	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * */
+	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
+		if (index > this.totalSizeOfAllLists() || index < 1) {
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
+		} else {
+			if (index <= deadlineTaskList.size()) {
+				DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
+				DeadlineTask deadlineTask = deadlineTaskList.get(index - 1);
+				String deadline = deadlineTask.getReadableDeadline();
+				int comparisonValue = format.print(new DateTime(newEndTime)).compareTo(deadline);  
+				if (comparisonValue <= 0) {
+					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), newEndTime, deadlineTask.getDeadline(), deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
+				} else {
+					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newEndTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
+				}
+			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+				timedTaskList.get(index - 1).setEndTime(newEndTime);
+			} else {
+				GenericTask task = genericTaskList.get(index - 1);
+				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+			}
+		}
+		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
 	//------------//
@@ -148,8 +253,8 @@ public class Database implements IDatabase {
 	 * @throws IOException for an interrupted IO operation.
 	 * 
 	 * */
-	public Database(String fileName) throws IOException {
-		setUpFile(fileName);
+	public Database() throws IOException {
+		setUpFile(FILENAME);
 	}
 	
 	//----------------//
@@ -177,12 +282,13 @@ public class Database implements IDatabase {
 	// File Reading //
 	//--------------//
 	
-	public GenericTaskList readFromFile() {
+	public void readFromFile() {
 		if (tempList.isEmpty()) {
-			return new GenericTaskList();
+			resultantGenericTL = new GenericTaskList();
+			DeadlineTaskList resultantDeadlineTL = new DeadlineTaskList();
+			TimedTaskList resultantTimedTL = new TimedTaskList();
 		} else {
-			genericTaskList = convertToTaskList(tempList);
-			return genericTaskList;
+			convertToTaskList(tempList);
 		}
 	}
 	
@@ -203,13 +309,16 @@ public class Database implements IDatabase {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(GenericTaskList inputTL) {
+	public void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL) {
 		try {
 			String fileName = file.getName();
 			file.delete();
 			file = new File(fileName);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
-			convertToStore(inputTL);
+			tempList.clear();
+			convertToStore(inputDeadlineTL);
+			convertToStore(inputTimedTL);
+			convertToStore(inputGenericTL); 
 			if (!tempList.isEmpty()) {
 				for (int i = 0; i < tempList.size(); i++) {
 					bw.write(tempList.get(i));
@@ -226,45 +335,82 @@ public class Database implements IDatabase {
 	// Variable Conversion //
 	//---------------------//
 	
-	private GenericTaskList convertToTaskList(ArrayList<String> array) {
-		GenericTaskList resultantTaskList = new GenericTaskList();
-		GenericTask task;
+	private void convertToTaskList(ArrayList<String> array) {
+		GenericTask genericTask;
+		DeadlineTask deadlineTask;
+		TimedTask timedTask;
 		JSONObject jsonTask;
 		
 		for (int i = 0; i < tempList.size(); i++) {
 			jsonTask = new JSONObject(tempList.get(i));
-			
-			task = new GenericTask(jsonTask.getString("name"));
-			// task.setDueDate(parseDueDate(jsonTask.getString("due date")));
-			task.setWorkload(jsonTask.getInt("workload"));
-			// task.setId(jsonTask.getString("id"));
-			
-			resultantTaskList.add(task);
+			if (jsonTask.getString("Type").equals("Generic")) {
+				genericTask = new GenericTask(jsonTask.getString("name"));
+				genericTask.setWorkload(jsonTask.getInt("workload"));
+				genericTask.setId(jsonTask.getString("id"));
+				resultantGenericTL.add(genericTask);
+			} else if (jsonTask.getString("Type").equals("Deadline")) {
+				deadlineTask = new DeadlineTask(jsonTask.getString("name"), parseDate(jsonTask.getString("Deadline")));
+				deadlineTask.setWorkload(jsonTask.getInt("workload"));
+				deadlineTask.setId(jsonTask.getString("id"));
+				resultantDeadlineTL.add(deadlineTask);
+			} else {
+				timedTask = new TimedTask(jsonTask.getString("name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
+				timedTask.setWorkload(jsonTask.getInt("workload"));
+				timedTask.setId(jsonTask.getString("id"));
+				resultantTimedTL.add(timedTask);
+			}
 		}
-		
-		return resultantTaskList;
 	}
 	
-	private DateTime parseDueDate(String date) {
-		DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+	private DateTime parseDate(String date) {
+		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 		DateTime dueDate = format.parseDateTime(date);
 		return dueDate;
 	}
 	
-	private ArrayList<String> convertToStore(GenericTaskList tasklist) {
+	private void convertToStore(GenericTaskList taskList) {
 		JSONObject jsonTask;
-		tempList.clear();
-		if (!tasklist.isEmpty()) {
-			for (int i = 0; i < tasklist.size(); i++) {
+		if (!taskList.isEmpty()) {
+			for (int i = 0; i < taskList.size(); i++) {
 				jsonTask = new JSONObject();
-				jsonTask.put("name", tasklist.get(i).getName());
+				jsonTask.put("Name", taskList.get(i).getName());
 				// jsonTask.put("due date", tasklist.get(i).getDueDate());
-				jsonTask.put("workload", tasklist.get(i).getWorkload());
-				// jsonTask.put("id", tasklist.get(i).getId());
+				jsonTask.put("Workload", taskList.get(i).getWorkload());
+				jsonTask.put("ID", taskList.get(i).getId());
+				jsonTask.put("Type", "Generic");
 				tempList.add(jsonTask.toString());
 			}
 		}
-		
-		return tempList;
+	}
+	
+	private void convertToStore(DeadlineTaskList deadlineTaskList) {
+		JSONObject jsonTask;
+		if (!deadlineTaskList.isEmpty()) {
+			for (int i = 0; i < deadlineTaskList.size(); i++) {
+				jsonTask = new JSONObject();
+				jsonTask.put("Name", deadlineTaskList.get(i).getName());
+				jsonTask.put("Deadline", deadlineTaskList.get(i).getReadableDeadline());
+				jsonTask.put("Workload", deadlineTaskList.get(i).getWorkload());
+				jsonTask.put("ID", deadlineTaskList.get(i).getId());
+				jsonTask.put("Type", "Deadline");
+				tempList.add(jsonTask.toString());
+			}
+		}
+	}
+	
+	private void convertToStore(TimedTaskList timedTaskList) {
+		JSONObject jsonTask;
+		if (!timedTaskList.isEmpty()) {
+			for (int i = 0; i < timedTaskList.size(); i++) {
+				jsonTask = new JSONObject();
+				jsonTask.put("Name", timedTaskList.get(i).getName());
+				jsonTask.put("Start Time", timedTaskList.get(i).getReadableStartTime());
+				jsonTask.put("End Time", timedTaskList.get(i).getReadableEndTime());
+				jsonTask.put("Workload", timedTaskList.get(i).getWorkload());
+				jsonTask.put("ID", timedTaskList.get(i).getId());
+				jsonTask.put("Type", "Timed");
+				tempList.add(jsonTask.toString());
+			}
+		}
 	}
 }
