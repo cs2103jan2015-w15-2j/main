@@ -15,6 +15,7 @@ public class GenericTask {
 	 * Default value of workload when user does not specify is 1
 	 * */
 	private static final int DEFAULT_WORKLOAD_VALUE = 1;
+	private static final String ID_FORMAT = "yyMMddHHmmss";
 	
 	//------------------//
 	// Class Attributes //
@@ -74,7 +75,7 @@ public class GenericTask {
 	private static String generateId() {
 		Calendar cal = Calendar.getInstance();
 		cal.getTime();
-		SimpleDateFormat dateTime = new SimpleDateFormat("yyMMddHHmmss");
+		SimpleDateFormat dateTime = new SimpleDateFormat(ID_FORMAT);
 		return dateTime.toString();
 	}
 	
