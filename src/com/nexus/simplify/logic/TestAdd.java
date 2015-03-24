@@ -1,16 +1,15 @@
 package com.nexus.simplify.logic;
 
-
-package com.nexus.simplify.logic;
-
 import static org.junit.Assert.*;
+
+import java.text.ParseException;
 
 import org.junit.Test;
 
 public class TestAdd {
 
 	@Test
-	public void testExecute() {
+	public void testExecute() throws Exception {
 		Add stubAdd = new Add();
 		String[] testParameter;
 		String feedback;

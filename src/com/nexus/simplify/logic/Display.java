@@ -21,28 +21,33 @@ public class Display {
 			return feedback;
 		}
 		else{
+			if (option == null) {
+				database.toggleDisplay("default");
+				feedback = "displayed tasks by default setting";
+				return feedback;
+			}
 			switch(option){
-				case "all":
+				case "all" :
 					database.toggleDisplay(option);
 					feedback = "displayed all tasks.";
 					return feedback;
-				case "week":
+					
+				case "week" :
 					database.toggleDisplay(option);
 					feedback = "displayed tasks due within a week.";
 					return feedback;
-				case "deadline":
+				
+				case "deadline" :
 					database.toggleDisplay(option);
 					feedback = "displayed tasks by deadline";
 					return feedback;
-				case "workload":
+				
+				case "workload" :
 					database.toggleDisplay(option);
 					feedback = "displayed tasks by workload";
 					return feedback;
-				case null:
-					database.toggleDisplay("default");
-					feedback = "displayed tasks by default setting";
-					return feedback;
-				default:
+
+				default :
 					feedback = "invalid option for display, please try again.";
 					return feedback;
 			}

@@ -1,5 +1,7 @@
 package com.nexus.simplify.UI.view;
 
+import java.text.ParseException;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.DeadlineTask;
@@ -237,8 +239,14 @@ public class BillboardOverviewController {
 	 * @return feedback from the logic component after processing the input.
 	 * */
 	private String processInputAndReceiveFeedback(Logic logic, String userInput) {
-		String resultantFeedback = logic.executeCommand(userInput);
-		return resultantFeedback;
+		String resultantFeedback;
+		try {
+			resultantFeedback = logic.executeCommand(userInput);
+			return resultantFeedback;
+		} catch (ParseException e) {
+			String exceptionFeedback = e.toString();
+			return exceptionFeedback;
+		}
 	}
 	
 	//-----------------//
