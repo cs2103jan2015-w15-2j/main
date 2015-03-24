@@ -11,6 +11,8 @@ import javafx.beans.property.*;
 
 public class GenericTask {
 	
+	private static final int default_workload_value = 1;
+	
 	//------------------//
 	// Class Attributes //
 	//------------------//
@@ -25,7 +27,7 @@ public class GenericTask {
 	// default constructor
 	public GenericTask(String name) {
 		this.name = new SimpleStringProperty(name);
-		this.workload = new SimpleIntegerProperty(1);
+		this.workload = new SimpleIntegerProperty(default_workload_value);
 		this.id = new SimpleStringProperty(setId());
 	}
 
@@ -73,16 +75,15 @@ public class GenericTask {
 	/**
 	 * @author tohjianfeng
 	 * */
-	
-	public StringProperty getIDProperty() {
+	public StringProperty getIDAsStringProperty() {
 		return id;
 	}
 	
-	public StringProperty getNameProperty() {
+	public StringProperty getNameAsStringProperty() {
 		return name;
 	}
 	
-	public IntegerProperty getWorkloadProperty() {
+	public IntegerProperty getWorkloadAsIntegerProperty() {
 		return workload;
 	}
 }

@@ -24,7 +24,7 @@ public class Database implements IDatabase {
 	
 	private File file;
 	private ArrayList<String> tempList = new ArrayList<String>();
-	private GenericTaskList taskList = new GenericTaskList();
+	private GenericTaskList genericTaskList = new GenericTaskList();
 	private TimedTaskList timedTaskList = new TimedTaskList();
 	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
 	
@@ -41,13 +41,13 @@ public class Database implements IDatabase {
 	}
 	
 	public void addFloating(String name, String workload) {
-		taskList.add(new GenericTask(name, workload));
+		genericTaskList.add(new GenericTask(name, workload));
 	}
 	
 	public void delete(int index) {
 		// index arrangement: floating, timed, deadline
 		if (index >= 11) {
-			taskList.delete(index - 11);
+			genericTaskList.delete(index - 11);
 		} else if (index >= 6) {
 			timedTaskList.delete(index - 6);
 		} else {
@@ -63,9 +63,9 @@ public class Database implements IDatabase {
 	public void modify(int index, String string) {
 		int integerValue = Integer.parseInt(string);
 		if (integerValue >= 5 || integerValue <= 1) {
-			taskList.get(index).setWorkload(integerValue);
+			genericTaskList.get(index).setWorkload(integerValue);
 		} else {
-			taskList.get(index).setName(string);
+			genericTaskList.get(index).setName(string);
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class Database implements IDatabase {
 	//------------//
 	
 	public TaskListPackage getTaskListPackage() {
-		return new TaskListPackage(deadlineTaskList, timedTaskList, taskList);
+		return new TaskListPackage(deadlineTaskList, timedTaskList, genericTaskList);
 	}
 
 	//-------------//
@@ -106,8 +106,8 @@ public class Database implements IDatabase {
 		if (tempList.isEmpty()) {
 			return new GenericTaskList();
 		} else {
-			taskList = convertToTaskList(tempList);
-			return taskList;
+			genericTaskList = convertToTaskList(tempList);
+			return genericTaskList;
 		}
 	}
 	

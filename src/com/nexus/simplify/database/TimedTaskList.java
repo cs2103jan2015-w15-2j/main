@@ -96,9 +96,9 @@ public class TimedTaskList {
 			case NAME:
 				Collections.sort(taskArray, taskNameComparator);
 				break;
-			case TIMED:
+			/*case TIMED:
 				Collections.sort(taskArray, taskTimedComparator);
-				break;
+				break;*/
 			case WORKLOAD:
 				Collections.sort(taskArray, taskWorkloadComparator);
 				break;
@@ -127,13 +127,14 @@ public class TimedTaskList {
 		}
 	};
 	
+	/*
 	private Comparator<TimedTask> taskTimedComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
 			String t1Deadline = t1.getTimed();
 			String t2Deadline = t2.getTimed();
 			return t1Deadline.compareTo(t2Deadline);
 		}
-	};
+	};*/
 	
 	private Comparator<TimedTask> taskWorkloadComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
