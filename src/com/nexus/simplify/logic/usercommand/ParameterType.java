@@ -1,4 +1,4 @@
-package com.nexus.simplify.usercommand;
+package com.nexus.simplify.logic.usercommand;
 
 public class ParameterType {
 	/**

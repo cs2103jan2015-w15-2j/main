@@ -1,7 +1,7 @@
 package com.nexus.simplify.logic;
 import com.nexus.simplify.Database;
-import com.nexus.simplify.usercommand.OperationType;
-import com.nexus.simplify.usercommand.UserCommand;
+import com.nexus.simplify.logic.usercommand.OperationType;
+import com.nexus.simplify.logic.usercommand.UserCommand;
 
 public class Logic implements ILogic {
 	

@@ -1,4 +1,4 @@
-package com.nexus.simplify.usercommand;
+package com.nexus.simplify.logic.usercommand;
 
 public enum OperationType {
 	DISPLAY, ADD, MODIFY, DELETE, DONE, INVALID 

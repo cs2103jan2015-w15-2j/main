@@ -1,6 +1,6 @@
 package com.nexus.simplify.logic;
 
-import com.nexus.simplify.usercommand.ParameterType;
+import com.nexus.simplify.logic.usercommand.ParameterType;
 
 public class Add {
 		

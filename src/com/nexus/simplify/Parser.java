@@ -5,8 +5,8 @@ import java.util.HashMap;
 import com.nexus.simplify.logic.Command;
 import com.nexus.simplify.logic.CommandResult;
 import com.nexus.simplify.logic.Logic;
-import com.nexus.simplify.usercommand.OperationType;
-import com.nexus.simplify.usercommand.ParameterType;
+import com.nexus.simplify.logic.usercommand.OperationType;
+import com.nexus.simplify.logic.usercommand.ParameterType;
 
 public class Parser implements IParser {
 
