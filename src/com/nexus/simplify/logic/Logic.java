@@ -16,6 +16,7 @@ public class Logic implements ILogic {
 		return theOne;
 	}
 	
+	@Override
 	public String executeCommand(String userInput){
 		Parser parser = new Parser();
 		UserCommand command = parser.parseInput(userInput);
@@ -35,7 +36,7 @@ public class Logic implements ILogic {
 			case DONE:
 				Done doneOp = new Done();
 				return doneOp.execute(command.getParameter());
-			default INVALID:
+			default:
 				Invalid invalidOp = new Invalid();
 				return invalidOp.execute();
 		}

@@ -9,9 +9,16 @@ public class Display {
 	
 	public Display() {}
 		
-	public String execute(){
-		TaskList updatedList = Logic.getTempList();
-		CommandResult result = new CommandResult(updatedList, MESSAGE_DISPLAY_SUCCESS);
-		return result;
+	public String execute(String[] parameter){
+		String option = parameter[0];
+		Database database = new Database();
+		if(isNumeric(option)){
+			database.display(option);
+			
+		}
+	}
+	
+	private static boolean isNumeric(String str){
+	  return str.matches("-?\\d+(\\.\\d+)?");
 	}
 }
