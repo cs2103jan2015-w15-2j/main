@@ -1,8 +1,12 @@
 package com.nexus.simplify;
 
 import java.util.HashMap;
+
 import com.nexus.simplify.ParameterType;
 import com.nexus.simplify.OperationType;
+import com.nexus.simplify.logic.Command;
+import com.nexus.simplify.logic.CommandResult;
+import com.nexus.simplify.logic.Logic;
 
 public class Parser implements IParser {
 
