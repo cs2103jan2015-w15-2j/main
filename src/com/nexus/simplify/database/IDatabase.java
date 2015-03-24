@@ -2,6 +2,6 @@ package com.nexus.simplify.database;
 
 public interface IDatabase {
 	// method signatures
-	GenericTaskList readFromFile();
-	void writeToFile(GenericTaskList tasklist);
+	void readFromFile();
+	void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL);
 }

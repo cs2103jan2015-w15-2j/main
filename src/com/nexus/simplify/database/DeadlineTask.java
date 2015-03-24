@@ -46,6 +46,17 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
+	 * constructor without workload
+	 * 
+	 * @param name name of task
+	 * @param deadline due date of task in DateTime 
+	 * */
+	public DeadlineTask(String name, DateTime deadline) {
+		super(name);
+		this.deadline = new SimpleObjectProperty<DateTime>(deadline);
+	}
+	
+	/**
 	 * constructor with workload
 	 * 
 	 * @param name name of task

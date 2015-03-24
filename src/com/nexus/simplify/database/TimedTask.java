@@ -64,6 +64,20 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
+	 * constructor for timed tasks without workload
+	 * 
+	 * @param name name of task
+	 * @param startTime start time of task in DateTime
+	 * @param endTime end time of task in DateTime
+	 * */
+	public TimedTask(String name, DateTime startTime, DateTime endTime) {
+		super(name);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(startTime);
+		this.endTime = new SimpleObjectProperty<DateTime>(endTime);
+	}
+	
+	/**
 	 * constructor for timed tasks with workload, id and endTime in DateTime format
 	 * 
 	 * @param name name of task in StringProperty format
