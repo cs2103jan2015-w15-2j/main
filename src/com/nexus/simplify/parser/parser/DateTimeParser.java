@@ -2,17 +2,21 @@ package com.nexus.simplify.parser.parser;
 
 import java.util.Date;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.parser.data.CommandData;
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 
 public class DateTimeParser extends TokenParser {
+	Logger LOGGER = LoggerFactory.getLogger(DateTimeParser.class.getName());
 	Parser natty = new Parser();
 	CommandData commandData = CommandData.getInstance();
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
+		LOGGER.debug("test");
 		if (isTokenListEmpty(tokenList)) {
 			return tokenList;
 		} else {
@@ -41,6 +45,19 @@ public class DateTimeParser extends TokenParser {
 				return getRemainingTokens(stringParsed, tokenList);
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		DateTimeParser parser = new DateTimeParser();
+		String test = "from today until next week";
+		try {
+			parser.parseTokens(test.split("//s"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 }
 
