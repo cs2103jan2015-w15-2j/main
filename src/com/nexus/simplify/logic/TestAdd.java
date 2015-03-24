@@ -1,7 +1,7 @@
 package com.nexus.simplify.logic;
-/* commented out to facilitate tut8
 
-package com.nexus.simplify;
+
+package com.nexus.simplify.logic;
 
 import static org.junit.Assert.*;
 
@@ -12,16 +12,22 @@ public class TestAdd {
 	@Test
 	public void testExecute() {
 		Add stubAdd = new Add();
-		start(stubAdd);
-	}
-	
-	private void start(Add stubAdd){
-		String[] parameter = new String[]{"add", "name", "tutorial 10", "deadline", "5/10/15", ""}
-		stubAdd.execute
-	}
-	private void testOneCommand(String expected, String[] parameter, CommandResult result){
-		assertEquals()
+		String[] testParameter;
+		String feedback;
+		
+		// test case for floating tasks
+		testParameter = new String[]{null, "play dota", null, null, "1"};
+		feedback = stubAdd.execute(testParameter);
+		assertEquals(feedback,"successfully added floating task \"play dota\".");
+		
+		// test case for timed tasks
+		testParameter = new String[]{null, "anime seminar", "Jan 18 11:11", "Jan 18 12:22", "2"};
+		feedback = stubAdd.execute(testParameter);
+		assertEquals(feedback,"successfully added timed task \"anime seminar\".");
+		
+		// test case for deadline tasks
+		testParameter = new String[]{null, "finish game XYZ", "Tue Feb 22 10:00", "Tue Feb 22 10:00", "3"};
+		feedback = stubAdd.execute(testParameter);
+		assertEquals(feedback,"successfully added deadline task \"finish game XYZ\".");
 	}
 }
-
-*/
