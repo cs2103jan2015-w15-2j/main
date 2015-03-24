@@ -10,7 +10,7 @@ public class Delete {
 		int indexToDelete = Integer.parseInt(parameter[0]);
 		String feedback = "successfully deleted entry #" + parameter[0] + ".";
 		Database database = new Database();
-		database.delete(indexToDelete);
+		database.deleteTaskByIndex(indexToDelete);
 		return feedback; 
 	}
 }
