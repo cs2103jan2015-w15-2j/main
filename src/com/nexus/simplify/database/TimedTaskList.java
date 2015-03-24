@@ -1,6 +1,3 @@
-/*
- * @author Tan Qian Yi
- */
 package com.nexus.simplify.database;
 
 import java.util.*;
@@ -8,6 +5,10 @@ import java.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * Represents an instance of a list consisting of TimedTasks
+ * @author Tan Qian Yi
+ * */
 public class TimedTaskList {
 
 	//------------------//
@@ -27,7 +28,10 @@ public class TimedTaskList {
 	//-------------//
 	// Constructor //
 	//-------------//
-		
+	
+	/**
+	 * default constructor
+	 * */
 	public TimedTaskList() {
 	}
 	
@@ -36,6 +40,11 @@ public class TimedTaskList {
 	// Attribute Accessor //
 	//---------------------//
 	
+	/**
+	 * returns the TimedTask at given index of the list
+	 * 
+	 * @return TimedTask at given index of the list
+	 * */
 	public TimedTask get(int index) {
 		return taskArray.get(index);
 	}
@@ -44,19 +53,29 @@ public class TimedTaskList {
 	// Attribute Mutators //
 	//--------------------//
 	
-	// is this necessary?
-	public void set(int index, TimedTask newTask) {
-		taskArray.set(index, newTask);
-	}
-	
+	/**
+	 * append given TimedTask at the end of the list
+	 * 
+	 * @param TimedTask to be appended to the end of the list
+	 * */
 	public void add(TimedTask task) {
 		taskArray.add(task);
 	}
 	
+	/**
+	 * remove the TimedTask at given index of the list
+	 * 
+	 *  @param index of the TimedlineTask to be removed
+	 * */
 	public void delete(int index) {
 		taskArray.remove(index);
 	}
 	
+	/**
+	 * remove the TimedTask with the given name from the list
+	 * 
+	 * @param name of TimedTask to be removed
+	 * */
 	public void delete(String name) {
 		int i;
 		for (i = 0; i < taskArray.size(); i++) {
@@ -71,14 +90,31 @@ public class TimedTaskList {
 	// Methods //
 	//---------//
 	
+	/**
+	 * returns the size of the list
+	 * 
+	 * @return size of the list as an integer
+	 * */
 	public int size() {
 		return taskArray.size();
 	}
 	
+	/**
+	 * checks if the list is empty
+	 * 
+	 * @return true if the list is empty
+	 * */
 	public boolean isEmpty() {
 		return taskArray.isEmpty();
 	}
 	
+	/**
+	 * returns the type of sorting to be done formatted as SORT_TYPE
+	 * supported types include: <NAME>, <TIMED>, <WORKLOAD>, <ID>
+	 * 
+	 * @param type of sorting to be done in String
+	 * @return type of sorting to be done as SORT_TYPE
+	 * */
 	public SORT_TYPE getSortType(String keyword) {
 		if (keyword.equals("name")) {
 			return SORT_TYPE.NAME;
@@ -91,14 +127,20 @@ public class TimedTaskList {
 		}
 	}
 	
+	/**
+	 * sorts the list via the given SORT_TYPE
+	 * supported types include: <NAME>, <TIMED>, <WORKLOAD>, <ID>
+	 * 
+	 * @param type of sorting to be done in the form of SORT_TYPE
+	 * */
 	public void sortBy(SORT_TYPE type) {
 		switch(type) {
 			case NAME:
 				Collections.sort(taskArray, taskNameComparator);
 				break;
-			/*case TIMED:
+			case TIMED:
 				Collections.sort(taskArray, taskTimedComparator);
-				break;*/
+				break;
 			case WORKLOAD:
 				Collections.sort(taskArray, taskWorkloadComparator);
 				break;
@@ -108,6 +150,11 @@ public class TimedTaskList {
 		}
 	}
 	
+	/**
+	 * returns an ObservableList of TimedTask
+	 * 
+	 * @return ObservableList of TimedTask
+	 * */
 	public ObservableList<TimedTask> getObservable() {
 		for (int i = 0; i < numOfDisplayItems; i++) {
 			observableTimed.add(get(i));
@@ -119,6 +166,13 @@ public class TimedTaskList {
 	// Comparison Methods //
 	//--------------------//
 	
+	/**
+	 * compares the name of TimedTask t1 with the name of TimedTask t2
+	 * 
+	 * @return zero if the names of the TimedTasks are the same
+	 * @return negative integer if the name of TimedTask t2 is lexicographically greater than the name of TimedTask t1
+	 * @return positive integer if the name of TimedTask t2 is lexicographically less than the name of TimedTask t1
+	 * */
 	private Comparator<TimedTask> taskNameComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
 			String t1Name = t1.getName().toUpperCase();
@@ -127,15 +181,29 @@ public class TimedTaskList {
 		}
 	};
 	
-	/*
+	/**
+	 * compares the start time of TimedTask t1 with the start time of TimedTask t2
+	 * 
+	 * @return zero if the start time of the TimedTasks are the same
+	 * @return negative integer if the start time of TimedTask t2 is lexicographically greater than the start time of TimedTask t1
+	 * @return positive integer if the start time of TimedTask t2 is lexicographically less than the start time of TimedTask t1
+	 * */
+	
 	private Comparator<TimedTask> taskTimedComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
-			String t1Deadline = t1.getTimed();
-			String t2Deadline = t2.getTimed();
-			return t1Deadline.compareTo(t2Deadline);
+			String t1StartTime = t1.getReadableStartTime();
+			String t2StartTime = t2.getReadableStartTime();
+			return t1StartTime.compareTo(t2StartTime);
 		}
-	};*/
+	};
 	
+	/**
+	 * compares the workload of TimedTask t1 with the workload of TimedTask t2
+	 * 
+	 * @return zero if the workloads of the TimedTasks are the same
+	 * @return negative integer if the workload of TimedTask t2 is lexicographically greater than the workload of TimedTask t1
+	 * @return positive integer if the workload of TimedTask t2 is lexicographically less than the workload of TimedTask t1
+	 * */
 	private Comparator<TimedTask> taskWorkloadComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
 			String t1Workload = Integer.toString(t1.getWorkload());
@@ -144,6 +212,13 @@ public class TimedTaskList {
 		}
 	};
 	
+	/**
+	 * compares the id of TimedTask t1 with the id of TimedTask t2
+	 * 
+	 * @return zero if the ids of the TimedTasks are the same
+	 * @return negative integer if the id of TimedTask t2 is lexicographically greater than the id of TimedTask t1
+	 * @return positive integer if the id of TimedTask t2 is lexicographically less than the id of TimedTask t1
+	 * */
 	private Comparator<TimedTask> taskIdComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
 			String t1Id = t1.getId();

@@ -13,7 +13,12 @@ import org.joda.time.format.*;
  */
 public class TimedTask extends GenericTask {
 	
+	/**
+	 * All dates will be shaped according to this format. 
+	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
+	 * */
 	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
+	private DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 	
 	//-----------------//
 	// Class Attribute //
@@ -32,6 +37,10 @@ public class TimedTask extends GenericTask {
 	/**
 	 * constructor for timed tasks with workload
 	 * 
+	 * @param name name of task
+	 * @param startTime start time of task
+	 * @param endTime end time of task
+	 * @param workload amount of effort requird to do the task ranging from 1 to 5
 	 * */
 	public TimedTask(String name, Date startTime, Date endTime, String workload) {
 		super(name, workload);
@@ -43,6 +52,9 @@ public class TimedTask extends GenericTask {
 	/**
 	 * constructor for timed tasks without workload
 	 * 
+	 * @param name name of task
+	 * @param startTime start time of task
+	 * @param endTime end time of task
 	 * */
 	public TimedTask(String name, Date startTime, Date endTime) {
 		super(name);
@@ -51,26 +63,24 @@ public class TimedTask extends GenericTask {
 		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
 	}
 	
-	/*
-	public TimedTask(String name, int year, int month, int day, int hour, int minute) {
-		super(name);
-		this.dueDate = new SimpleObjectProperty<DateTime>(new DateTime(year, month, day, hour, minute));
-	}
-	
-	public TimedTask(String name, int year, int month, int day, int hour, int minute, String workload) {
-		super(name, workload);
-		this.dueDate = new SimpleObjectProperty<DateTime>(new DateTime(year, month, day, hour, minute));
-	}
-	*/
-	
 	//--------------------//
 	// Attribute Mutators //
 	//--------------------//
 	
+	/**
+	 * default setter for class attribute startTime
+	 * 
+	 * @param startTime the new start time for the task
+	 * */
 	public void setStartTime(String startTime) {
 		this.startTime.set(new DateTime(startTime));
 	}
 	
+	/**
+	 * default setter for class attribute endTime
+	 * 
+	 * @param endTime the new end time for the task
+	 * */
 	public void setEndTime(String endTime) {
 		this.endTime.set(new DateTime(endTime));
 	}
@@ -79,41 +89,75 @@ public class TimedTask extends GenericTask {
 	// Attribute Accessors //
 	//---------------------//
 	
+	/**
+	 * returns the start time of the task formatted as a DateTimeProperty Object
+	 * 
+	 * @return start time of task as a DateTimeProperty Object
+	 * */
 	public ObjectProperty<DateTime> getStartTime() {
 		return startTime;
 	}
 	
+	/**
+	 * returns the end time of the task formatted as a DateTimeProperty Object
+	 * 
+	 * @return end time of task as a DateTimeProperty Object
+	 * */
 	public ObjectProperty<DateTime> getEndTime() {
 		return endTime;
 	}
 	
+	/**
+	 * default getter method for attribute startTime
+	 * 
+	 * @return start time of task
+	 * */
 	public DateTime getStartTimeAsDT() {
 		return startTime.get();
 	}
 	
+	/**
+	 * default getter method for attribute endTime
+	 * 
+	 * @return end time of task
+	 * */
 	public DateTime getEndTimeAsDT() {
 		return endTime.get();
 	}
 	
+	/*
+	 * returns the start time of the task fomatted as a StringProperty Object
+	 * 
+	 * @return start time of the task as StringProperty Object
+	 */
 	public StringProperty getStartTimeAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableStartTime());
 	}
 	
+	/*
+	 * returns the end time of the task formatted as a StringProperty Object
+	 * 
+	 * @return end time of task as StringProperty Object
+	 */
 	public StringProperty getEndTimeAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableEndTime());
 	}
 	
+	/**
+	 * returns the start time of the task fomatted into a readable String Object
+	 * 
+	 * @return start time of task as String Object
+	 * */
 	public String getReadableStartTime() {
-		return startTime.get().toString();
+		return format.print(startTime.get());
 	}
 	
+	/**
+	 * returns the end time of the task formatted into a readable String Object
+	 * 
+	 * @return end time of task as String Object
+	 * */
 	public String getReadableEndTime() {
-		return endTime.get().toString();
+		return format.print(endTime.get());
 	}
-	
-	/*
-	public String getTimed() {
-		DateTimeFormatter format = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
-		return format.print(dueDate.get());
-	}*/
 }
