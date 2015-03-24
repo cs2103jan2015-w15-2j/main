@@ -22,19 +22,19 @@ public class Logic implements ILogic {
 		switch(command.getOperationType()){
 			case ADD:
 				Add addOp = new Add();
-				return addOp.execute(command);
+				return addOp.execute(command.getParameter());
 			case DISPLAY:
 				Display displayOp = new Display();
-				return displayOp.execute(command);
+				return displayOp.execute(command.getParameter());
 			case MODIFY:
 				Modify modifyOp = new Modify();
-				return modifyOp.execute(command);
+				return modifyOp.execute(command.getParameter());
 			case DELETE:
 				Delete deleteOp = new Delete();
-				return deleteOp.execute(command);
+				return deleteOp.execute(command.getParameter());
 			case DONE:
 				Done doneOp = new Done();
-				return doneOp.execute(command);
+				return doneOp.execute(command.getParameter());
 			default INVALID:
 				Invalid invalidOp = new Invalid();
 				return invalidOp.execute();
