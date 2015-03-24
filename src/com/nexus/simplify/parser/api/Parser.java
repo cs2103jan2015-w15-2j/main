@@ -1,8 +1,12 @@
 package com.nexus.simplify.parser.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.data.CommandData;
 import com.nexus.simplify.parser.parser.MainParser;
+import com.nexus.simplify.parser.parser.ParamParser;
 import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 /**
@@ -21,6 +25,7 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  */
 
 public class Parser implements IParser {
+	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
 	
 	//Parameter constants
 	Tokeniser tokeniser = new Tokeniser();
@@ -29,6 +34,7 @@ public class Parser implements IParser {
 	
 	@Override
 	public UserCommand parseInput(String userInput) {
+		LOGGER.info("Parsing user input: {}", userInput);
 		String[] userTokens = tokeniser.tokenise(userInput);
 		parser.parseTokens(userTokens);	
 		UserCommand userCommand = commandData.createCommand();

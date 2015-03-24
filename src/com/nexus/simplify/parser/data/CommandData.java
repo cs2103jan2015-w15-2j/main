@@ -1,10 +1,15 @@
 package com.nexus.simplify.parser.data;
 
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
+import com.nexus.simplify.parser.parser.DateTimeParser;
 
 
 public class CommandData {
@@ -12,7 +17,8 @@ public class CommandData {
 	OperationType _userOp;
 	String[] _paramArray;
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
-
+	Logger LOGGER = LoggerFactory.getLogger(DateTimeParser.class.getName());
+	
 	public static CommandData getInstance() {
 		if (instance == null) {
 			instance = new CommandData();
@@ -61,6 +67,7 @@ public class CommandData {
 //	}
 	
 	public UserCommand createCommand() {
+		LOGGER.info("User Operation: {}. User Parameters: {}", _userOp, Arrays.toString(_paramArray));
 		return new UserCommand(_userOp, _paramArray);
 	}
 	
