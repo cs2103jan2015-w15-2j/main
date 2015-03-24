@@ -29,8 +29,8 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	
-	private Logic logic;
-	private Database database;
+	private static Logic logic;
+	private static Database database;
 
 	//-------------//
 	// Constructor //
@@ -127,14 +127,14 @@ public class MainApp extends Application {
 	/**
 	 * @return reference to the instance of logic instantiated in the main app.
 	 * */
-	public Logic getLogic() {
+	public static Logic getLogic() {
 		return logic;
 	}
 	
 	/**
 	 * @return reference to the instance of database instantiated in the main app.
 	 * */
-	public Database getDatabase() {
+	public static Database getDatabase() {
 		return database;
 	}
 }

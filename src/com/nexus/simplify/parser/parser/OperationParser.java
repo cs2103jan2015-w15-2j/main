@@ -5,8 +5,8 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nexus.simplify.Command;
-import com.nexus.simplify.OperationType;
+import com.nexus.simplify.logic.usercommand.UserCommand;
+import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.parser.data.CommandData;
 
 public class OperationParser extends TokenParser {
@@ -35,9 +35,9 @@ public class OperationParser extends TokenParser {
 					commandData.setOp(userOp);
 					return indexParser.parseTokens(remainingTokens);
 
-				case ARCHIVE :
+				/*case ARCHIVE :
 					commandData.setOp(userOp);
-					return indexParser.parseTokens(remainingTokens);
+					return indexParser.parseTokens(remainingTokens);*/
 
 				case DELETE :
 					commandData.setOp(userOp);

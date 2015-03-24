@@ -42,7 +42,7 @@ public class TimedTask extends GenericTask {
 	 * @param endTime end time of task
 	 * @param workload amount of effort requird to do the task ranging from 1 to 5
 	 * */
-	public TimedTask(String name, Date startTime, Date endTime, int workload) {
+	public TimedTask(String name, Date startTime, Date endTime, String workload) {
 		super(name, workload);
 		assert(startTime != null || endTime != null);
 		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));

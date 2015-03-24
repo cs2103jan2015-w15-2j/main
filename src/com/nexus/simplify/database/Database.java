@@ -39,7 +39,7 @@ public class Database implements IDatabase {
 	 * @param endTime time and date when task ends
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
-	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+	public void addTimedTask(String name, Date startTime, Date endTime, String workload) {
 		timedTaskList.add(new TimedTask(name, startTime, endTime, workload));
 	}
 	
@@ -50,7 +50,7 @@ public class Database implements IDatabase {
 	 * @param deadline time and date when task ends
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
-	public void addDeadlineTask(String name, Date deadline, int workload) {
+	public void addDeadlineTask(String name, Date deadline, String workload) {
 		deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
 	}
 	
@@ -60,7 +60,7 @@ public class Database implements IDatabase {
 	 * @param name name of task
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
-	public void addGenericTask(String name, int workload) {
+	public void addGenericTask(String name, String workload) {
 		genericTaskList.add(new GenericTask(name, workload));
 	}
 	

@@ -149,8 +149,16 @@ public class GenericTaskList {
 	 * @return ObservableList of GenericTask
 	 * */	
 	public ObservableList<GenericTask> getObservable() {
-		for (int i = 0; i < numOfDisplayItems; i++) {
-			observableGeneric.add(get(i));
+		int maxNumTasksToAdd;
+		if (isEmpty()) {
+			if (taskArray.size() > numOfDisplayItems) {
+				maxNumTasksToAdd = numOfDisplayItems;
+			} else {
+				maxNumTasksToAdd = taskArray.size();
+			}
+			for (int i = 0; i < maxNumTasksToAdd; i++) {
+				observableGeneric.add(get(i));
+			}
 		}
 		return observableGeneric;
 	}

@@ -43,11 +43,11 @@ public class CommandData {
 	}
 
 	public void setTime(String time) {
-		_paramArray[ParameterType.NEW_STARTTME_POS] = time;
+		_paramArray[ParameterType.NEW_STARTTIME_POS] = time;
 	}
 
 	public void setTime(String time1, String time2){
-		_paramArray[ParameterType.NEW_STARTTME_POS] = time1;
+		_paramArray[ParameterType.NEW_STARTTIME_POS] = time1;
 		_paramArray[ParameterType.NEW_ENDTIME_POS] = time2;
 	}
 	

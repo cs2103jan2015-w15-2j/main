@@ -156,8 +156,16 @@ public class DeadlineTaskList {
 	 * @return ObservableList of DeadlineTask
 	 * */
 	public ObservableList<DeadlineTask> getObservable() {
-		for (int i = 0; i < numOfDisplayItems; i++) {
-			observableDeadline.add(get(i));
+		int maxNumTasksToAdd;
+		if (isEmpty()) {
+			if (taskArray.size() > numOfDisplayItems) {
+				maxNumTasksToAdd = numOfDisplayItems;
+			} else {
+				maxNumTasksToAdd = taskArray.size();
+			}
+			for (int i = 0; i < maxNumTasksToAdd; i++) {
+				observableDeadline.add(get(i));
+			}
 		}
 		return observableDeadline;
 	}

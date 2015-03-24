@@ -156,8 +156,16 @@ public class TimedTaskList {
 	 * @return ObservableList of TimedTask
 	 * */
 	public ObservableList<TimedTask> getObservable() {
-		for (int i = 0; i < numOfDisplayItems; i++) {
-			observableTimed.add(get(i));
+		int maxNumTasksToAdd;
+		if (isEmpty()) {
+			if (taskArray.size() > numOfDisplayItems) {
+				maxNumTasksToAdd = numOfDisplayItems;
+			} else {
+				maxNumTasksToAdd = taskArray.size();
+			}
+			for (int i = 0; i < maxNumTasksToAdd; i++) {
+				observableTimed.add(get(i));
+			}
 		}
 		return observableTimed;
 	}

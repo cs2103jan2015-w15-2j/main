@@ -15,6 +15,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 /**
  * Controller class of the Object BillBoardOverview.
@@ -154,7 +156,6 @@ public class BillboardOverviewController {
 		fillTablesWithData(tlPackage);
 		updateTableIndexValues();
 		displayWelcomeMessage();
-		listenForCommand(mainApp);
 		updateTables();
 	}
 
@@ -218,19 +219,14 @@ public class BillboardOverviewController {
 	// Processing User Input //
 	//-----------------------//
 	
-	/**
-	 * enables the text field to listen for user input 
-	 * and passes it to the Logic component for processing.
-	 * 
-	 * @param mainApp reference to the main application
-	 * */
-	private void listenForCommand(MainApp mainApp) {
-		userInputField.setOnAction((event) -> {
+	@FXML
+	private void processInputOnEnterKeyPressed(KeyEvent event) {
+		if (event.getCode() == KeyCode.ENTER) {
 			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
-		});
+			userInputField.clear();
+		}
 	}
-	
 	
 	/**
 	 * passes user input to the Logic component to process
