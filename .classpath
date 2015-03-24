@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/nexus/simplify/Main.java|com/nexus/simplify/UI/IUI.java|com/nexus/simplify/UI/UI.java" kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
-	<classpathentry kind="lib" path="lib/json-20140107.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.7.10.jar"/>
-<<<<<<< HEAD
-=======
-	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.10.jar"/>
->>>>>>> a0e4da74ae96f15e8e34f0cf3f34614b0da0ea11
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.10.jar"/>
+	<classpathentry kind="lib" path="lib/json-20140107.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.7.10.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
