@@ -42,7 +42,7 @@ public class TimedTask extends GenericTask {
 	 * @param endTime end time of task
 	 * @param workload amount of effort requird to do the task ranging from 1 to 5
 	 * */
-	public TimedTask(String name, Date startTime, Date endTime, String workload) {
+	public TimedTask(String name, Date startTime, Date endTime, int workload) {
 		super(name, workload);
 		assert(startTime != null || endTime != null);
 		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));
@@ -63,6 +63,38 @@ public class TimedTask extends GenericTask {
 		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
 	}
 	
+	/**
+	 * constructor for timed tasks with workload, id and endTime in DateTime format
+	 * 
+	 * @param name name of task in StringProperty format
+	 * @param startTime start time of task as Date 
+	 * @param endTime end time of task in DateTime format
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public TimedTask(StringProperty name, Date startTime, DateTime endTime, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));
+		this.endTime = new SimpleObjectProperty<DateTime>(endTime);
+	}
+	
+	/**
+	 * constructor for timed tasks with workload, id and startTime in DateTime format
+	 * 
+	 * @param name name of task in StringProperty format
+	 * @param startTime start time of task in DateTime format 
+	 * @param endTime end time of task as Date
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public TimedTask(StringProperty name, DateTime startTime, Date endTime, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(startTime);
+		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
+	}
+	
 	//--------------------//
 	// Attribute Mutators //
 	//--------------------//
@@ -72,7 +104,7 @@ public class TimedTask extends GenericTask {
 	 * 
 	 * @param startTime the new start time for the task
 	 * */
-	public void setStartTime(String startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime.set(new DateTime(startTime));
 	}
 	
@@ -81,7 +113,7 @@ public class TimedTask extends GenericTask {
 	 * 
 	 * @param endTime the new end time for the task
 	 * */
-	public void setEndTime(String endTime) {
+	public void setEndTime(Date endTime) {
 		this.endTime.set(new DateTime(endTime));
 	}
 	
@@ -159,5 +191,21 @@ public class TimedTask extends GenericTask {
 	 * */
 	public String getReadableEndTime() {
 		return format.print(endTime.get());
+	}
+	
+	//--------//
+	// Method //
+	//--------//
+	
+	/**
+	 * converts TimedTask to GenericTask
+	 * 
+	 * @param name name of TimedTask in StringProperty
+	 * @param workload amount of effort required to do the TimedTask ranging from 1 to 5 in IntegerProperty
+	 * @param id id of TimedTask in StringProperty
+	 * @return GenericTask
+	 * */
+	public GenericTask convertToGeneric(StringProperty name, IntegerProperty workload, StringProperty id) {
+		return new GenericTask(name, workload, id);
 	}
 }
