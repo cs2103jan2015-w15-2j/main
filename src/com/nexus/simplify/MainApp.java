@@ -8,6 +8,7 @@ package com.nexus.simplify;
 import java.io.IOException;
 
 import com.nexus.simplify.UI.view.BillboardOverviewController;
+import com.nexus.simplify.database.Database;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
+	
+	private static final String NAME_INPUT_FILE = "input.json";
 
 	//-----------------//
 	// Class Variables //
@@ -25,8 +28,17 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	
-	private Logic logic = new Logic();
-	private Database database = new Database();
+	private Logic logic;
+	private Database database;
+
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public MainApp() throws IOException {
+		logic = new Logic();
+		database = new Database(NAME_INPUT_FILE);
+	}
 	
 	//--------------------------//
 	// Interface Initialization //
@@ -61,7 +73,7 @@ public class MainApp extends Application {
 			// gives the controller access to the main app.
 			BillboardOverviewController bbController = loader.getController();
 			bbController.setMainApp(this);
-			bbController.initBillboard(listPackage);
+			bbController.initBillboard(database);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
