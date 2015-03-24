@@ -6,10 +6,16 @@ public class Delete {
 	public Delete() {}
 	
 	String execute(String[] parameter){
+		try{
+			int indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		}catch(NumberFormatException e){
+			String feedback = "please enter a task index to delete.";
+			return feedback;
+		}
 		int indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		String feedback = "successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
 		Database database = new Database();
 		database.delete(indexToDelete);
+		String feedback = "successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
 		return feedback; 
 	}
 }
