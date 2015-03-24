@@ -20,8 +20,6 @@ import javafx.stage.Stage;
  * */
 public class MainApp extends Application {
 	
-	private static final String NAME_INPUT_FILE = "input.json";
-
 	//-----------------//
 	// Class Variables //
 	//-----------------//

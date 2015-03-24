@@ -212,7 +212,7 @@ public class BillboardOverviewController {
 	 * */
 	private void updateTables() {
 		feedbackDisplay.textProperty().addListener((observable, oldvalue, newvalue) -> {
-			TaskListPackage listPackage = fetchDataFromDatabase(mainApp.getDatabase());
+			TaskListPackage listPackage = fetchDataFromDatabase(MainApp.getDatabase());
 			fillTablesWithData(listPackage);
 		});
 	}
@@ -224,7 +224,7 @@ public class BillboardOverviewController {
 	@FXML
 	private void processInputOnEnterKeyPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
-			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
+			String feedback = processInputAndReceiveFeedback(MainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
 			userInputField.clear();
 		}
