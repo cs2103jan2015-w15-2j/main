@@ -17,7 +17,7 @@ public abstract class TokenParser {
 
 		assert(usedTokenList.length <= tokenList.length);
 		String[] newTokenList = new String[tokenList.length - usedTokenList.length];
-		
+
 		// Replacing tokens in tokenList with null if they are used
 		for (int i = 0; i < newTokenList.length; i++) {
 			for (int j = 0; j < usedTokenList.length; j++) {
@@ -27,17 +27,21 @@ public abstract class TokenParser {
 			}
 		}
 		// Populating newTokenList with remaining unsed tokens
-		int count = 0;
-		for (int i = 0; i < tokenList.length; i++) {
-			if (tokenList[i] != null) {
-				newTokenList[count] = tokenList[i];
-				count++;
+		if (newTokenList.length == 0) {
+			return newTokenList;
+		} else {
+			int count = 0;
+			for (int i = 0; i < tokenList.length; i++) {
+				if (tokenList[i] != null) {
+					newTokenList[count] = tokenList[i];
+					count++;
+				}
 			}
+
+			return newTokenList;
 		}
-		
-		return newTokenList;
 	}
-	
+
 	protected boolean isTokenListEmpty(String[] tokenList) {
 		if (tokenList.length == 1 & tokenList[0].equals("")) {
 			return true;
@@ -49,11 +53,11 @@ public abstract class TokenParser {
 	protected String[] strToTokenList(String str) {
 		return str.split("//s");
 	}
-	
+
 	protected String tokenListToStr(String[] strArr) {
 		StringBuilder builder = new StringBuilder();
 		for(String s : strArr) {
-		    builder.append(s);
+			builder.append(s);
 		}
 		return builder.toString();
 	}
