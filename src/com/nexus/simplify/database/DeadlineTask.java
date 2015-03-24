@@ -52,7 +52,7 @@ public class DeadlineTask extends GenericTask {
 	 * @param deadline due date of task
 	 * @param workload amount of effort required to do the task ranging from 1 to 5. 
 	 * */
-	public DeadlineTask(String name, Date deadline, String workload) {
+	public DeadlineTask(String name, Date deadline, int workload) {
 		super(name, workload);
 		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
 	}

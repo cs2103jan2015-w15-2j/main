@@ -1,7 +1,8 @@
 package com.nexus.simplify.logic;
-import com.nexus.simplify.Database;
+import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
+import com.nexus.simplify.parser.api.Parser;
 
 public class Logic implements ILogic {
 	
@@ -33,12 +34,12 @@ public class Logic implements ILogic {
 			case DELETE:
 				Delete deleteOp = new Delete();
 				return deleteOp.execute(command.getParameter());
-			case DONE:
+			/*case DONE:
 				Done doneOp = new Done();
-				return doneOp.execute(command.getParameter());
+				return doneOp.execute(command.getParameter());*/
 			default:
-				Invalid invalidOp = new Invalid();
-				return invalidOp.execute();
+				/*Invalid invalidOp = new Invalid();*/
+				return null;//invalidOp.execute();
 		}
 	}		
 }

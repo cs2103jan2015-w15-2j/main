@@ -32,6 +32,7 @@ public class GenericTask {
 	 * constructor without workload
 	 * 
 	 * @param name name of task
+	 * @param  
 	 * */
 	public GenericTask(String name) {
 		this.name = new SimpleStringProperty(name);
@@ -45,9 +46,9 @@ public class GenericTask {
 	 * @param name name of task
 	 * @param workload workload of task
 	 * */
-	public GenericTask(String name, String workload) {
+	public GenericTask(String name, int workload) {
 		this.name = new SimpleStringProperty(name);
-		this.workload = new SimpleIntegerProperty(Integer.parseInt(workload));
+		this.workload = new SimpleIntegerProperty(workload);
 		this.id = new SimpleStringProperty(setId());
 	}
 	

@@ -73,7 +73,7 @@ public class MainApp extends Application {
 		try {
 			// loads main interface from FXML file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("UI/view/InterfaceOverview.fxml"));
+			loader.setLocation(MainApp.class.getResource("UI/view/BillboardOverview.fxml"));
 			AnchorPane billboardOverview = (AnchorPane) loader.load();
 			
 			// sets main interface onto the center of root layout.
