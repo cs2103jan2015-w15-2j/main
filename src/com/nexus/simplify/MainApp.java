@@ -1,13 +1,9 @@
 package com.nexus.simplify;
-
-/**
- *@author Toh Jian Feng 
- *
- */
-
 import java.io.IOException;
 
 import com.nexus.simplify.UI.view.BillboardOverviewController;
+import com.nexus.simplify.database.Database;
+import com.nexus.simplify.logic.Logic;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +12,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+
+/**
+ * Main class for Simplify.
+ * @author tohjianfeng
+ * 
+ * */
 public class MainApp extends Application {
+	
+	private static final String NAME_INPUT_FILE = "input.json";
 
 	//-----------------//
 	// Class Variables //
@@ -25,13 +29,26 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	
-	private Logic logic = new Logic();
-	private Database database = new Database();
+	private Logic logic;
+	private Database database;
+
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public MainApp() throws IOException {
+		logic = Logic.getInstance();
+		database = new Database(NAME_INPUT_FILE);
+	}
 	
 	//--------------------------//
 	// Interface Initialization //
 	//--------------------------//
 	
+	/**
+	 * Initializes the root layout of the application (i.e. the canvas of the app)
+	 * 
+	 * */
 	private void initRootLayout() {
 		try {
 			// load root layout from FXML file.
@@ -48,6 +65,10 @@ public class MainApp extends Application {
 		}	
 	}
 	
+	/**
+	 * displays the scene of the billboard (i.e. 'pasting' the display onto canvas)
+	 * 
+	 * */
 	public void showBillboardOverview() {
 		try {
 			// loads main interface from FXML file.
@@ -61,7 +82,7 @@ public class MainApp extends Application {
 			// gives the controller access to the main app.
 			BillboardOverviewController bbController = loader.getController();
 			bbController.setMainApp(this);
-			bbController.initBillboard(listPackage);
+		    bbController.initBillboard(database);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -71,17 +92,23 @@ public class MainApp extends Application {
 	// Driver Functions //
 	//------------------//
 	
+	/**
+	 * default main function.
+	 * */
 	public static void main(String[] args) {
 		launch(args);
 	}
 
+	/**
+	 * Main driver method to start the app.
+	 * 
+	 * */
 	@Override
 	public void start(Stage primaryStage) throws Exception {		
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Simplify");
 		
 		initRootLayout();
-		
 		showBillboardOverview();
 	}
 	
@@ -89,14 +116,24 @@ public class MainApp extends Application {
 	// Attribute Accessors //
 	//---------------------//
 	
+	/**
+	 * default getter for class attribute primaryStage.
+	 * @return primary stage of application.
+	 * */
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
 	
+	/**
+	 * @return reference to the instance of logic instantiated in the main app.
+	 * */
 	public Logic getLogic() {
 		return logic;
 	}
 	
+	/**
+	 * @return reference to the instance of database instantiated in the main app.
+	 * */
 	public Database getDatabase() {
 		return database;
 	}

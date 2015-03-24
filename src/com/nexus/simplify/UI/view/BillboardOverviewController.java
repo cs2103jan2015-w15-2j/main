@@ -1,31 +1,42 @@
 package com.nexus.simplify.UI.view;
 
 import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DeadlineTask;
+import com.nexus.simplify.database.GenericTask;
+import com.nexus.simplify.database.TaskListPackage;
+import com.nexus.simplify.database.TimedTask;
+import com.nexus.simplify.logic.Logic;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /**
- * 
+ * Controller class of the Object BillBoardOverview.
  * @author Toh Jian Feng
  * */
-
 public class BillboardOverviewController {
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+	
 	//------------------//
 	// Class Attributes //
 	//------------------//
 	
-	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
-
-	// reference to MainApp
+	/**
+	 * Reference to MainApp.
+	 * Required for controller to link with MainApp.
+	 * */
 	MainApp mainApp;
 	
-	// deadline-based task attributes
+	/**
+	 * Attributes of the table displaying deadline-based tasks.
+	 * 
+	 * */
 	@FXML
 	private TableView<DeadlineTask> deadlineTaskTable;
 	
@@ -41,7 +52,10 @@ public class BillboardOverviewController {
 	@FXML
 	private TableColumn<DeadlineTask, Integer> deadlineTaskWorkloadColumn;
 	
-	// timed task attributes
+	/**
+	 * Attributes of the table displaying timed tasks.
+	 * 
+	 * */
 	@FXML
 	private TableView<TimedTask> timedTaskTable;
 	
@@ -60,7 +74,10 @@ public class BillboardOverviewController {
 	@FXML
 	private TableColumn<TimedTask, Integer> timedTaskWorkloadColumn;
 	
-	// generic task attributes
+	/**
+	 * Attributes of the table displaying generic tasks.
+	 * 
+	 * */
 	@FXML
 	private TableView<GenericTask> genericTaskTable;
 	
@@ -73,11 +90,15 @@ public class BillboardOverviewController {
 	@FXML
 	private TableColumn<GenericTask, Integer> genericTaskWorkloadColumn;
 	
-	// Feedback listener
+	/**
+	 * Allows feedback to be displayed on the billboard.
+	 * */
 	@FXML
 	private TextArea feedbackDisplay;
 	
-	// 
+	/**
+	 * Retrieves user input from the keyboard.
+	 * */
 	@FXML
 	private TextField userInputField;
 	
@@ -86,7 +107,6 @@ public class BillboardOverviewController {
 	//-------------//
 	
     /**
-     * The constructor.
      * The constructor is called before the initialize() method.
      */
 	public BillboardOverviewController() {
@@ -97,6 +117,11 @@ public class BillboardOverviewController {
 	// Attribute Mutators //
 	//--------------------//
 		
+	/**
+	 * Called by the main application to give a reference back to itself.
+	 * 
+	 * @param mainApp the main class for the program
+	 * */	
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;		
 	}
@@ -117,48 +142,53 @@ public class BillboardOverviewController {
 	}
 
 	/**
-	 * 
 	 * Initialises the 3 tables on the interface.
 	 * 
-	 * @param listPackage
-	 * the package of observable lists obtained from database
+	 * @param listPackage the package of observable lists obtained from database
 	 * */
-	public void initBillboard(TaskListPackage listPackage) {		
-		fillTablesWithData(listPackage);
-
+	public void initBillboard(Database database) {		
+		fillTablesWithData(database.getTaskListPackage());
 		displayWelcomeMessage();
-		
 		listenForCommand(mainApp);
-		
 		updateTables();
 	}
 
+	/**
+	 * Initializes the table displaying generic tasks with columns representing each attribute of the task class.
+	 * Only genericTaskIndexColumn has no relation to the GenericTask class.
+	 * */
 	private void initGenericTaskTable() {
-		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
-		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().taskNameProperty());
-		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
+		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(genericTaskTable.getItems().indexOf(column.getValue())));
 	}
 
+	/**
+	 * Initializes the table displaying timed tasks with columns representing each attribute of the task class.
+	 * Only timedTaskIndexColumn has no relation to the TimedTask class.
+	 * */
 	private void initTimedTaskTable() {
-		timedTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
-		timedTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().taskNameProperty());
-		timedTaskStartTimeColumn.setCellValueFactory(cellData -> cellData.getValue().taskStartTimeProperty());
-		timedTaskEndTimeColumn.setCellValueFactory(cellData -> cellData.getValue().taskEndTimeProperty());
-		timedTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
+		timedTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		timedTaskStartTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimeAsStringProperty());
+		timedTaskEndTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getEndTimeAsStringProperty());
+		timedTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(timedTaskTable.getItems().indexOf(column.getValue())));
 	}
 
+	/**
+	 * Initializes the table displaying deadline-based tasks with columns representing each attribute of the task class.
+	 * Only deadlineTaskIndexColumn has no relation to the DeadlineTask class.
+	 * */
 	private void initDeadlineTaskTable() {
-		deadlineTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
-		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().taskNameProperty());
-		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().taskDueDateProperty());
-		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
+		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDTAsStringProperty());
+		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer>(deadlineTaskTable.getItems().indexOf(column.getValue())));
 	}
 	
 	/**
-	 * 
 	 * fetches updated lists from database once feedback is received from 
 	 * the Logic component.
-	 * 
 	 * */
 	private void updateTables() {
 		feedbackDisplay.textProperty().addListener((observable, oldvalue, newvalue) -> {
@@ -171,15 +201,30 @@ public class BillboardOverviewController {
 	// Processing User Input //
 	//-----------------------//
 	
+	/**
+	 * enables the text field to listen for user input 
+	 * and passes it to the Logic component for processing.
+	 * 
+	 * @param mainApp reference to the main application
+	 * */
 	private void listenForCommand(MainApp mainApp) {
 		userInputField.setOnAction((event) -> {
-			String feedback = processInputAndReceiveFeedback(mainApp.getLogic());
+			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
 		});
 	}
 	
-	private String processInputAndReceiveFeedback(Logic logic) {
-		String resultantFeedback = logic.processInput();
+	
+	/**
+	 * passes user input to the Logic component to process
+	 * it as a command.
+	 * 
+	 * @param logic reference to the logic component
+	 * @param userInput command entered by the user
+	 * @return feedback from the logic component after processing the input.
+	 * */
+	private String processInputAndReceiveFeedback(Logic logic, String userInput) {
+		String resultantFeedback = logic.executeCommand(userInput);
 		return resultantFeedback;
 	}
 	
@@ -187,6 +232,9 @@ public class BillboardOverviewController {
 	// Display Methods //
 	//-----------------//
 	
+	/**
+	 * displays a welcome message to the user during a new session.
+	 * */
 	private void displayWelcomeMessage() {
 		feedbackDisplay.setText(MESSAGE_WELCOME);
 	}
@@ -195,22 +243,28 @@ public class BillboardOverviewController {
 	// Data Fetching and Table Manipulation //
 	//--------------------------------------//
 	
+	/**
+	 * @param database the reference to the single instance of database in main app.
+	 * @return a task list package that wraps the three observable task lists together.
+	 * */
 	private TaskListPackage fetchDataFromDatabase(Database database) {
 		TaskListPackage listPackage = database.getTaskListPackage();
 		return listPackage;
 	}
 	
+	/**
+	 * Populates all three tables with data fetched from database
+	 * @param listPackage the wrapper class containing all three ObservableLists
+	 * */
 	private void fillTablesWithData(TaskListPackage listPackage) {
-		ObservableList<DeadlineTask> deadlineTaskList = listPackage.getDeadlineTaskList();
-		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTaskList();
-		ObservableList<GenericTask> floatingTaskList = listPackage.getFloatingTaskList();
+		ObservableList<DeadlineTask> deadlineTaskList = listPackage.getDeadlineTL();
+		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTL();
+		ObservableList<GenericTask> genericTaskList = listPackage.getGenericTL();
 		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
-		genericTaskTable.setItems(floatingTaskList);
+		genericTaskTable.setItems(genericTaskList);
 	}
-	
-	
 
-	
+
 }
