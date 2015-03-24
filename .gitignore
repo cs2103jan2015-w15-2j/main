@@ -23,6 +23,5 @@ hs_err_pid*
 #########
 
 # External Libraries #
-!/lib/joda-time-2.1.jar
-!/lib/json-20140107.jar
+!/lib/*
 input.json
