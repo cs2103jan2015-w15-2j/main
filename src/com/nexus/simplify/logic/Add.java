@@ -7,7 +7,7 @@ public class Add {
 	
 	public Add(){}
 	
-	public CommandResult execute(String[] parameter){
+	public String execute(String[] parameter){
 		String name = parameter[ParameterType.CURRENT_NAME_POS];
 		String deadline = parameter[ParameterType.NEW_DEADLINE_POS];
 		String workload = parameter[ParameterType.NEW_WORKLOAD_POS];

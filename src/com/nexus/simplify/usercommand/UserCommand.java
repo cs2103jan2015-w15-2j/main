@@ -2,18 +2,18 @@ package com.nexus.simplify.usercommand;
 
 public class UserCommand {
 	private OperationType operation;
-	private int parameterType;
+	private String[] parameter;
 	
-	public UserCommand(OperationType operation, int parameterType){
+	public UserCommand(OperationType operation, String[] parameter){
 		this.operation = operation;
-		this.parameterType = parameterType;
+		this.parameter = parameter;
 	}
 	
 	public OperationType getOperationType(){
 		return operation;
 	}
 	
-	public int getParameterType(){
-		return parameterType;
+	public String[] getParameter(){
+		return parameter;
 	}
 }
