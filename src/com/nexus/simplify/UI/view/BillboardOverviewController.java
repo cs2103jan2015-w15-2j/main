@@ -31,6 +31,8 @@ public class BillboardOverviewController {
 	// Class Attributes //
 	//------------------//
 	
+	private static final int INDEX_OFFSET = 1;
+	
 	/**
 	 * Reference to MainApp.
 	 * Required for controller to link with MainApp.
@@ -150,15 +152,12 @@ public class BillboardOverviewController {
 
 	/**
 	 * Initialises the 3 tables on the interface.
-	 * 
 	 * @param listPackage the package of observable lists obtained from database
 	 * */
-	public void initBillboard(Database database) {
-		TaskListPackage tlPackage = fetchDataFromDatabase(database);
-		fillTablesWithData(tlPackage);
+	public void initBillboard() {
+		updateTables();
 		updateTableIndexValues();
 		displayWelcomeMessage();
-		updateTables();
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class BillboardOverviewController {
 						);
 		deadlineTaskIndexColumn.setCellValueFactory(
 				column -> new ReadOnlyObjectWrapper<Integer>(
-						deadlineTaskTable.getItems().indexOf(column.getValue()))
+						deadlineTaskTable.getItems().indexOf(column.getValue()) + INDEX_OFFSET)
 						);
 	}
 	
@@ -211,10 +210,9 @@ public class BillboardOverviewController {
 	 * the Logic component.
 	 * */
 	private void updateTables() {
-		feedbackDisplay.textProperty().addListener((observable, oldvalue, newvalue) -> {
-			TaskListPackage listPackage = fetchDataFromDatabase(MainApp.getDatabase());
-			fillTablesWithData(listPackage);
-		});
+		TaskListPackage listPackage = fetchDataFromDatabase(MainApp.getDatabase());
+		fillTablesWithData(listPackage);
+
 	}
 	
 	//-----------------------//
@@ -226,6 +224,7 @@ public class BillboardOverviewController {
 		if (event.getCode() == KeyCode.ENTER) {
 			String feedback = processInputAndReceiveFeedback(MainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
+			updateTables();
 			userInputField.clear();
 		}
 	}
