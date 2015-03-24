@@ -1,6 +1,11 @@
 package com.nexus.simplify.UI.view;
 
 import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DeadlineTask;
+import com.nexus.simplify.database.GenericTask;
+import com.nexus.simplify.database.TaskListPackage;
+import com.nexus.simplify.database.TimedTask;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -123,8 +128,8 @@ public class BillboardOverviewController {
 	 * @param listPackage
 	 * the package of observable lists obtained from database
 	 * */
-	public void initBillboard(TaskListPackage listPackage) {		
-		fillTablesWithData(listPackage);
+	public void initBillboard(Database database) {		
+		fillTablesWithData(database.getTaskListPackage());
 
 		displayWelcomeMessage();
 		
@@ -134,8 +139,8 @@ public class BillboardOverviewController {
 	}
 
 	private void initGenericTaskTable() {
-		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().taskIndexProperty());
-		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().taskNameProperty());
+		genericTaskIndexColumn.setCellValueFactory(cellData -> cellData.getValue().getId());
+		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getName().);
 		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().taskWorkloadProperty());
 	}
 
@@ -201,13 +206,13 @@ public class BillboardOverviewController {
 	}
 	
 	private void fillTablesWithData(TaskListPackage listPackage) {
-		ObservableList<DeadlineTask> deadlineTaskList = listPackage.getDeadlineTaskList();
-		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTaskList();
-		ObservableList<GenericTask> floatingTaskList = listPackage.getFloatingTaskList();
+		ObservableList<DeadlineTask> deadlineTaskList = listPackage.getDeadline();
+		ObservableList<TimedTask> timedTaskList = listPackage.getTimed();
+		ObservableList<GenericTask> genericTaskList = listPackage.getGeneric();
 		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
-		genericTaskTable.setItems(floatingTaskList);
+		genericTaskTable.setItems(genericTaskList);
 	}
 	
 	

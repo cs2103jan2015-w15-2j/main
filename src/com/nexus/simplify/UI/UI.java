@@ -17,7 +17,11 @@ import com.nexus.simplify.logic.CommandResult;
 import com.nexus.simplify.logic.Logic;
 import com.nexus.simplify.logic.Task;
 import com.nexus.simplify.logic.TaskList;
+<<<<<<< HEAD
 >>>>>>> c81863ddb6014175bfe625daf3c96622735e5efa:src/com/nexus/simplify/UI.java
+=======
+>>>>>>> 6f2e3832147ef855d6261e6402dc33b96517a985:src/com/nexus/simplify/UI.java
+>>>>>>> origin/gui-data-merge-test
 
 public class UI implements IUI {
 	

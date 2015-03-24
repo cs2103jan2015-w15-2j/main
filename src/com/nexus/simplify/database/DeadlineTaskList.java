@@ -129,8 +129,8 @@ public class DeadlineTaskList {
 	
 	private Comparator<DeadlineTask> taskDeadlineComparator = new Comparator<DeadlineTask>() {
 		public int compare(DeadlineTask t1, DeadlineTask t2) {
-			String t1Deadline = t1.getDeadline();
-			String t2Deadline = t2.getDeadline();
+			String t1Deadline = t1.getReadableDeadline();
+			String t2Deadline = t2.getReadableDeadline();
 			return t1Deadline.compareTo(t2Deadline);
 		}
 	};
