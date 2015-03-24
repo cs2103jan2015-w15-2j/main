@@ -2,7 +2,7 @@
  * @author Tan Qian Yi
  * */
 
-package com.nexus.simplify;
+package com.nexus.simplify.logic;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

@@ -2,7 +2,7 @@
  * @author David Zhao Han
  * */
 
-package com.nexus.simplify;
+package com.nexus.simplify.logic;
 
 import java.util.*;
 

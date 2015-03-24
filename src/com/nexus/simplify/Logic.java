@@ -1,14 +1,17 @@
 package com.nexus.simplify;
 
 import com.nexus.simplify.OperationType;
+import com.nexus.simplify.database.Database;
+
+import java.io.*;
 
 public class Logic implements ILogic {
 	
-	private static TaskList tempList;
+	private static GenericTaskList tempList;
 	private static Database database;
 	
 	public Logic() {
-		tempList = new TaskList();
+		tempList = new GenericTaskList();
 	}
 	
 	public CommandResult executeCommand(Command command) {
@@ -17,7 +20,7 @@ public class Logic implements ILogic {
 		return command.executeSpecificCommand(operation, parameter);
 	}
 	
-	public static TaskList getTempList() {
+	public static GenericTaskList getTempList() {
 		return tempList;
 	}
 	
@@ -26,14 +29,20 @@ public class Logic implements ILogic {
 	}
 	
 	public CommandResult initialise(String fileName) {
-		database = new Database(fileName);
-		tempList = database.readFromFile();
-		if(tempList == null){
+		try {
+			database = new Database(fileName);
+			tempList = database.readFromFile();
+			if(tempList == null){
+				return null;
+			} else {
+				String feedback = null;
+				CommandResult result = new CommandResult(tempList, feedback);
+				return result;
+			}
+		} catch (IOException ioe){
+			// return error message
+			System.err.println("Error when accessing file");
 			return null;
-		} else {
-			String feedback = null;
-			CommandResult result = new CommandResult(tempList, feedback);
-			return result;
 		}
 	}
 }

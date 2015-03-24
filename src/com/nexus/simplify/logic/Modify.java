@@ -1,5 +1,6 @@
-package com.nexus.simplify;
-import com.nexus.simplify.ParameterType;
+package com.nexus.simplify.logic;
+import com.nexus.simplify.Database;
+import com.nexus.simplify.usercommand.ParameterType;
 
 public class Modify {
 	public Modify() {
