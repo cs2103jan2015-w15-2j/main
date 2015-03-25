@@ -285,6 +285,7 @@ public class Database implements IDatabase {
 		file = new File(fileName);
 		if (file.exists()) {
 			getDataFromFile();
+			readFromFile();
 		} else {
 			file.createNewFile();
 		}
@@ -356,19 +357,19 @@ public class Database implements IDatabase {
 		for (int i = 0; i < tempList.size(); i++) {
 			jsonTask = new JSONObject(tempList.get(i));
 			if (jsonTask.getString("Type").equals("Generic")) {
-				genericTask = new GenericTask(jsonTask.getString("name"));
-				genericTask.setWorkload(jsonTask.getInt("workload"));
-				genericTask.setId(jsonTask.getString("id"));
+				genericTask = new GenericTask(jsonTask.getString("Name"));
+				genericTask.setWorkload(jsonTask.getInt("Workload"));
+				genericTask.setId(jsonTask.getString("ID"));
 				resultantGenericTL.add(genericTask);
 			} else if (jsonTask.getString("Type").equals("Deadline")) {
-				deadlineTask = new DeadlineTask(jsonTask.getString("name"), parseDate(jsonTask.getString("Deadline")));
-				deadlineTask.setWorkload(jsonTask.getInt("workload"));
+				deadlineTask = new DeadlineTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Deadline")));
+				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
 				deadlineTask.setId(jsonTask.getString("id"));
 				resultantDeadlineTL.add(deadlineTask);
 			} else {
-				timedTask = new TimedTask(jsonTask.getString("name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
-				timedTask.setWorkload(jsonTask.getInt("workload"));
-				timedTask.setId(jsonTask.getString("id"));
+				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
+				timedTask.setWorkload(jsonTask.getInt("Workload"));
+				timedTask.setId(jsonTask.getString("ID"));
 				resultantTimedTL.add(timedTask);
 			}
 		}

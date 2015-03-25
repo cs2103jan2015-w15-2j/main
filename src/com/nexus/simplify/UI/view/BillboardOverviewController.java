@@ -290,7 +290,7 @@ public class BillboardOverviewController {
 	
 	
 	/**
-	 * updates the refernce size values of the deadline-based task tables
+	 * updates the reference size values of the deadline-based task tables
 	 * and the timed task tables.
 	 * 
 	 * */
