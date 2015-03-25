@@ -2,8 +2,6 @@ package com.nexus.simplify.logic;
 
 import static org.junit.Assert.*;
 
-import java.text.ParseException;
-
 import org.junit.Test;
 
 public class TestAdd {

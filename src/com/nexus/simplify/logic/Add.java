@@ -8,6 +8,10 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+/*
+ * This class determines task type and calls database
+ * to add the task into the storage
+ */
 public class Add {
 		
 	public Add(){}
