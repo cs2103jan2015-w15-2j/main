@@ -2,9 +2,12 @@ package com.nexus.simplify.parser.api;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.joestelmach.natty.DateGroup;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
@@ -19,7 +22,7 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testAddBoundaries() {
+	public void testAddNameBoundaries() {
 		String[] noParam = new String[ParameterType.MAX_SIZE];
 		OperationType add = OperationType.ADD;
 
@@ -41,6 +44,20 @@ public class ParserTest {
 		String[] expectedLongParam = new String[ParameterType.MAX_SIZE];
 		setParameterValue(expectedLongParam, ParameterType.NEW_NAME_POS, longName);
 		validateParse(longName, add, expectedParam);
+	}
+	
+	public void testAddDeadline() {
+		
+	}
+	
+	private List<String> getDates(String userInput) {
+		com.joestelmach.natty.Parser natty = new com.joestelmach.natty.Parser();
+		List<DateGroup> groups = natty.parse(userInput);
+		for (DateGroup group:groups) {
+			// get List<String> of dates in string
+		}
+		return null;
+		
 	}
 	
 	private void validateParse(String input, OperationType expectedOp, String[] expectedParam) {
