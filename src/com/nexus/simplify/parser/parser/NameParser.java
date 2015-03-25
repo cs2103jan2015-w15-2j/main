@@ -23,4 +23,14 @@ public class NameParser extends TokenParser {
 			return getRemainingTokens(name, tokenList);
 		}
 	}
+	
+	@Override
+	protected String tokenListToStr(String[] strArr) {
+		StringBuilder builder = new StringBuilder();
+		for(String s : strArr) {
+			builder.append(s);
+			builder.append(" ");
+		}
+		return builder.toString().trim();
+	}
 }
