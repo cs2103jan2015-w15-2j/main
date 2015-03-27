@@ -57,4 +57,8 @@ public class Display {
 	private static boolean isNumeric(String str){
 	  return str.matches("-?\\d+(\\.\\d+)?");
 	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter){}
 }

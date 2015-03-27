@@ -2,6 +2,7 @@ package com.nexus.simplify.logic;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
@@ -84,4 +85,8 @@ public class Modify {
 		feedback += "modified.";
 		return feedback;
 	}
+	
+		// this method is for unit testing, which assumes that parser and
+		// database function correctly
+		public String executeForTesting(String[] parameter){}
 }

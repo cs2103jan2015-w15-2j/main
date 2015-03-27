@@ -52,4 +52,8 @@ public class Add {
 		}
 		return feedback;
 	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter){}
 }
