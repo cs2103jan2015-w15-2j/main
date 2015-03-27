@@ -364,7 +364,7 @@ public class Database implements IDatabase {
 			} else if (jsonTask.getString("Type").equals("Deadline")) {
 				deadlineTask = new DeadlineTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Deadline")));
 				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
-				deadlineTask.setId(jsonTask.getString("id"));
+				deadlineTask.setId(jsonTask.getString("ID"));
 				resultantDeadlineTL.add(deadlineTask);
 			} else {
 				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
