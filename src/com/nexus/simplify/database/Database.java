@@ -377,20 +377,7 @@ public class Database implements IDatabase {
 				genericTask = new GenericTask(jsonTask.getString("Name"));
 				genericTask.setWorkload(jsonTask.getInt("Workload"));
 				genericTask.setId(jsonTask.getString("ID"));
-<<<<<<< HEAD
 				resultantGenericTL.add(genericTask);
-			} else if (jsonTask.getString("Type").equals("Deadline")) {
-				deadlineTask = new DeadlineTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Deadline")));
-				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
-				deadlineTask.setId(jsonTask.getString("ID"));
-				resultantDeadlineTL.add(deadlineTask);
-			} else {
-				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
-				timedTask.setWorkload(jsonTask.getInt("Workload"));
-				timedTask.setId(jsonTask.getString("ID"));
-				resultantTimedTL.add(timedTask);
-=======
-				genericTL.add(genericTask);
 			}
 		}
 		return genericTL;
@@ -425,7 +412,6 @@ public class Database implements IDatabase {
 				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
 				deadlineTask.setId(jsonTask.getString("ID"));
 				deadlineTL.add(deadlineTask);
->>>>>>> 3d7eacdff87fb44daa09eaafc053dc1ab5789323
 			}
 		}
 		return deadlineTL;
