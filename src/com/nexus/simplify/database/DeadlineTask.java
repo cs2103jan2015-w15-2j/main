@@ -17,7 +17,7 @@ public class DeadlineTask extends GenericTask {
 	 * All dates will be shaped according to this format. 
 	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
 	 * */
-	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
+	private static final String JAVA_DATE_FORMAT = "E MMM dd HH:mm";
 
 	/** 
 	 * reference to http://stackoverflow.com/questions/3307330/using-joda-date-time-api-to-parse-multiple-formats 
