@@ -53,7 +53,11 @@ public class Database implements IDatabase {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
-		timedTaskList.add(new TimedTask(name, startTime, endTime, workload));
+		if (workload == 0) {
+			timedTaskList.add(new TimedTask(name, startTime, endTime));
+		} else {
+			timedTaskList.add(new TimedTask(name, startTime, endTime, workload));
+		}
 		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
@@ -65,7 +69,11 @@ public class Database implements IDatabase {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
-		deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
+		if (workload == 0) {
+			deadlineTaskList.add(new DeadlineTask(name, deadline));
+		} else {
+			deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
+		}
 		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
@@ -76,7 +84,11 @@ public class Database implements IDatabase {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addGenericTask(String name, int workload) {
-		genericTaskList.add(new GenericTask(name, workload));
+		if (workload == 0) {
+			genericTaskList.add(new GenericTask(name));
+		} else {
+			genericTaskList.add(new GenericTask(name, workload));
+		}
 		writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
