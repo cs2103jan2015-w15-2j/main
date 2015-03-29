@@ -37,7 +37,7 @@ public class Add {
 			if(newStartTime.equals(newEndTime)){
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-				feedback = "successfully added dealine task \"" + name + "\".";
+				feedback = "successfully added deadline task \"" + name + "\".";
 			}
 			else{
 				Date startTime = df.parse(newStartTime);

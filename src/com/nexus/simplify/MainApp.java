@@ -27,7 +27,7 @@ public class MainApp extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	
-	private static Logic logic;
+	private Logic logic;
 	private static Database database;
 
 	//-------------//
@@ -44,7 +44,7 @@ public class MainApp extends Application {
 	//--------------------------//
 	
 	/**
-	 * Initializes the root layout of the application (i.e. the canvas of the app)
+	 * Initializes the root layout of the application (the canvas of the app)
 	 * 
 	 * */
 	private void initRootLayout() {
@@ -64,12 +64,9 @@ public class MainApp extends Application {
 	}
 	
 	/**
-	 * displays the scene of the billboard (i.e. 'pasting' the display onto canvas)
+	 * displays the scene of the billboard ('pasting' the display onto canvas)
 	 * 
 	 * */
-	/**
-	 * 
-	 */
 	public void showBillboardOverview() {
 		try {
 			// loads main interface from FXML file.
@@ -83,6 +80,7 @@ public class MainApp extends Application {
 			// gives the controller access to the main app.
 			BillboardOverviewController bbController = loader.getController();
 			bbController.setMainApp(this);
+			bbController.setDatabase(database);
 		    bbController.initBillboard();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -128,7 +126,7 @@ public class MainApp extends Application {
 	/**
 	 * @return reference to the instance of logic instantiated in the main app.
 	 * */
-	public static Logic getLogic() {
+	public Logic getLogic() {
 		return logic;
 	}
 	

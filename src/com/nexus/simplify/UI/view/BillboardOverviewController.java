@@ -10,7 +10,6 @@ import com.nexus.simplify.database.TaskListPackage;
 import com.nexus.simplify.database.TimedTask;
 import com.nexus.simplify.logic.Logic;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -22,6 +21,10 @@ import javafx.scene.input.KeyEvent;
 
 /**
  * Controller class of the Object BillBoardOverview.
+ * BillboardOverview displays three tables for each type of task:
+ * 1. deadline-based tasks
+ * 2. timed tasks
+ * 3. generic tasks
  * @author Toh Jian Feng
  * */
 public class BillboardOverviewController {
@@ -31,17 +34,12 @@ public class BillboardOverviewController {
 	// Class Attributes //
 	//------------------//
 	
-	private static final int INDEX_OFFSET = 1;
-	
-	/**
-	 * Reference to MainApp.
-	 * Required for controller to link with MainApp.
-	 * */
+	// References to main application
 	MainApp mainApp;
+	Database database;
 	
 	/**
 	 * Attributes of the table displaying deadline-based tasks.
-	 * 
 	 * */
 	@FXML
 	private TableView<DeadlineTask> deadlineTaskTable;
@@ -60,7 +58,6 @@ public class BillboardOverviewController {
 	
 	/**
 	 * Attributes of the table displaying timed tasks.
-	 * 
 	 * */
 	@FXML
 	private TableView<TimedTask> timedTaskTable;
@@ -108,9 +105,6 @@ public class BillboardOverviewController {
 	@FXML
 	private TextField userInputField;
 	
-	private int currentDeadlineTLSize = 0;
-	private int currentTimedTLSize = 0;
-	
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -135,6 +129,15 @@ public class BillboardOverviewController {
 		this.mainApp = mainApp;		
 	}
 	
+	/**
+	 * Called by the main application to reference its instance of database.
+	 * 
+	 * @param database the database instance from the main application
+	 * */
+	public void setDatabase(Database database) {
+		this.database = database;
+	}
+	
 	//----------------//
 	// Initialization //
 	//----------------//
@@ -151,18 +154,16 @@ public class BillboardOverviewController {
 	}
 
 	/**
-	 * Initialises the 3 tables on the interface.
+	 * Initializes the 3 tables on the interface.
 	 * @param listPackage the package of observable lists obtained from database
 	 * */
 	public void initBillboard() {
 		updateTables();
-		updateTableIndexValues();
 		displayWelcomeMessage();
 	}
 
 	/**
 	 * Initializes the table displaying generic tasks with columns representing each attribute of the task class.
-	 * Only genericTaskIndexColumn has no relation to the GenericTask class.
 	 * */
 	private void initGenericTaskTable() {
 		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
@@ -171,7 +172,6 @@ public class BillboardOverviewController {
 
 	/**
 	 * Initializes the table displaying timed tasks with columns representing each attribute of the task class.
-	 * Only timedTaskIndexColumn has no relation to the TimedTask class.
 	 * */
 	private void initTimedTaskTable() {
 		timedTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
@@ -182,7 +182,6 @@ public class BillboardOverviewController {
 
 	/**
 	 * Initializes the table displaying deadline-based tasks with columns representing each attribute of the task class.
-	 * Only deadlineTaskIndexColumn has no relation to the DeadlineTask class.
 	 * */
 	private void initDeadlineTaskTable() {
 		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
@@ -190,27 +189,12 @@ public class BillboardOverviewController {
 		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
 	}
 	
-	private void updateTableIndexValues() {
-		genericTaskIndexColumn.setCellValueFactory(
-				column -> new ReadOnlyObjectWrapper<Integer>(
-						genericTaskTable.getItems().indexOf(column.getValue()) + currentDeadlineTLSize + currentTimedTLSize)
-						);
-		timedTaskIndexColumn.setCellValueFactory(
-				column -> new ReadOnlyObjectWrapper<Integer>(
-						timedTaskTable.getItems().indexOf(column.getValue()) + currentDeadlineTLSize)
-						);
-		deadlineTaskIndexColumn.setCellValueFactory(
-				column -> new ReadOnlyObjectWrapper<Integer>(
-						deadlineTaskTable.getItems().indexOf(column.getValue()) + INDEX_OFFSET)
-						);
-	}
-	
 	/**
 	 * fetches updated lists from database once feedback is received from 
 	 * the Logic component.
 	 * */
 	private void updateTables() {
-		TaskListPackage listPackage = fetchDataFromDatabase(MainApp.getDatabase());
+		TaskListPackage listPackage = fetchDataFromDatabase(database);
 		fillTablesWithData(listPackage);
 
 	}
@@ -219,10 +203,16 @@ public class BillboardOverviewController {
 	// Processing User Input //
 	//-----------------------//
 	
+	/**
+	 * Sends input to the Logic component upon the action
+	 * when the user presses Enter on the keyboard.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
 	@FXML
 	private void processInputOnEnterKeyPressed(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
-			String feedback = processInputAndReceiveFeedback(MainApp.getLogic(), userInputField.getText());
+			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
 			updateTables();
 			userInputField.clear();
@@ -259,9 +249,9 @@ public class BillboardOverviewController {
 		feedbackDisplay.setText(MESSAGE_WELCOME);
 	}
 	
-	//--------------------------------------//
-	// Data Fetching and Table Manipulation //
-	//--------------------------------------//
+	//-----------------------------------------//
+	// Data Observation and Table Manipulation //
+	//-----------------------------------------//
 	
 	/**
 	 * @param database the reference to the single instance of database in main app.
@@ -281,21 +271,8 @@ public class BillboardOverviewController {
 		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTL();
 		ObservableList<GenericTask> genericTaskList = listPackage.getGenericTL();
 		
-		updateTableSizes(deadlineTaskList, timedTaskList);
-		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
 		genericTaskTable.setItems(genericTaskList);
-	}
-	
-	
-	/**
-	 * updates the reference size values of the deadline-based task tables
-	 * and the timed task tables.
-	 * 
-	 * */
-	private void updateTableSizes(ObservableList<DeadlineTask> deadlineTaskList, ObservableList<TimedTask> timedTaskList) {
-		currentTimedTLSize = timedTaskList.size();
-		currentDeadlineTLSize = deadlineTaskList.size();
 	}
 }
