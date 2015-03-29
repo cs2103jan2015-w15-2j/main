@@ -6,6 +6,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.nexus.simplify.database.observables.DeadlineTaskList;
+import com.nexus.simplify.database.observables.GenericTaskList;
+import com.nexus.simplify.database.observables.TimedTaskList;
+
 /**
  * provides a test suite for the various methods found in the Database Class.
  * @author tohjianfeng

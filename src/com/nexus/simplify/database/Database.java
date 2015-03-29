@@ -10,29 +10,41 @@ import java.io.*;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.json.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import com.nexus.simplify.database.*;
+import com.nexus.simplify.database.observables.DeadlineTaskList;
+import com.nexus.simplify.database.observables.GenericTaskList;
+import com.nexus.simplify.database.observables.TaskListPackage;
+import com.nexus.simplify.database.observables.TimedTaskList;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
 
 @SuppressWarnings("unused")
 
-public class Database implements IDatabase {
+public class Database {
 	
 	/**
 	 * All dates will be shaped according to this format. 
 	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
 	 * */
-	private static final String JAVA_DATE_FORMAT = "MMM dd HH:mm";
+	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
 	private static final String MSG_INDEX_OOR = "Index is out of range.";
 	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
-	private static final String FILENAME = "input.json";
+	private static final String DEFAULT_FILE_NAME = "input.json";
+	private static final String CONFIG_FILE_LOCATION = "config/";
+	private static final String CONFIG_FILE_NAME = "simplify-config.json";
+	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
 	
-	private File file;
-	private ArrayList<String> tempList = new ArrayList<String>();
+	private String dataFileLocation;
+	
 	private GenericTaskList genericTaskList = new GenericTaskList();
 	private TimedTaskList timedTaskList = new TimedTaskList();
 	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
@@ -257,7 +269,6 @@ public class Database implements IDatabase {
 	// API for UI //
 	//------------//
 	
-	
 	/**
 	 * packages the three lists.
 	 * 
@@ -278,61 +289,145 @@ public class Database implements IDatabase {
 	 * 
 	 * */
 	public Database() throws IOException {
-		setUpFile(FILENAME);
-		readFromFile();
+		initDatabase();
+		JSONArray jsonTaskArray = retrieveDataFromFile();
+		populateTaskLists(jsonTaskArray);
 	}
 	
 	//----------------//
 	// Initialization //
 	//----------------//
-	
-	/**
-	 * initializes the data base by opening the input file 
-	 * and fetching data from it.
-	 * 
-	 * @param fileName name of input file to be opened
-	 * @throws IOException for an interrupted IO operation.
-	 * 
-	 * */
-	private void setUpFile(String fileName) throws IOException {
-		// String dirName = "somestring";
-		// File dir = new File(dirName);
-		// File actualFile = new File(dir, fileName);
-		file = new File(fileName);
-		if (file.exists()) {
-			getDataFromFile();
-			readFromFile();
+
+	private void initDatabase() {
+		String configFile = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
+		if (!configFileExists(configFile)) {
+			createNewConfigFile(configFile);
+			revertToDefaultSettings();
 		} else {
-			file.createNewFile();
+			retrieveSettingsFromConfigFile();
 		}
 	}
 	
+	private void retrieveSettingsFromConfigFile() {
+		JSONObject configJson = new JSONObject();
+		try {
+			JSONParser jsonParser = new JSONParser();
+			Object object = jsonParser.parse(new FileReader(CONFIG_FILE_LOCATION + CONFIG_FILE_NAME));
+			configJson = (JSONObject) object;
+			
+			if (!configJson.containsKey("data file directory")) {
+				revertToDefaultSettings();
+			} else {
+				this.dataFileLocation = String.valueOf(configJson.get("data file directory"));
+			}
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void revertToDefaultSettings() {
+		this.dataFileLocation = DEFAULT_DATA_FILE_LOCATION;
+		storeSettingsIntoConfigFile();
+	}
+	
+	private boolean configFileExists(String configFileName) {
+		File configFile = new File(configFileName);
+		return configFile.exists();
+	}
+	
+	private void createNewConfigFile(String configFileName) {
+		try {
+			File newConfigFile = new File(configFileName);
+			if (newConfigFile.getParentFile() != null) {
+				newConfigFile.getParentFile().mkdirs();
+			}
+			
+			newConfigFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void createNewDataFile(String dataFileName) {
+		try {
+			File newConfigFile = new File(dataFileName);
+			if (newConfigFile.getParentFile() != null) {
+				newConfigFile.getParentFile().mkdirs();
+			}
+			
+			newConfigFile.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void storeSettingsIntoConfigFile() {
+		JSONObject configJson = new JSONObject();
+		configJson.put("data file location", DEFAULT_DATA_FILE_LOCATION);
+		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
+		File outputConfigFile = new File(outputConfigFilePath);
+		try {
+			FileWriter fileWriter = new FileWriter(outputConfigFilePath);
+			fileWriter.write(configJson.toJSONString());
+			fileWriter.flush();
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+		
 	//--------------//
 	// File Reading //
 	//--------------//
 	
-	public void readFromFile() {
-		if (tempList.isEmpty()) {
-			genericTaskList = new GenericTaskList();
-			deadlineTaskList = new DeadlineTaskList();
-			timedTaskList = new TimedTaskList();
-		} else {
-			genericTaskList = getGenericTLFromData(tempList);
-			timedTaskList = getTimedTLFromData(tempList);
-			deadlineTaskList = getDeadlineTLFromData(tempList);
-		}
+	public String getDataFilePath() {
+		return this.dataFileLocation + DEFAULT_FILE_NAME;
 	}
 	
-	private void getDataFromFile() {
+	private JSONArray retrieveDataFromFile() {
+		String fileName = getDataFilePath();
+		JSONArray jsonTaskArray = new JSONArray();
+		
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String text;
-			while ((text = br.readLine()) != null) {
-				tempList.add(text);
+			File dataFile = new File(fileName);
+			if (!dataFile.exists()) {
+				createNewDataFile(fileName);
+			} else {
+				JSONParser jsonParser = new JSONParser();
+				Object object = jsonParser.parse(new FileReader(fileName));
+				jsonTaskArray = (JSONArray) object;
 			}
-			br.close();
-		} catch (FileNotFoundException e) {
-		} catch (IOException e) {
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return jsonTaskArray;
+	}
+	
+	/**
+	 * Populates all three task lists (generic, deadline, timed)
+	 * with their corresponding data obtained from the JSON file.
+	 * 
+	 * */
+	public void populateTaskLists(JSONArray jsonTaskArray) {
+		for (Object object : jsonTaskArray) {
+			JSONObject jsonTask = (JSONObject) object;
+			String taskType = (String) jsonTask.get("Type");
+			switch (taskType) {
+				case "Generic": 
+					addGenericTaskToList(jsonTask);
+					break;
+				case "Deadline":
+					addDeadlineTaskToList(jsonTask);
+					break;
+				case "Timed":
+					addTimedTaskToList(jsonTask);
+					break;
+				default:
+					// ignore and continue to the next entry
+					break;
+			}
 		}
 	}
 	
@@ -342,129 +437,117 @@ public class Database implements IDatabase {
 	
 	public void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL) {
 		try {
-			String fileName = file.getName();
-			file.delete();
-			file = new File(fileName);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
-			tempList.clear();
-			convertToStore(inputDeadlineTL);
-			convertToStore(inputTimedTL);
-			convertToStore(inputGenericTL); 
-			if (!tempList.isEmpty()) {
-				for (int i = 0; i < tempList.size(); i++) {
-					bw.write(tempList.get(i));
-					bw.newLine();
-				}
-			}
-			bw.close();
-		} catch (FileNotFoundException e) {
+			String fileName = getDataFilePath();
+			File outputFile = new File(fileName);
+			FileWriter fileWriter = new FileWriter(outputFile);
+			JSONArray jsonArrayForStorage = new JSONArray();
+			
+			convertToStore(inputDeadlineTL, jsonArrayForStorage);
+			convertToStore(inputTimedTL, jsonArrayForStorage);
+			convertToStore(inputGenericTL, jsonArrayForStorage); 
+			
+			fileWriter.write(jsonArrayForStorage.toJSONString());
+			fileWriter.close();
 		} catch (IOException e) {
-		}
+			e.printStackTrace();
+		} 
+	}
+	
+	//------------------//
+	// Populating Lists //
+	//------------------//
+	
+	private void addTimedTaskToList(JSONObject jsonTask) {
+		TimedTask timedTask = new TimedTask (
+										(String)jsonTask.get("Name"),
+										parseDate((String)jsonTask.get("Start Time")), 
+										parseDate((String)jsonTask.get("End Time"))
+								  );
+		
+		timedTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
+		timedTask.setId((String)jsonTask.get("ID"));
+		timedTaskList.add(timedTask);
+	}
+
+	private void addDeadlineTaskToList(JSONObject jsonTask) {
+		DeadlineTask deadlineTask = new DeadlineTask ( 
+											(String)jsonTask.get("Name"), 
+											parseDate((String)jsonTask.get("DueDate"))
+										);
+		deadlineTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
+		deadlineTask.setId((String)jsonTask.get("ID"));
+		deadlineTaskList.add(deadlineTask);
+	}
+
+	private void addGenericTaskToList(JSONObject jsonTask) {
+		GenericTask genericTask = new GenericTask((String)jsonTask.get("Name"));
+		genericTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
+		genericTask.setId((String)jsonTask.get("ID"));
+		genericTaskList.add(genericTask);
 	}
 	
 	//---------------------//
 	// Variable Conversion //
 	//---------------------//
-	
-	private GenericTaskList getGenericTLFromData(ArrayList<String> array) {
-		GenericTask genericTask;
-		GenericTaskList genericTL = new GenericTaskList();
-		JSONObject jsonTask;
-		
-		for (int i = 0; i < array.size(); i++) {
-			jsonTask = new JSONObject(array.get(i));
-			if (jsonTask.getString("Type").equals("Generic")) {
-				genericTask = new GenericTask(jsonTask.getString("Name"));
-				genericTask.setWorkload(jsonTask.getInt("Workload"));
-				genericTask.setId(jsonTask.getString("ID"));
-				genericTL.add(genericTask);
-			}
-		}
-		return genericTL;
-	}
-	
-	private TimedTaskList getTimedTLFromData(ArrayList<String> array) {
-		TimedTask timedTask;
-		TimedTaskList timedTL = new TimedTaskList();
-		JSONObject jsonTask;
-		
-		for (int i = 0; i < array.size(); i++) {
-			jsonTask = new JSONObject(array.get(i));
-			if (jsonTask.getString("Type").equals("Timed")) {
-				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("End Time")));
-				timedTask.setWorkload(jsonTask.getInt("Workload"));
-				timedTask.setId(jsonTask.getString("ID"));
-				timedTL.add(timedTask);
-			}
-		}
-		return timedTL;
-	}
-	
-	private DeadlineTaskList getDeadlineTLFromData(ArrayList<String> array) {
-		DeadlineTask deadlineTask;
-		DeadlineTaskList deadlineTL = new DeadlineTaskList();
-		JSONObject jsonTask;
-		
-		for (int i = 0; i < array.size(); i++) {
-			jsonTask = new JSONObject(array.get(i));
-			if (jsonTask.getString("Type").equals("Deadline")) {
-				deadlineTask = new DeadlineTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Deadline")));
-				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
-				deadlineTask.setId(jsonTask.getString("ID"));
-				deadlineTL.add(deadlineTask);
-			}
-		}
-		return deadlineTL;
-	}
-	
+			
 	private DateTime parseDate(String date) {
 		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 		DateTime dueDate = format.parseDateTime(date);
 		return dueDate;
 	}
 	
-	private void convertToStore(GenericTaskList taskList) {
-		JSONObject jsonTask;
+	@SuppressWarnings("unchecked")
+	private void convertToStore(GenericTaskList taskList, JSONArray jsonArrayForStorage) {
 		if (!taskList.isEmpty()) {
 			for (int i = 0; i < taskList.size(); i++) {
-				jsonTask = new JSONObject();
-				jsonTask.put("Name", taskList.get(i).getName());
-				// jsonTask.put("due date", tasklist.get(i).getDueDate());
-				jsonTask.put("Workload", taskList.get(i).getWorkload());
-				jsonTask.put("ID", taskList.get(i).getId());
+				GenericTask currGenericTask = taskList.get(i);
+				JSONObject jsonTask = new JSONObject();
+				
+				jsonTask.put("Name", currGenericTask.getName());
+				jsonTask.put("Workload", currGenericTask.getWorkload());
+				jsonTask.put("ID", currGenericTask.getId());
 				jsonTask.put("Type", "Generic");
-				tempList.add(jsonTask.toString());
+				
+				jsonArrayForStorage.add(jsonTask);
 			}
 		}
 	}
 	
-	private void convertToStore(DeadlineTaskList deadlineTaskList) {
+	@SuppressWarnings("unchecked")
+	private void convertToStore(DeadlineTaskList deadlineTaskList, JSONArray jsonArrayForStorage) {
 		JSONObject jsonTask;
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
+				DeadlineTask currDeadlineTask = deadlineTaskList.get(i);
 				jsonTask = new JSONObject();
-				jsonTask.put("Name", deadlineTaskList.get(i).getName());
-				jsonTask.put("Deadline", deadlineTaskList.get(i).getReadableDeadline());
-				jsonTask.put("Workload", deadlineTaskList.get(i).getWorkload());
-				jsonTask.put("ID", deadlineTaskList.get(i).getId());
+				
+				jsonTask.put("Name", currDeadlineTask.getName());
+				jsonTask.put("DueDate", currDeadlineTask.getReadableDeadline());
+				jsonTask.put("Workload", currDeadlineTask.getWorkload());
+				jsonTask.put("ID", currDeadlineTask.getId());
 				jsonTask.put("Type", "Deadline");
-				tempList.add(jsonTask.toString());
+				
+				jsonArrayForStorage.add(jsonTask);
 			}
 		}
 	}
 	
-	private void convertToStore(TimedTaskList timedTaskList) {
+	@SuppressWarnings("unchecked")
+	private void convertToStore(TimedTaskList timedTaskList, JSONArray jsonArrayForStorage) {
 		JSONObject jsonTask;
 		if (!timedTaskList.isEmpty()) {
 			for (int i = 0; i < timedTaskList.size(); i++) {
+				TimedTask currTimedTask = timedTaskList.get(i);
 				jsonTask = new JSONObject();
-				jsonTask.put("Name", timedTaskList.get(i).getName());
-				jsonTask.put("Start Time", timedTaskList.get(i).getReadableStartTime());
-				jsonTask.put("End Time", timedTaskList.get(i).getReadableEndTime());
-				jsonTask.put("Workload", timedTaskList.get(i).getWorkload());
-				jsonTask.put("ID", timedTaskList.get(i).getId());
+				
+				jsonTask.put("Name", currTimedTask.getName());
+				jsonTask.put("Start Time", currTimedTask.getReadableStartTime());
+				jsonTask.put("End Time", currTimedTask.getReadableEndTime());
+				jsonTask.put("Workload", currTimedTask.getWorkload());
+				jsonTask.put("ID", currTimedTask.getId());
 				jsonTask.put("Type", "Timed");
-				tempList.add(jsonTask.toString());
+				
+				jsonArrayForStorage.add(jsonTask);
 			}
 		}
 	}

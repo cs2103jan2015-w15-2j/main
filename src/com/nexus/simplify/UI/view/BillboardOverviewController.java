@@ -4,10 +4,10 @@ import java.text.ParseException;
 
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
-import com.nexus.simplify.database.DeadlineTask;
-import com.nexus.simplify.database.GenericTask;
-import com.nexus.simplify.database.TaskListPackage;
-import com.nexus.simplify.database.TimedTask;
+import com.nexus.simplify.database.observables.TaskListPackage;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.Logic;
 
 import javafx.collections.ObservableList;
