@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.tasktype;
 
 import java.util.Date;
 

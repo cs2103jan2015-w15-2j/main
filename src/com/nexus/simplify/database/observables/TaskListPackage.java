@@ -1,4 +1,8 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.observables;
+
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
 
 import javafx.collections.ObservableList;
 

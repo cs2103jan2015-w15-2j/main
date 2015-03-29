@@ -1,6 +1,8 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.observables;
 
 import java.util.*;
+
+import com.nexus.simplify.database.tasktype.TimedTask;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
