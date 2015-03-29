@@ -22,7 +22,7 @@ public class Database implements IDatabase {
 	 * All dates will be shaped according to this format. 
 	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
 	 * */
-	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
+	private static final String JAVA_DATE_FORMAT = "MMM dd HH:mm";
 	private static final String MSG_INDEX_OOR = "Index is out of range.";
 	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
 	private static final String FILENAME = "input.json";
@@ -295,6 +295,9 @@ public class Database implements IDatabase {
 	 * 
 	 * */
 	private void setUpFile(String fileName) throws IOException {
+		// String dirName = "somestring";
+		// File dir = new File(dirName);
+		// File actualFile = new File(dir, fileName);
 		file = new File(fileName);
 		if (file.exists()) {
 			getDataFromFile();
@@ -310,11 +313,13 @@ public class Database implements IDatabase {
 	
 	public void readFromFile() {
 		if (tempList.isEmpty()) {
-			resultantGenericTL = new GenericTaskList();
-			DeadlineTaskList resultantDeadlineTL = new DeadlineTaskList();
-			TimedTaskList resultantTimedTL = new TimedTaskList();
+			genericTaskList = new GenericTaskList();
+			deadlineTaskList = new DeadlineTaskList();
+			timedTaskList = new TimedTaskList();
 		} else {
-			convertToTaskList(tempList);
+			genericTaskList = getGenericTLFromData(tempList);
+			timedTaskList = getTimedTLFromData(tempList);
+			deadlineTaskList = getDeadlineTLFromData(tempList);
 		}
 	}
 	
@@ -361,31 +366,55 @@ public class Database implements IDatabase {
 	// Variable Conversion //
 	//---------------------//
 	
-	private void convertToTaskList(ArrayList<String> array) {
+	private GenericTaskList getGenericTLFromData(ArrayList<String> array) {
 		GenericTask genericTask;
-		DeadlineTask deadlineTask;
-		TimedTask timedTask;
+		GenericTaskList genericTL = new GenericTaskList();
 		JSONObject jsonTask;
 		
-		for (int i = 0; i < tempList.size(); i++) {
-			jsonTask = new JSONObject(tempList.get(i));
+		for (int i = 0; i < array.size(); i++) {
+			jsonTask = new JSONObject(array.get(i));
 			if (jsonTask.getString("Type").equals("Generic")) {
 				genericTask = new GenericTask(jsonTask.getString("Name"));
 				genericTask.setWorkload(jsonTask.getInt("Workload"));
 				genericTask.setId(jsonTask.getString("ID"));
-				resultantGenericTL.add(genericTask);
-			} else if (jsonTask.getString("Type").equals("Deadline")) {
+				genericTL.add(genericTask);
+			}
+		}
+		return genericTL;
+	}
+	
+	private TimedTaskList getTimedTLFromData(ArrayList<String> array) {
+		TimedTask timedTask;
+		TimedTaskList timedTL = new TimedTaskList();
+		JSONObject jsonTask;
+		
+		for (int i = 0; i < array.size(); i++) {
+			jsonTask = new JSONObject(array.get(i));
+			if (jsonTask.getString("Type").equals("Timed")) {
+				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("End Time")));
+				timedTask.setWorkload(jsonTask.getInt("Workload"));
+				timedTask.setId(jsonTask.getString("ID"));
+				timedTL.add(timedTask);
+			}
+		}
+		return timedTL;
+	}
+	
+	private DeadlineTaskList getDeadlineTLFromData(ArrayList<String> array) {
+		DeadlineTask deadlineTask;
+		DeadlineTaskList deadlineTL = new DeadlineTaskList();
+		JSONObject jsonTask;
+		
+		for (int i = 0; i < array.size(); i++) {
+			jsonTask = new JSONObject(array.get(i));
+			if (jsonTask.getString("Type").equals("Deadline")) {
 				deadlineTask = new DeadlineTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Deadline")));
 				deadlineTask.setWorkload(jsonTask.getInt("Workload"));
 				deadlineTask.setId(jsonTask.getString("ID"));
-				resultantDeadlineTL.add(deadlineTask);
-			} else {
-				timedTask = new TimedTask(jsonTask.getString("Name"), parseDate(jsonTask.getString("Start Time")), parseDate(jsonTask.getString("Start Time")));
-				timedTask.setWorkload(jsonTask.getInt("Workload"));
-				timedTask.setId(jsonTask.getString("ID"));
-				resultantTimedTL.add(timedTask);
+				deadlineTL.add(deadlineTask);
 			}
 		}
+		return deadlineTL;
 	}
 	
 	private DateTime parseDate(String date) {
