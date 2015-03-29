@@ -388,16 +388,7 @@ public class Database {
 	private JSONArray retrieveDataFromFile() {
 		String fileName = getDataFilePath();
 		JSONArray jsonTaskArray = new JSONArray();
-		
-<<<<<<< HEAD
-		for (int i = 0; i < array.size(); i++) {
-			jsonTask = new JSONObject(array.get(i));
-			if (jsonTask.getString("Type").equals("Generic")) {
-				genericTask = new GenericTask(jsonTask.getString("Name"));
-				genericTask.setWorkload(jsonTask.getInt("Workload"));
-				genericTask.setId(jsonTask.getString("ID"));
-				resultantGenericTL.add(genericTask);
-=======
+	
 		try {
 			File dataFile = new File(fileName);
 			if (!dataFile.exists()) {
@@ -406,7 +397,6 @@ public class Database {
 				JSONParser jsonParser = new JSONParser();
 				Object object = jsonParser.parse(new FileReader(fileName));
 				jsonTaskArray = (JSONArray) object;
->>>>>>> gui_v0.3
 			}
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
