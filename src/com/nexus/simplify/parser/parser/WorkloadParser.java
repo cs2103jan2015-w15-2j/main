@@ -8,23 +8,29 @@ import com.nexus.simplify.parser.data.CommandData;
 public class WorkloadParser extends TokenParser {
 	Logger LOGGER = LoggerFactory.getLogger(WorkloadParser.class.getName());
 	CommandData commandData = CommandData.getInstance();
+	String workloadString = null;
+	String workloadValueString = null;
+	final int INDEX_START_OF_WORKLOAD = 1;
+
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
 		if (isTokenListEmpty(tokenList)) {
 			return tokenList;
 		} else {
-			if (tokenList[0].matches("[1-5]") && tokenList[tokenList.length - 1].matches("[1-5]")) {
-				commandData.setWorkload(tokenList[tokenList.length -1]);
-				throw new Exception("Two possible values of deadline detected. The second one is considered");
-			} else if (tokenList[0].matches("[1-5]")) {
-				String workload = tokenList[0];
-				commandData.setWorkload(workload);
-				return getRemainingTokens(workload, tokenList);
-			} else if (tokenList[tokenList.length - 1].matches("[1-5]")) {
-				String workload = tokenList[tokenList.length -1];
-				commandData.setWorkload(workload);
-				return getRemainingTokens(workload, tokenList);
+			if (tokenList[0].matches("[wW][1-5]")) {
+				workloadString = tokenList[0];
+				workloadString = workloadString.substring(INDEX_START_OF_WORKLOAD);
+			}
+			
+			if (tokenList[tokenList.length - 1].matches("[wW][1-5]")) {
+				workloadString = tokenList[tokenList.length - 1];
+				workloadValueString = workloadString.substring(INDEX_START_OF_WORKLOAD);
+			}
+			
+			if (workloadValueString != null && workloadValueString.matches("[1-5]")) {
+					commandData.setWorkload(workloadValueString);
+					return getRemainingTokens(workloadString, tokenList);
 			}
 			return tokenList;
 		}

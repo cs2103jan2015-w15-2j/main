@@ -1,12 +1,14 @@
-/*
- * @author David Zhao Han
- * */
-
 package com.nexus.simplify.logic;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+/*
+ * This class calls database to display stored tasks
+ * in a format chosen by the user. Currently supporting:
+ * a number, null(default), all, week, deadline, workload. 
+ * @author David Zhao Han
+ * */
 public class Display {
 	
 	public Display() {}
@@ -57,4 +59,8 @@ public class Display {
 	private static boolean isNumeric(String str){
 	  return str.matches("-?\\d+(\\.\\d+)?");
 	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter){}
 }

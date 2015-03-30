@@ -1,5 +1,9 @@
 package com.nexus.simplify.parser.api;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,20 +30,33 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 public class Parser implements IParser {
 	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
-	
+
 	//Parameter constants
 	Tokeniser tokeniser = new Tokeniser();
 	MainParser parser = new MainParser();
 	CommandData commandData = CommandData.getInstance();
-	
+
 	@Override
 	public UserCommand parseInput(String userInput) {
 		LOGGER.info("Parsing user input: {}", userInput);
 		String[] userTokens = tokeniser.tokenise(userInput);
 		parser.parseTokens(userTokens);	
 		UserCommand userCommand = commandData.createCommand();
-		
+
 		return userCommand;
 	}
 
+	// main function to run white-box texting with console input
+	public static void main(String[] args) {
+		InputStreamReader inStream = new InputStreamReader(System.in); 
+		BufferedReader br = new java.io.BufferedReader(inStream);
+		Parser test = new Parser();
+		while (true) {
+			try {
+				test.parseInput(br.readLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

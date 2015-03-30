@@ -54,18 +54,7 @@ public class DateTimeParser extends TokenParser {
 		}
 	}
 
-	public static void main(String[] args) {
-		String a = "";
-		System.out.println(a.split("//s").length);
-		DateTimeParser parser = new DateTimeParser();
-		String test = "from today until next week";
-		try {
-			parser.parseTokens(test.split("//s"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+
 	@Override
 	protected String tokenListToStr(String[] strArr) {
 		StringBuilder builder = new StringBuilder();
@@ -75,26 +64,40 @@ public class DateTimeParser extends TokenParser {
 		}
 		return builder.toString().trim();
 	}
-}
 
-//	List of functions available from natty library
-//		Parser parser = new Parser();
-//		List<DateGroup> groups = parser.parse("from 03/04 to 03/05 to 03/06");
-//		for(DateGroup group:groups) {
-//			List<Date> dates = group.getDates();
-//
-//			int line = group.getLine();
-//			int column = group.getPosition();
-//			String matchingValue = group.getText();
-//
-//			String syntaxTree = group.getSyntaxTree().toStringTree();
-//			Map<String, List<ParseLocation>> parseMap = group.getParseLocations();
-//			boolean isRecurreing = group.isRecurring();
-//			Date recursUntil = group.getRecursUntil();
-//
-//			System.out.println(dates.toString());
-//			System.out.println(matchingValue);
+
+	//List of functions available from natty library
+	public static void main(String[] args) {
+		Parser parser = new Parser();
+		List<DateGroup> groups = parser.parse("do " +"'CS3230' " + "tomorrow");
+		for(DateGroup group:groups) {
+			List<Date> dates = group.getDates();
+
+			int line = group.getLine();
+			int column = group.getPosition();
+			String matchingValue = group.getText();
+
+			String syntaxTree = group.getSyntaxTree().toStringTree();
+			//Map<String, List<ParseLocation>> parseMap = group.getParseLocations();
+			boolean isRecurreing = group.isRecurring();
+			Date recursUntil = group.getRecursUntil();
+
+			System.out.println(dates.toString());
+			System.out.println(matchingValue);
+		}
+	}
+
+//	public static void main(String[] args) {
+//		String a = "";
+//		System.out.println(a.split("//s").length);
+//		DateTimeParser parser = new DateTimeParser();
+//		String test = "from today until next week";
+//		try {
+//			parser.parseTokens(test.split("//s"));
+//		} catch (Exception e) {
+//			e.printStackTrace();
 //		}
 //	}
+}
 
 
