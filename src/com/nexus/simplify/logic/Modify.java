@@ -10,6 +10,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 /*
  * This class determines what fields of a task to modify 
  * and calls APIs provided by database to modify storage.
+ * @author David Zhao Han
  */
 public class Modify {
 	public Modify() {}
@@ -42,7 +43,6 @@ public class Modify {
 				startTime = df.parse(newStartTime);
 				database.modifyStartTime(indexToModify, startTime);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -55,7 +55,6 @@ public class Modify {
 				endTime = df.parse(newEndTime);
 				database.modifyStartTime(indexToModify, endTime);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -73,11 +72,7 @@ public class Modify {
 			
 			try {
 				database.modifyWorkload(indexToModify, newWorkload);
-			} catch (IndexOutOfBoundsException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			feedback += "and workload ";

@@ -7,6 +7,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 /*
  * This class determines that user wants to mark
  * a task as done and calls database to modify the storage.
+ * @author David Zhao Han
  */
 public class Done {
 	
@@ -23,7 +24,7 @@ public class Done {
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		Database database = MainApp.getDatabase();
 
-		database.markTaskDoneByIndex(indexToMarkDone);
+		database.markTaskDone(indexToMarkDone);
 		String feedback = "successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
 
 		return feedback; 

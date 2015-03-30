@@ -5,7 +5,8 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 
 /*
  * This class calls database to delete a task in database
- * by passing a task index
+ * by passing a task index.
+ * @author David Zhao Han
  */
 public class Delete {
 	

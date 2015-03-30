@@ -10,7 +10,8 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 
 /*
  * This class determines task type and calls database
- * to add the task into the storage
+ * to add a task into the storage.
+ * @author David Zhao Han
  */
 public class Add {
 		
@@ -25,6 +26,7 @@ public class Add {
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
 		int workload;
+		
 		if (workloadStr == null) {
 			workload = 0;
 		} else {
@@ -32,6 +34,11 @@ public class Add {
 		}
 		String feedback;
 		Database database = MainApp.getDatabase();
+		
+		if(name == null){
+			feedback = "please enter a name for this task.";
+			return feedback;
+		}
 		
 		if(newStartTime == null && newEndTime == null){
 			database.addGenericTask(name, workload);
