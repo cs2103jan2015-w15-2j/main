@@ -233,8 +233,8 @@ public class BillboardOverviewController {
 		try {
 			resultantFeedback = logic.executeCommand(userInput);
 			return resultantFeedback;
-		} catch (ParseException e) {
-			String exceptionFeedback = e.toString();
+		} catch (Exception e) {
+			String exceptionFeedback = e.getMessage();
 			return exceptionFeedback;
 		}
 	}

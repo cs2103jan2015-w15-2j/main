@@ -1,5 +1,6 @@
 package com.nexus.simplify.logic;
-import java.text.ParseException;
+import com.nexus.simplify.database.Database;
+import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
 
@@ -21,7 +22,7 @@ public class Logic implements ILogic {
 	}
 	
 	@Override
-	public String executeCommand(String userInput) throws ParseException{
+	public String executeCommand(String userInput) throws Exception{
 		Parser parser = new Parser();
 		UserCommand command = parser.parseInput(userInput);
 		switch(command.getOperationType()){

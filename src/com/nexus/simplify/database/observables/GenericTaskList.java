@@ -68,7 +68,7 @@ public class GenericTaskList {
 	 *  @param index of the GenericTask to be removed
 	 * */
 	public void delete(int index) {
-		taskArray.remove(index);
+		taskArray.remove(index - 1);
 	}
 	
 	/**

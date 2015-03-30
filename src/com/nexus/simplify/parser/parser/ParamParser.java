@@ -11,7 +11,7 @@ public class ParamParser extends TokenParser {
 	WorkloadParser wlParser = new WorkloadParser();
 	NameParser nameParser = new NameParser();
 	CommandData commandData = CommandData.getInstance();
-	Logger LOGGER = LoggerFactory.getLogger(ParamParser.class.getName());
+	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
@@ -20,19 +20,21 @@ public class ParamParser extends TokenParser {
 		} else {
 			try {
 				tokenList = dtParser.parseTokens(tokenList);
+				
 				/* workload parameter should either be either the first or last token
 				 * as it is the second last parameter type to be parsed.
 				 */
 				tokenList = wlParser.parseTokens(tokenList);
+				
 				// remaining tokens are take to be new name as it is the last supported parameter
 				tokenList = nameParser.parseTokens(tokenList);
+				return tokenList;
 			} catch(Exception e) {
 				LOGGER.error("Parse Error on: {}", tokenList, e);
+				throw e;
 			}
-			return tokenList;
 		}
 
 	}
-
 
 }

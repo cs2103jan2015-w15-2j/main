@@ -9,6 +9,7 @@ public interface IParser {
 	 * 
 	 * @param userInput
 	 * @return string feedback for user
+	 * @throws Exception 
 	 */
-	public UserCommand parseInput(String userInput);
+	public UserCommand parseInput(String userInput) throws Exception;
 }

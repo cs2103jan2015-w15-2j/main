@@ -70,7 +70,7 @@ public class DeadlineTaskList {
 	 *  @param index of the DeadlineTask to be removed
 	 * */
 	public void delete(int index) {
-		taskArray.remove(index);
+		taskArray.remove(index - 1);
 	}
 	
 	/**
