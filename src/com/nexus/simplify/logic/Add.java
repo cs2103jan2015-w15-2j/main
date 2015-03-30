@@ -43,18 +43,13 @@ public class Add {
 		if((newStartTime == null || newStartTime.isEmpty()) && (newEndTime == null || newEndTime.isEmpty())){
 			database.addGenericTask(name, workload);
 			feedback = "successfully added floating task \"" + name + "\".";
-		} else{
+		} else {
 			if(newStartTime.equals(newEndTime)){
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-<<<<<<< HEAD
 				feedback = "successfully added deadline task \"" + name + "\".";
-			}
-			else{
-=======
-				feedback = "successfully added dealine task \"" + name + "\".";
-			} else{
->>>>>>> 06eaec5ad96ded6af2bc6506a119c903646482b7
+			} else {
+
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
