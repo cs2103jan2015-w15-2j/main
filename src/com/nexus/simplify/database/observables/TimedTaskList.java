@@ -160,7 +160,7 @@ public class TimedTaskList {
 	public ObservableList<TimedTask> getObservable() {
 		int maxNumTasksToAdd;
 		observableTimed.removeAll(observableTimed);
-		if (isEmpty()) {
+		if (!isEmpty()) {
 			if (taskArray.size() > numOfDisplayItems) {
 				maxNumTasksToAdd = numOfDisplayItems;
 			} else {
