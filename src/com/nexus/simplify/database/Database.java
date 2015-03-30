@@ -27,17 +27,33 @@ import com.nexus.simplify.database.tasktype.TimedTask;
 
 public class Database {
 	
+	private static final String TASK_TYPE_TIMED = "Timed";
+	private static final String TASK_TYPE_DEADLINE = "Deadline";
+	private static final String TASK_TYPE_GENERIC = "Generic";
+	
+	private static final String JSON_KEY_DUEDATE = "DueDate";
+	private static final String JSON_KEY_ID = "ID";
+	private static final String JSON_KEY_WORKLOAD = "Workload";
+	private static final String JSON_KEY_END_TIME = "End Time";
+	private static final String JSON_KEY_START_TIME = "Start Time";
+	private static final String JSON_KEY_NAME = "Name";
+	private static final String JSON_KEY_TYPE = "Type";
+	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "data file directory";
+	
 	/**
 	 * All dates will be shaped according to this format. 
 	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
 	 * */
 	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
+	
 	private static final String MSG_INDEX_OOR = "Index is out of range.";
 	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
+	
 	private static final String DEFAULT_FILE_NAME = "input.json";
+	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
 	private static final String CONFIG_FILE_LOCATION = "config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
-	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
+	
 	
 	//------------------//
 	// Class Attributes //
@@ -48,9 +64,6 @@ public class Database {
 	private GenericTaskList genericTaskList = new GenericTaskList();
 	private TimedTaskList timedTaskList = new TimedTaskList();
 	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
-	private GenericTaskList resultantGenericTL = new GenericTaskList();
-	private DeadlineTaskList resultantDeadlineTL = new DeadlineTaskList();
-	private TimedTaskList resultantTimedTL = new TimedTaskList();
 		
 	//---------------//
 	// API for Logic //
@@ -290,7 +303,7 @@ public class Database {
 	 * */
 	public Database() throws IOException {
 		initDatabase();
-		JSONArray jsonTaskArray = retrieveDataFromFile();
+		JSONArray jsonTaskArray = retrieveDataFromDataFile();
 		populateTaskLists(jsonTaskArray);
 	}
 	
@@ -299,45 +312,69 @@ public class Database {
 	//----------------//
 
 	private void initDatabase() {
-		String configFile = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
-		if (!configFileExists(configFile)) {
-			createNewConfigFile(configFile);
+		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
+		if (!configFileExists(configFilePath)) {
+			createNewFile(configFilePath);
 			revertToDefaultSettings();
 		} else {
 			retrieveSettingsFromConfigFile();
 		}
 	}
 	
+	//-----------------//
+	// File Processing //
+	//-----------------//
+	
+	/**
+	 * retrieves the data file location from the 
+	 * configuration file.
+	 * */
 	private void retrieveSettingsFromConfigFile() {
 		JSONObject configJson = new JSONObject();
 		try {
 			JSONParser jsonParser = new JSONParser();
+			String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 			Object object = jsonParser.parse(new FileReader(CONFIG_FILE_LOCATION + CONFIG_FILE_NAME));
 			configJson = (JSONObject) object;
 			
-			if (!configJson.containsKey("data file directory")) {
+			if (!configJson.containsKey(JSON_KEY_DATA_FILE_DIRECTORY)) {
 				revertToDefaultSettings();
 			} else {
-				this.dataFileLocation = String.valueOf(configJson.get("data file directory"));
+				this.dataFileLocation = String.valueOf(configJson.get(JSON_KEY_DATA_FILE_DIRECTORY));
 			}
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * sets the location of the data file to its default location
+	 * and stores the default settings into the configuration file.
+	 * */
 	private void revertToDefaultSettings() {
 		this.dataFileLocation = DEFAULT_DATA_FILE_LOCATION;
 		storeSettingsIntoConfigFile();
 	}
 	
+	/**
+	 * @param configFileName name of program configuration file
+	 * @return true if config file exists, false otherwise.
+	 * */
 	private boolean configFileExists(String configFileName) {
 		File configFile = new File(configFileName);
 		return configFile.exists();
 	}
 	
-	private void createNewConfigFile(String configFileName) {
+	/**
+	 * creates a new file for the program.
+	 * 
+	 * @param fileName name of the file
+	 * */
+	private void createNewFile(String fileName) {
 		try {
-			File newConfigFile = new File(configFileName);
+			File newConfigFile = new File(fileName);
+			
+			// we make a new instance of directory for the file.
 			if (newConfigFile.getParentFile() != null) {
 				newConfigFile.getParentFile().mkdirs();
 			}
@@ -348,19 +385,11 @@ public class Database {
 		}
 	}
 	
-	private void createNewDataFile(String dataFileName) {
-		try {
-			File newConfigFile = new File(dataFileName);
-			if (newConfigFile.getParentFile() != null) {
-				newConfigFile.getParentFile().mkdirs();
-			}
-			
-			newConfigFile.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
+
+	/**
+	 * 
+	 * 
+	 * */
 	@SuppressWarnings("unchecked")
 	private void storeSettingsIntoConfigFile() {
 		JSONObject configJson = new JSONObject();
@@ -381,21 +410,26 @@ public class Database {
 	// File Reading //
 	//--------------//
 	
+	/**
+	 * @return the relative file path.
+	 * 
+	 * */
 	public String getDataFilePath() {
 		return this.dataFileLocation + DEFAULT_FILE_NAME;
 	}
 	
-	private JSONArray retrieveDataFromFile() {
-		String fileName = getDataFilePath();
+	
+	private JSONArray retrieveDataFromDataFile() {
+		String dataFileName = getDataFilePath();
 		JSONArray jsonTaskArray = new JSONArray();
 	
 		try {
-			File dataFile = new File(fileName);
+			File dataFile = new File(dataFileName);
 			if (!dataFile.exists()) {
-				createNewDataFile(fileName);
+				createNewFile(dataFileName);
 			} else {
 				JSONParser jsonParser = new JSONParser();
-				Object object = jsonParser.parse(new FileReader(fileName));
+				Object object = jsonParser.parse(new FileReader(dataFileName));
 				jsonTaskArray = (JSONArray) object;
 			}
 		} catch (IOException | ParseException e) {
@@ -413,19 +447,19 @@ public class Database {
 	public void populateTaskLists(JSONArray jsonTaskArray) {
 		for (Object object : jsonTaskArray) {
 			JSONObject jsonTask = (JSONObject) object;
-			String taskType = (String) jsonTask.get("Type");
+			String taskType = (String) jsonTask.get(JSON_KEY_TYPE);
 			switch (taskType) {
-				case "Generic": 
+				case TASK_TYPE_GENERIC: 
 					addGenericTaskToList(jsonTask);
 					break;
-				case "Deadline":
+				case TASK_TYPE_DEADLINE:
 					addDeadlineTaskToList(jsonTask);
 					break;
-				case "Timed":
+				case TASK_TYPE_TIMED:
 					addTimedTaskToList(jsonTask);
 					break;
 				default:
-					// ignore and continue to the next entry
+					// invalid entry; ignore and continue to the next entry
 					break;
 			}
 		}
@@ -459,37 +493,44 @@ public class Database {
 	
 	private void addTimedTaskToList(JSONObject jsonTask) {
 		TimedTask timedTask = new TimedTask (
-										(String)jsonTask.get("Name"),
-										parseDate((String)jsonTask.get("Start Time")), 
-										parseDate((String)jsonTask.get("End Time"))
+										(String)jsonTask.get(JSON_KEY_NAME),
+										parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
+										parseDate((String)jsonTask.get(JSON_KEY_END_TIME))
 								  );
 		
-		timedTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
-		timedTask.setId((String)jsonTask.get("ID"));
+		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		timedTaskList.add(timedTask);
 	}
 
 	private void addDeadlineTaskToList(JSONObject jsonTask) {
 		DeadlineTask deadlineTask = new DeadlineTask ( 
-											(String)jsonTask.get("Name"), 
-											parseDate((String)jsonTask.get("DueDate"))
+											(String)jsonTask.get(JSON_KEY_NAME), 
+											parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
 										);
-		deadlineTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
-		deadlineTask.setId((String)jsonTask.get("ID"));
+		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		deadlineTaskList.add(deadlineTask);
 	}
 
 	private void addGenericTaskToList(JSONObject jsonTask) {
-		GenericTask genericTask = new GenericTask((String)jsonTask.get("Name"));
-		genericTask.setWorkload(((Long)jsonTask.get("Workload")).intValue());
-		genericTask.setId((String)jsonTask.get("ID"));
+		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
+		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		genericTaskList.add(genericTask);
 	}
 	
 	//---------------------//
 	// Variable Conversion //
 	//---------------------//
-			
+	
+	/**
+	 * Re-formats a date represented as a String object
+	 * into a DateTime object.
+	 * 
+	 * @param date date in String format
+	 * @return date in DateTime format
+	 * */
 	private DateTime parseDate(String date) {
 		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 		DateTime dueDate = format.parseDateTime(date);
@@ -503,10 +544,10 @@ public class Database {
 				GenericTask currGenericTask = taskList.get(i);
 				JSONObject jsonTask = new JSONObject();
 				
-				jsonTask.put("Name", currGenericTask.getName());
-				jsonTask.put("Workload", currGenericTask.getWorkload());
-				jsonTask.put("ID", currGenericTask.getId());
-				jsonTask.put("Type", "Generic");
+				jsonTask.put(JSON_KEY_NAME, currGenericTask.getName());
+				jsonTask.put(JSON_KEY_WORKLOAD, currGenericTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currGenericTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_GENERIC);
 				
 				jsonArrayForStorage.add(jsonTask);
 			}
@@ -521,11 +562,11 @@ public class Database {
 				DeadlineTask currDeadlineTask = deadlineTaskList.get(i);
 				jsonTask = new JSONObject();
 				
-				jsonTask.put("Name", currDeadlineTask.getName());
-				jsonTask.put("DueDate", currDeadlineTask.getReadableDeadline());
-				jsonTask.put("Workload", currDeadlineTask.getWorkload());
-				jsonTask.put("ID", currDeadlineTask.getId());
-				jsonTask.put("Type", "Deadline");
+				jsonTask.put(JSON_KEY_NAME, currDeadlineTask.getName());
+				jsonTask.put(JSON_KEY_DUEDATE, currDeadlineTask.getReadableDeadline());
+				jsonTask.put(JSON_KEY_WORKLOAD, currDeadlineTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currDeadlineTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_DEADLINE);
 				
 				jsonArrayForStorage.add(jsonTask);
 			}
@@ -540,12 +581,12 @@ public class Database {
 				TimedTask currTimedTask = timedTaskList.get(i);
 				jsonTask = new JSONObject();
 				
-				jsonTask.put("Name", currTimedTask.getName());
-				jsonTask.put("Start Time", currTimedTask.getReadableStartTime());
-				jsonTask.put("End Time", currTimedTask.getReadableEndTime());
-				jsonTask.put("Workload", currTimedTask.getWorkload());
-				jsonTask.put("ID", currTimedTask.getId());
-				jsonTask.put("Type", "Timed");
+				jsonTask.put(JSON_KEY_NAME, currTimedTask.getName());
+				jsonTask.put(JSON_KEY_START_TIME, currTimedTask.getReadableStartTime());
+				jsonTask.put(JSON_KEY_END_TIME, currTimedTask.getReadableEndTime());
+				jsonTask.put(JSON_KEY_WORKLOAD, currTimedTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currTimedTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_TIMED);
 				
 				jsonArrayForStorage.add(jsonTask);
 			}
