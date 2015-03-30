@@ -17,7 +17,7 @@ public class TimedTask extends GenericTask {
 	 * All dates will be shaped according to this format. 
 	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
 	 * */
-	private static final String JAVA_DATE_FORMAT = "E MMM DD HH:mm";
+	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
 	private DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 	
 	//-----------------//
