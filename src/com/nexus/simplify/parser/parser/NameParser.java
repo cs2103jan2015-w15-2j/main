@@ -1,7 +1,5 @@
 package com.nexus.simplify.parser.parser;
 
-import java.util.Arrays;
-
 import com.nexus.simplify.parser.data.CommandData;
 
 /**

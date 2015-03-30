@@ -1,7 +1,6 @@
 package com.nexus.simplify.parser.api;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.data.CommandData;
 import com.nexus.simplify.parser.parser.MainParser;
-import com.nexus.simplify.parser.parser.ParamParser;
 import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 /**
@@ -31,19 +29,23 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
 public class Parser implements IParser {
 	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
 
-	//Parameter constants
 	Tokeniser tokeniser = new Tokeniser();
 	MainParser parser = new MainParser();
 	CommandData commandData = CommandData.getInstance();
+	String[] userTokens;
 
 	@Override
-	public UserCommand parseInput(String userInput) {
-		LOGGER.info("Parsing user input: {}", userInput);
-		String[] userTokens = tokeniser.tokenise(userInput);
-		parser.parseTokens(userTokens);	
-		UserCommand userCommand = commandData.createCommand();
-
-		return userCommand;
+	public UserCommand parseInput(String userInput) throws Exception {
+		try {
+			LOGGER.info("Parsing user input: {}", userInput);
+			userTokens = tokeniser.tokenise(userInput);
+			parser.parseTokens(userTokens);	
+			UserCommand userCommand = commandData.createCommand();
+			return userCommand;
+		} catch(Exception e) {
+			throw new Exception("Error parsing command: " + userInput
+					+ System.lineSeparator() + "Please specify parameters as clear as possible");
+		}
 	}
 
 	// main function to run white-box texting with console input
@@ -54,7 +56,7 @@ public class Parser implements IParser {
 		while (true) {
 			try {
 				test.parseInput(br.readLine());
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

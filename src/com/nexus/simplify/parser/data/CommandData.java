@@ -68,12 +68,21 @@ public class CommandData {
 //	}
 	
 	public UserCommand createCommand() {
-		LOGGER.info("User Operation: {}. User Parameters: {}", _userOp, Arrays.toString(_paramArray));
-		return new UserCommand(_userOp, _paramArray);
+		OperationType tempOp = _userOp;
+		String[] tempArray = _paramArray.clone();
+		_userOp = null;
+		_paramArray = new String[ParameterType.MAX_SIZE];
+		LOGGER.info("User Operation: {}. User Parameters: {}", tempOp, Arrays.toString(tempArray));
+		return new UserCommand(tempOp, tempArray);
 	}
 	
 	public OperationType getOperationType(String keyword) {
-		return cmdHash.get(keyword);
+		if (cmdHash.containsKey(keyword)) {
+			return cmdHash.get(keyword);
+		} else {
+			return OperationType.INVALID;
+		}
+		
 	}
 	
 	public OperationType getUserOp() {
