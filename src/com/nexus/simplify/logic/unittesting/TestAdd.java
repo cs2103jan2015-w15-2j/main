@@ -1,8 +1,7 @@
-package com.nexus.simplify.logic;
-
+package com.nexus.simplify.logic.unittesting;
 import static org.junit.Assert.*;
-
 import org.junit.Test;
+import com.nexus.simplify.logic.Add;
 
 public class TestAdd {
 	

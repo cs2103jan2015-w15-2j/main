@@ -31,5 +31,16 @@ public class Delete {
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){}
+	public String executeForTesting(String[] parameter){
+		int indexToDelete;
+		try{
+			indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		}catch(NumberFormatException e){
+			String feedback = "please enter a task index to delete.";
+			return feedback;
+		}
+		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		String feedback = "successfully deleted entry #" + String.valueOf(indexToDelete) + ".";
+		return feedback;
+	}
 }
