@@ -4,6 +4,10 @@ import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
 
+/*
+ * This class acts like a facade for other components to interact
+ * with the logic component
+ */
 public class Logic implements ILogic {
 	
 	private static Logic theOne;
