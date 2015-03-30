@@ -10,7 +10,7 @@ public class Tokeniser {
 	 * @return          A string token array.
 	 */
 	public String[] tokenise(String userInput){
-		String[] stringArray = userInput.split("\\s");
+		String[] stringArray = userInput.split("\\s+");
 		return stringArray;
 	}
 }

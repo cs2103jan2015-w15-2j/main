@@ -55,7 +55,8 @@ public abstract class TokenParser {
 	}
 
 	protected String[] strToTokenList(String str) {
-		return str.split("//s");
+		String[] strArr = str.split("\\s+");
+		return strArr;
 	}
 
 	protected String tokenListToStr(String[] strArr) {

@@ -15,7 +15,7 @@ public class GenericTask {
 	 * Default value of workload when user does not specify is 1
 	 * */
 	private static final int DEFAULT_WORKLOAD_VALUE = 1;
-	private static final String ID_FORMAT = "yyMMddHHmmss";
+	private static final String ID_FORMAT = "ddMMyyHHmmss";
 	
 	//------------------//
 	// Class Attributes //
