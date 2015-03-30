@@ -1,0 +1,63 @@
+.background {
+    -fx-background-color: white;
+}
+
+.table-view {
+    -fx-base: white;
+    -fx-control-inner-background: white;
+    -fx-background-color: white;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-border-color: black;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Monaco";
+    -fx-text-fill: black;
+    -fx-alignment: center;
+    -fx-opacity: 1;
+}
+
+.split-pane:horizontal > * > .split-pane-divider, .split-pane:vertical > * >.split-pane-divider {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.split-pane *.vertical-grabber {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-shape: " ";
+}
+
+
+.split-pane *.horizontal-grabber {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-shape: " ";
+}
+
+.table-cell {
+    -fx-font-size: 9pt;
+    -fx-alignment: center;
+    -fx-font-family: "Monaco";
+    -fx-text-fill: black;
+}
+
+
+.text-area {
+    -fx-alignment: center;
+}
