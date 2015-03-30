@@ -160,7 +160,7 @@ public class DeadlineTaskList {
 	public ObservableList<DeadlineTask> getObservable() {
 		int maxNumTasksToAdd;
 		observableDeadline.removeAll(observableDeadline);
-		if (isEmpty()) {
+		if (!isEmpty()) {
 			if (taskArray.size() > numOfDisplayItems) {
 				maxNumTasksToAdd = numOfDisplayItems;
 			} else {

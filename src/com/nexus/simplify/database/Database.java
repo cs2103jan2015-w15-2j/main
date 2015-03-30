@@ -390,8 +390,8 @@ public class Database {
 	 * 
 	 * 
 	 * */
-	@SuppressWarnings("unchecked")
-	private void storeSettingsIntoConfigFile() {
+	@SuppressWarnings("unchecked") 
+	public void storeSettingsIntoConfigFile() {
 		JSONObject configJson = new JSONObject();
 		configJson.put("data file location", DEFAULT_DATA_FILE_LOCATION);
 		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
@@ -418,8 +418,20 @@ public class Database {
 		return this.dataFileLocation + DEFAULT_FILE_NAME;
 	}
 	
+	/**
+	 * @return the location (directory) of the file.
+	 * 
+	 * */
+	public String getDataFileLocation() {
+		return this.dataFileLocation;
+	}
 	
-	private JSONArray retrieveDataFromDataFile() {
+	public void setDataFileLocation(String newFileLocation) {
+		this.dataFileLocation = newFileLocation;
+	}
+	
+	
+	public JSONArray retrieveDataFromDataFile() {
 		String dataFileName = getDataFilePath();
 		JSONArray jsonTaskArray = new JSONArray();
 	
@@ -444,7 +456,7 @@ public class Database {
 	 * with their corresponding data obtained from the JSON file.
 	 * 
 	 * */
-	public void populateTaskLists(JSONArray jsonTaskArray) {
+	private void populateTaskLists(JSONArray jsonTaskArray) {
 		for (Object object : jsonTaskArray) {
 			JSONObject jsonTask = (JSONObject) object;
 			String taskType = (String) jsonTask.get(JSON_KEY_TYPE);
@@ -469,7 +481,7 @@ public class Database {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL) {
+	private void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL) {
 		try {
 			String fileName = getDataFilePath();
 			File outputFile = new File(fileName);
@@ -556,11 +568,10 @@ public class Database {
 	
 	@SuppressWarnings("unchecked")
 	private void convertToStore(DeadlineTaskList deadlineTaskList, JSONArray jsonArrayForStorage) {
-		JSONObject jsonTask;
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
 				DeadlineTask currDeadlineTask = deadlineTaskList.get(i);
-				jsonTask = new JSONObject();
+				JSONObject jsonTask = new JSONObject();
 				
 				jsonTask.put(JSON_KEY_NAME, currDeadlineTask.getName());
 				jsonTask.put(JSON_KEY_DUEDATE, currDeadlineTask.getReadableDeadline());
@@ -575,11 +586,11 @@ public class Database {
 	
 	@SuppressWarnings("unchecked")
 	private void convertToStore(TimedTaskList timedTaskList, JSONArray jsonArrayForStorage) {
-		JSONObject jsonTask;
+		
 		if (!timedTaskList.isEmpty()) {
 			for (int i = 0; i < timedTaskList.size(); i++) {
 				TimedTask currTimedTask = timedTaskList.get(i);
-				jsonTask = new JSONObject();
+				JSONObject jsonTask = new JSONObject();
 				
 				jsonTask.put(JSON_KEY_NAME, currTimedTask.getName());
 				jsonTask.put(JSON_KEY_START_TIME, currTimedTask.getReadableStartTime());
