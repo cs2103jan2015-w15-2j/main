@@ -10,6 +10,7 @@ import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.Logic;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -274,5 +275,21 @@ public class BillboardOverviewController {
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
 		genericTaskTable.setItems(genericTaskList);
+		
+		fillTableIndexes();
+	}
+	
+	private void fillTableIndexes() {
+		int deadlineTaskTableSize = deadlineTaskTable.getItems().size();
+		int timedTaskTableSize = timedTaskTable.getItems().size();
+		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																      deadlineTaskTable.getItems().indexOf(column.getValue()) + 1)
+																  );
+		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																	  timedTaskTable.getItems().indexOf(column.getValue()) + 1 + deadlineTaskTableSize)
+															   ); 
+		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																	  genericTaskTable.getItems().indexOf(column.getValue()) + 1 + deadlineTaskTableSize + timedTaskTableSize)
+																 ); 
 	}
 }
