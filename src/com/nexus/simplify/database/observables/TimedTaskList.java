@@ -70,7 +70,7 @@ public class TimedTaskList {
 	 *  @param index of the TimedlineTask to be removed
 	 * */
 	public void delete(int index) {
-		taskArray.remove(index);
+		taskArray.remove(index - 1);
 	}
 	
 	/**
