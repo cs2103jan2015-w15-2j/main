@@ -321,6 +321,22 @@ public class Database {
 		}
 	}
 	
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	public GenericTaskList getGenericTL() {
+		return genericTaskList;
+	}
+	
+	public TimedTaskList getTimedTL() {
+		return timedTaskList;
+	}
+	
+	public DeadlineTaskList getDeadlineTL() {
+		return deadlineTaskList;
+	}
+	
 	//-----------------//
 	// File Processing //
 	//-----------------//
