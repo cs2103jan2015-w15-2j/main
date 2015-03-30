@@ -32,12 +32,13 @@ public class Modify {
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
-		if(newName != null){
+		if(newName != null && !newName.isEmpty()){
 			database.modifyName(indexToModify, newName);
-			feedback += "name ";
+			feedback += "name, ";
 		}
+		
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
-		if(newStartTime != null){
+		if(newStartTime != null && !newStartTime.isEmpty()){
 			Date startTime;
 			try {
 				startTime = df.parse(newStartTime);
@@ -45,11 +46,11 @@ public class Modify {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
-			feedback += "and start time ";
+			feedback += "start time, ";
 		}
+		
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
-		if(newEndTime != null){
+		if(newEndTime != null && !newEndTime.isEmpty()){
 			Date endTime;
 			try {
 				endTime = df.parse(newEndTime);
@@ -57,31 +58,82 @@ public class Modify {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-
-			feedback += "and end time ";
+			feedback += "end time, ";
 		}
-		if(parameter[ParameterType.NEW_WORKLOAD_POS] != null){
+		
+		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()){
 			int newWorkload;
 			try{
-				newWorkload = Integer.parseInt(parameter[ParameterType.NEW_WORKLOAD_POS]);
+				newWorkload = Integer.parseInt(newWorkloadStr);
 			}catch(NumberFormatException e){
 				return "please enter a valid workload.";
 			}
 			
-			newWorkload = Integer.parseInt(parameter[ParameterType.NEW_WORKLOAD_POS]);
-			
+			newWorkload = Integer.parseInt(newWorkloadStr);
 			try {
 				database.modifyWorkload(indexToModify, newWorkload);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			feedback += "and workload ";
+			feedback += "workload, ";
+		}
+		
+		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
+			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())){
+			feedback = "please specify something to modify.";
 		}
 		feedback += "modified.";
 		return feedback;
 	}
 	
-		// this method is for unit testing, which assumes that parser and
-		// database function correctly
-		public String executeForTesting(String[] parameter){}
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter){
+		int indexToModify;
+		try{
+			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		}catch(NumberFormatException e){
+			String feedback = "please enter a task index to modify.";
+			return feedback;
+		}
+		
+		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		String feedback = "task ";
+		String newName = parameter[ParameterType.NEW_NAME_POS];
+		if(newName != null && !newName.isEmpty()){
+			feedback += "name, ";
+		}
+		
+		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		if(newStartTime != null && !newStartTime.isEmpty()){
+			feedback += "start time, ";
+		}
+		
+		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		if(newEndTime != null && !newEndTime.isEmpty()){
+			feedback += "end time, ";
+		}
+		
+		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()){
+			int newWorkload;
+			try{
+				newWorkload = Integer.parseInt(newWorkloadStr);
+			}catch(NumberFormatException e){
+				feedback = "please enter a valid workload.";
+				return feedback;
+			}
+			newWorkload = Integer.parseInt(newWorkloadStr);
+			feedback += "workload, ";
+		}
+		
+		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
+				(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())){
+				feedback = "please specify something to modify.";
+				return feedback;
+		}
+		feedback += "modified.";
+		return feedback;
+	}
 }
