@@ -13,8 +13,9 @@ public class Display {
 	
 	public Display() {}
 		
-	public String execute(String[] parameter){
+	String execute(String[] parameter){
 		String option = parameter[ParameterType.INDEX_POS];
+		String fileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
 		String feedback;
 		Database database = MainApp.getDatabase();
 		if(isNumeric(option)){
@@ -48,7 +49,10 @@ public class Display {
 					database.toggleDisplay(option);
 					feedback = "displayed tasks by workload.";
 					return feedback;
-
+				case "file location" :
+					database.toggleDisplay(option,fileLocation);
+					feedback = "file location displayed.";
+					return feedback;
 				default :
 					feedback = "invalid option for display, please try again.";
 					return feedback;

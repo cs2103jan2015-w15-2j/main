@@ -43,10 +43,10 @@ public class Logic implements ILogic {
 				return doneOp.execute(command.getParameter());
 			case SEARCH:
 				Search searchOp = new Search();
-				return searchOp.execute(command.getParameter());
+				return searchOp.execute(command.getParameter(), command.getSearchField);
 			case UNDO:
 				Undo undoOp = new Undo();
-				return undoOp.execute(command.getParameter());
+				return undoOp.execute();
 			default:
 				return null;
 		}

@@ -15,7 +15,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 public class Modify {
 	public Modify() {}
 	
-	public String execute(String[] parameter){
+	String execute(String[] parameter){
 		// pattern follows Java.util.Date toString() method
 		String pattern = "E MMM dd hh:mm:ss zzz yyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
@@ -54,7 +54,7 @@ public class Modify {
 			Date endTime;
 			try {
 				endTime = df.parse(newEndTime);
-				database.modifyStartTime(indexToModify, endTime);
+				database.modifyEndTime(indexToModify, endTime);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -79,8 +79,19 @@ public class Modify {
 			feedback += "workload, ";
 		}
 		
+		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
+		if(newFileLocation != null && !newFileLocation.isEmpty()){
+			try {
+				database.modifyFileLocation(indexToModify, newFileLocation);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			feedback += "file location, ";
+		}
+		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
-			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())){
+			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
+			&& (newFileLocation==null || newFileLocation.isEmpty())){
 			feedback = "please specify something to modify.";
 		}
 		feedback += "modified.";
