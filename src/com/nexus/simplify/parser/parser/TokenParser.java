@@ -26,7 +26,7 @@ public abstract class TokenParser {
 				}
 			}
 		}
-		// Populating newTokenList with remaining unsed tokens
+		// Populating newTokenList with remaining unused tokens
 		if (newTokenList.length == 0) {
 			return newTokenList;
 		} else {
