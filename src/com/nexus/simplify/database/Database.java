@@ -23,6 +23,7 @@ import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.database.Writer;
 import com.nexus.simplify.database.Reader;
+import com.nexus.simplify.database.State;
 
 @SuppressWarnings("unused")
 
@@ -56,6 +57,7 @@ public class Database {
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
 	
 	Writer writer = new Writer(this);
+	State state;
 	
 	//------------------//
 	// Class Attributes //
@@ -148,8 +150,16 @@ public class Database {
 		observableDeadline.clear();
 	}
 	
+	private void saveState() {
+		state.saveGenericState();
+		state.saveDeadlineState();
+		state.saveTimedState();
+	}
+	
 	public void undoTask() {
-		
+		state.loadDeadlineState();
+		state.loadTimedState();
+		state.loadGenericState();
 	}
 	
 	public void searchDatabase(String[] parameter, boolean[] searchField) {
@@ -307,6 +317,7 @@ public class Database {
 		Reader reader = new Reader(this);
 		JSONArray jsonTaskArray = reader.retrieveDataFromDataFile(getDataFilePath());
 		reader.populateTaskLists(jsonTaskArray);
+		state = new State(this);
 	}
 	
 	//----------------//
