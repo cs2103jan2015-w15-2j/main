@@ -133,7 +133,7 @@ public class Database {
 		} else {
 			if (index <= deadlineTaskList.size()) {
 				deadlineTaskList.delete(index);
-			} else if (index > deadlineTaskList.size() && index <= deadlineTaskList.size() + timedTaskList.size()) {
+			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
 				index = index - deadlineTaskList.size();
 				timedTaskList.delete(index);
 			} else {
@@ -182,9 +182,11 @@ public class Database {
 		} else {
 			if (index <= deadlineTaskList.size()) {
 				deadlineTaskList.get(index - 1).setName(newName);
-			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
+				index = index - deadlineTaskList.size();
 				timedTaskList.get(index - 1).setName(newName);
 			} else {
+				index = index - deadlineTaskList.size() - timedTaskList.size();
 				genericTaskList.get(index - 1).setName(newName);
 			}
 		}
@@ -208,9 +210,11 @@ public class Database {
 			} else {
 				if (index <= deadlineTaskList.size()) {
 					deadlineTaskList.get(index - 1).setWorkload(newWorkloadValue);
-				} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+				} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
+					index = index - deadlineTaskList.size();
 					timedTaskList.get(index - 1).setWorkload(newWorkloadValue);
 				} else {
+					index = index - deadlineTaskList.size() - timedTaskList.size();
 					genericTaskList.get(index - 1).setWorkload(newWorkloadValue);
 				}
 			}
@@ -240,9 +244,11 @@ public class Database {
 				} else {
 					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newStartTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
 				}
-			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
+				index = index - deadlineTaskList.size();
 				timedTaskList.get(index - 1).setStartTime(newStartTime);
 			} else {
+				index = index - deadlineTaskList.size() - timedTaskList.size();
 				GenericTask task = genericTaskList.get(index - 1);
 				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
@@ -273,9 +279,11 @@ public class Database {
 				} else {
 					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newEndTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
 				}
-			} else if (index > deadlineTaskList.size() && index <= timedTaskList.size()) {
+			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
+				index = index - deadlineTaskList.size();
 				timedTaskList.get(index - 1).setEndTime(newEndTime);
 			} else {
+				index = index - deadlineTaskList.size() - timedTaskList.size();
 				GenericTask task = genericTaskList.get(index - 1);
 				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
@@ -379,50 +387,6 @@ public class Database {
 		this.dataFileLocation = newFileLocation;
 	}
 	
-	//-----------------//
-	// File Processing //
-	//-----------------//
-	
-	/**
-	 * retrieves the data file location from the 
-	 * configuration file.
-	 * */
-	private void retrieveSettingsFromConfigFile() {
-		JSONObject configJson = new JSONObject();
-		try {
-			JSONParser jsonParser = new JSONParser();
-			String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
-			Object object = jsonParser.parse(new FileReader(CONFIG_FILE_LOCATION + CONFIG_FILE_NAME));
-			configJson = (JSONObject) object;
-			
-			if (!configJson.containsKey(JSON_KEY_DATA_FILE_DIRECTORY)) {
-				revertToDefaultSettings();
-			} else {
-				this.dataFileLocation = String.valueOf(configJson.get(JSON_KEY_DATA_FILE_DIRECTORY));
-			}
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * sets the location of the data file to its default location
-	 * and stores the default settings into the configuration file.
-	 * */
-	private void revertToDefaultSettings() {
-		this.dataFileLocation = DEFAULT_DATA_FILE_LOCATION;
-		storeSettingsIntoConfigFile();
-	}
-	
-	/**
-	 * @param configFileName name of program configuration file
-	 * @return true if config file exists, false otherwise.
-	 * */
-	private boolean configFileExists(String configFileName) {
-		File configFile = new File(configFileName);
-		return configFile.exists();
-	}
-	
 	/**
 	 * creates a new file for the program.
 	 * 
@@ -443,6 +407,49 @@ public class Database {
 		}
 	}
 	
+	//-----------------//
+	// File Processing //
+	//-----------------//
+	
+	/**
+	 * retrieves the data file location from the 
+	 * configuration file.
+	 * */
+	public void retrieveSettingsFromConfigFile() {
+		JSONObject configJson = new JSONObject();
+		try {
+			JSONParser jsonParser = new JSONParser();
+			String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
+			Object object = jsonParser.parse(new FileReader(configFilePath));
+			configJson = (JSONObject) object;
+			
+			if (!configJson.containsKey(JSON_KEY_DATA_FILE_DIRECTORY)) {
+				revertToDefaultSettings();
+			} else {
+				this.setDataFileLocation(String.valueOf(configJson.get(JSON_KEY_DATA_FILE_DIRECTORY)));
+			}
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * sets the location of the data file to its default location
+	 * and stores the default settings into the configuration file.
+	 * */
+	private void revertToDefaultSettings() {
+		this.setDataFileLocation(DEFAULT_DATA_FILE_LOCATION);
+		storeSettingsIntoConfigFile();
+	}
+	
+	/**
+	 * @param configFileName name of program configuration file
+	 * @return true if config file exists, false otherwise.
+	 * */
+	public boolean configFileExists(String configFileName) {
+		File configFile = new File(configFileName);
+		return configFile.exists();
+	}
 
 	/**
 	 * 
@@ -453,7 +460,7 @@ public class Database {
 		JSONObject configJson = new JSONObject();
 		configJson.put("data file location", DEFAULT_DATA_FILE_LOCATION);
 		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
-		File outputConfigFile = new File(outputConfigFilePath);
+		// File outputConfigFile = new File(outputConfigFilePath);
 		try {
 			FileWriter fileWriter = new FileWriter(outputConfigFilePath);
 			fileWriter.write(configJson.toJSONString());
