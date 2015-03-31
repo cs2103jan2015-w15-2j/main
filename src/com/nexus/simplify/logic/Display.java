@@ -51,7 +51,7 @@ public class Display {
 					
 				case "file location" :
 					feedback = "file location displayed.";
-					feedback += database.getFileLocation(option);
+					feedback += database.getDataFileLocation();
 					return feedback;
 					
 				default :
