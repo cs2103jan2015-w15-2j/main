@@ -21,7 +21,7 @@ public class ParamParser extends TokenParser {
 			return tokenList;
 		} else {
 			try {
-				if (commandData.getUserOp() == OperationType.SEARCH))) {
+				if (commandData.getUserOp() == OperationType.SEARCH) {
 					tokenList = sdtParser.parseTokens(tokenList);
 				} else {
 					tokenList = dtParser.parseTokens(tokenList);

@@ -2,12 +2,11 @@ package com.nexus.simplify.database;
 
 import java.util.Date;
 
-import com.nexus.simplify.database.tasktype.DeadlineTask;
-import com.nexus.simplify.database.tasktype.GenericTask;
-import com.nexus.simplify.database.tasktype.TimedTask;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.ParameterType;
-import com.nexus.simplify.logic.usercommand.UserCommand;
 
 /**
  * Helper class for testing purposes. Allows to track the method and parameters that
@@ -19,114 +18,209 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
 public class LogicRequest {
 	OperationType _operation;
 	Object[] _parameter;
+	OperationType _displayOp = OperationType.DISPLAY;
+	OperationType _addOp = OperationType.ADD;
+	OperationType _modifyOp = OperationType.MODIFY;
+	OperationType _deleteOp = OperationType.DELETE;
+	OperationType _doneOp = OperationType.DONE;
+	OperationType _clearOp = OperationType.CLEAR;
+	OperationType _undoOp = OperationType.UNDO;
+	OperationType _searchOp = OperationType.SEARCH;
+	OperationType _invalidOp = OperationType.INVALID;
+	Logger LOGGER = LoggerFactory.getLogger(LogicRequest.class.getName());
 	
 	public LogicRequest() {
 		_operation = OperationType.INVALID;
 		_parameter = new Object[ParameterType.MAX_SIZE];
 	}
+	
+	public void reset() {
+		_operation = OperationType.INVALID;
+		_parameter = new Object[ParameterType.MAX_SIZE];
+	}
 
 	/**
-	 * Adds a new timed task to the list of timed tasks.
+	 * Track the parameter called onto addTimedTask in Database
 	 * 
 	 * @param name name of task
 	 * @param startTime time and date when task starts
 	 * @param endTime time and date when task ends
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
-	 * */
-	public void setAddTimedTask(String name, Date startTime, Date endTime, int workload) {
-		
+	 */
+	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+		LOGGER.info("addTimedTasked is called. Name: {}, StartTime: {}, EndTime: {}, Workload: {}",
+				name, startTime, endTime, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setStartTime(startTime);
+		setEndTime(endTime);
+		setWorkload(workload);
 	}
 	
 	/**
-	 * Adds a new deadline-based task to the list of deadline-based tasks.
+	 * Track the parameter called onto addDeadlineTask in Database.
 	 * 
 	 * @param name name of task
 	 * @param deadline time and date when task ends
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
-	 * */
+	 * 
+	 */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
-		if (workload == 0) {
-			observableDeadline.add(new DeadlineTask(name, deadline));
-		} else {
-			observableDeadline.add(new DeadlineTask(name, deadline, workload));
-		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		LOGGER.info("addDeadlineTask is called. Name: {}, Deadline: {}, Workload: {}",
+				name, deadline, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setStartTime(deadline);
+		setEndTime(deadline);
+		setWorkload(workload);
 	}
 	
 	/**
-	 * Adds a new generic (floating) task to the list of generic tasks.
+	 * Track the parameter called onto addGenericTask in Database.
 	 * 
 	 * @param name name of task
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
-	 * */
+	 *
+	 */
 	public void addGenericTask(String name, int workload) {
-		if (workload == 0) {
-			observableGeneric.add(new GenericTask(name));
-		} else {
-			observableGeneric.add(new GenericTask(name, workload));
-		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		LOGGER.info("addGenericTask is called. Name: {}, Workload: {}",
+				name, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setWorkload(workload);
 	}
 	
-	
 	/**
-	 * Deletes a task from the table based on its index being displayed on the billboard.
+	 * Track the parameter called onto deleteTaskByIndex() in Database.
 	 * 
 	 * @param index index of task with respect to the billboard
 	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
-	 * */
-	public void deleteTaskByIndex(int index) throws IndexOutOfBoundsException {
-		if (index > this.totalSizeOfAllLists() || index < 1) {
-			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
-		} else {
-			if (index <= observableDeadline.size()) {
-				observableDeadline.remove(index - 1);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				observableTimed.remove(index - 1);
-			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				observableGeneric.remove(index - 1);
-			}
-		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+	 * 
+	 */
+	public void deleteTaskByIndex(int index) {
+		LOGGER.info("deleteTaskByIndex is called. Index: {}", index);
+		setOperationType(_deleteOp);
+		setIndex(index);
 	}
 	
+	/**
+	 * Track the parameter called onto clearContent in Database.
+	 */
 	public void clearContent() {
-		setOperationType.
+		LOGGER.info("clearContent is called.");
+		setOperationType(_clearOp);
 	}
 	
-	public void undoTask() {
-		
+	// Not implemented yet
+//	public void searchDatabase(String[] parameter, boolean[] searchField) {
+//		setOperationType(_searchOp);
+//	}
+	
+	// Not implemented yet
+//	/**
+//	 * Track the parameter called onto toggleDisplay in Database.
+//	 * 
+//	 * @param option toggles the sorting order of the task lists
+//	 * */
+//	public void toggleDisplay(String option) {
+//		setOperationType(_displayOp);
+//	}
+	
+	/**
+	 * Track the parameter called onto modifyName in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newName new name to be written to the task
+	 *  
+	 * */
+	public void modifyName(int index, String newName) {
+		LOGGER.info("modifyName is called. Index: {}, Name: {}", index, newName);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setName(newName);
 	}
 	
-	public void searchDatabase(String[] parameter, boolean[] searchField) {
-		
+	/**
+	 * Track the parameter called onto modifyWorkload in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newWorkloadValue new value of workload to be written to the task
+	 *
+	 * */
+	public void modifyWorkload(int index, int newWorkloadValue) {
+		LOGGER.info("modifyWorkload is called. Index: {}, Workload: {}", index, newWorkloadValue);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setWorkload(newWorkloadValue);
 	}
+	
+	/**
+	 * Track the parameter called onto modifyStartTime in Database.
+	 *  
+	 * @param index index of task with respect to the billboard
+	 * @param newStartTime new value of start time to be written to the task
+	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * */
+	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setStartTime(newStartTime);
+	}
+	
+	/**
+	 * Track the parameter called onto modifyEndTime in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newEndTime new value of end time to be written to the task
+	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * */
+	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
+		LOGGER.info("modifyEndTime is called. Index: {}, EndTime: {}", index, newEndTime);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setEndTime(newEndTime);
+	}
+	
+	/**
+	 * Track the parameter called onto markTaskDone in Database.
+	 * 
+	 */
+	public void markTaskDone(int indexToMarkDone) {
+		LOGGER.info("markTaskDone is called. Index: {}", indexToMarkDone);
+		setOperationType(_doneOp);
+	}
+	
+	// check if there is missing backslash
+	public void modifyFileLocation(String newFileLocation) {
+		setOperationType(_modifyOp);
+		setFileLocation(newFileLocation);
+	}
+
 	
 	// Getters and Setters
+	
 	public void setOperationType(OperationType op) {
-		_parameter[ParameterType.INDEX_POS] = op;
+		_operation = op;
 	}
 	
 	public void setIndex(int index) {
-		_parameter[ParameterType.INDEX_POS] = index
+		_parameter[ParameterType.INDEX_POS] = index;
 	}
 	
 	public void setName(String name) {
-		_parameter[ParameterType.INDEX_POS] = name
+		_parameter[ParameterType.NEW_NAME_POS] = name;
 	}
 	public void setStartTime(Date startTime) {
-		_parameter[ParameterType.INDEX_POS] = startTime;
+		_parameter[ParameterType.NEW_STARTTIME_POS] = startTime;
 	}
 	public void setEndTime(Date endTime) {
-		_parameter[ParameterType.INDEX_POS] = endTime;
+		_parameter[ParameterType.NEW_ENDTIME_POS] = endTime;
 	}
 	public void setWorkload(int workload) {
-		_parameter[ParameterType.INDEX_POS] = workload;
+		_parameter[ParameterType.NEW_WORKLOAD_POS] = workload;
 	}
 	public void setFileLocation(String fileLocation) {
-		_parameter[ParameterType.INDEX_POS] = fileLocation;
+		_parameter[ParameterType.NEW_FILELOCATION_POS] = fileLocation;
 	}
 	
 	public OperationType getOperationType(){
@@ -137,9 +231,14 @@ public class LogicRequest {
 		return _parameter;
 	}
 
-	public int getIndex() {
-		int index = (int) _parameter[ParameterType.INDEX_POS];
-		return index;
+	public Object getIndex() {
+		if (_parameter[ParameterType.INDEX_POS] == null) {
+			return null;
+		} else {
+			int index = (int) _parameter[ParameterType.INDEX_POS];
+			return index;
+		}
+		
 	}
 	
 	public String getName() {
@@ -158,8 +257,13 @@ public class LogicRequest {
 	}
 	
 	public int getWorkload() {
-		int workload = (int) _parameter[ParameterType.NEW_WORKLOAD_POS];
-		return workload;
+		if (_parameter[ParameterType.NEW_WORKLOAD_POS] == null) {
+			return 0;
+		} else {
+			int workload = (int) _parameter[ParameterType.NEW_WORKLOAD_POS];
+			return workload;
+		}
+		
 	}
 	
 	public String getFileLocation() {

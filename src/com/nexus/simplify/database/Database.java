@@ -58,6 +58,7 @@ public class Database {
 	
 	Writer writer = new Writer(this);
 	State state;
+	LogicRequest logicRequest = new LogicRequest();
 	
 	//------------------//
 	// Class Attributes //
@@ -81,6 +82,7 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+		logicRequest.addTimedTask(name, startTime, endTime, workload);
 		if (workload == 0) {
 			observableTimed.add(new TimedTask(name, startTime, endTime));
 		} else {
@@ -97,6 +99,7 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
+		logicRequest.addDeadlineTask(name, deadline, workload);
 		if (workload == 0) {
 			observableDeadline.add(new DeadlineTask(name, deadline));
 		} else {
@@ -112,6 +115,7 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addGenericTask(String name, int workload) {
+		logicRequest.addGenericTask(name, workload);
 		if (workload == 0) {
 			observableGeneric.add(new GenericTask(name));
 		} else {
@@ -128,6 +132,7 @@ public class Database {
 	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
 	 * */
 	public void deleteTaskByIndex(int index) throws IndexOutOfBoundsException {
+		logicRequest.deleteTaskByIndex(index);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
@@ -145,6 +150,7 @@ public class Database {
 	}
 	
 	public void clearContent() {
+		logicRequest.clearContent();
 		observableGeneric.clear();
 		observableTimed.clear();
 		observableDeadline.clear();
@@ -199,6 +205,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive 
 	 * */
 	public void modifyName(int index, String newName) throws IndexOutOfBoundsException {
+		logicRequest.modifyName(index, newName);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
@@ -224,6 +231,7 @@ public class Database {
 	 * @throws Exception if workload is not in range of 1 - 5 inclusive.
 	 * */
 	public void modifyWorkload(int index, int newWorkloadValue) throws IndexOutOfBoundsException, Exception {
+		logicRequest.modifyWorkload(index, newWorkloadValue);
 		if (newWorkloadValue > 5 || newWorkloadValue < 1) {
 			throw new Exception("Invalid workload value entered. Supported workload values range from 1 to 5.");
 		} else {
@@ -253,6 +261,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+		logicRequest.modifyStartTime(index, newStartTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
@@ -280,6 +289,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
+		logicRequest.modifyEndTime(index, newEndTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
@@ -295,6 +305,12 @@ public class Database {
 			}
 		}
 		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+	}
+	
+	public void markTaskDone(int indexToMarkDone) {
+		logicRequest.markTaskDone(indexToMarkDone);
+		// TODO Auto-generated method stub
+		
 	}
 	
 	// check if there is missing backslash
@@ -364,6 +380,14 @@ public class Database {
 	 * */
 	public String getDataFileLocation() {
 		return this.dataFileLocation;
+	}
+	
+	/**
+	 * Returns the LogicRequest object of this Database
+	 @return 
+	 */
+	public LogicRequest getLogicRequest() {
+		return logicRequest;
 	}
 	
 	//--------------------//
