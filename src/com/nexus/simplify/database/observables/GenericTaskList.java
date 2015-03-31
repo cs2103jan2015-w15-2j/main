@@ -23,7 +23,7 @@ public class GenericTaskList {
 		NAME, WORKLOAD, ID
 	}
 	
-	private int numOfDisplayItems = 5;
+	private int numOfDisplayItems = 7;
 	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
 	
 	//-------------//

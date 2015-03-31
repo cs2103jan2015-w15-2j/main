@@ -23,7 +23,7 @@ public class TimedTaskList {
 		NAME, TIMED, WORKLOAD, ID
 	}
 
-	private int numOfDisplayItems = 5;
+	private int numOfDisplayItems = 7;
 	private ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
 	
 		

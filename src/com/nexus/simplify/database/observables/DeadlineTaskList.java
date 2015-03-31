@@ -23,7 +23,7 @@ public class DeadlineTaskList {
 		NAME, DEADLINE, WORKLOAD, ID
 	}
 	
-	private int numOfDisplayItems = 5;
+	private int numOfDisplayItems = 7;
 	private ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
 		
 	//-------------//
