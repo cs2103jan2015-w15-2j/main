@@ -21,14 +21,13 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  * Coding Style: 
  * https://docs.google.com/a/nuscomputing.com/document/pub?id=1iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp
  * 
- * Need identify Keywords in enum or hash, etc
- * http://stackoverflow.com/questions/717588/writing-a-cleaner-and-more-modular-command-parser
+ * @author davis
  * 
  */
 
 public class Parser implements IParser {
 	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
-
+	String givenInput;
 	Tokeniser tokeniser = new Tokeniser();
 	MainParser parser = new MainParser();
 	CommandData commandData = CommandData.getInstance();
@@ -37,6 +36,7 @@ public class Parser implements IParser {
 	@Override
 	public UserCommand parseInput(String userInput) throws Exception {
 		try {
+			givenInput = userInput;
 			LOGGER.info("Parsing user input: {}", userInput);
 			userTokens = tokeniser.tokenise(userInput);
 			parser.parseTokens(userTokens);	
@@ -46,6 +46,10 @@ public class Parser implements IParser {
 			throw new Exception("Error parsing command: " + userInput
 					+ System.lineSeparator() + "Please specify parameters as clear as possible");
 		}
+	}
+	
+	public String getGivenInput() {
+		return givenInput;
 	}
 
 	// main function to run white-box texting with console input

@@ -11,6 +11,7 @@ import com.nexus.simplify.parser.api.Parser;
 public class Logic implements ILogic {
 	
 	private static Logic theOne;
+	private Parser parser = new Parser();
 	
 	private Logic() {}
 	
@@ -23,8 +24,7 @@ public class Logic implements ILogic {
 	
 	@Override
 	public String executeCommand(String userInput) throws Exception{
-		Parser parser = new Parser();
-		UserCommand command = parser.parseInput(userInput);
+		UserCommand command = getParsedCommand(userInput);
 		switch(command.getOperationType()){
 			case ADD:
 				Add addOp = new Add();
@@ -45,5 +45,14 @@ public class Logic implements ILogic {
 				/*Invalid invalidOp = new Invalid();*/
 				return null;//invalidOp.execute();
 		}
+	}
+	
+	public Parser getParser() {
+		return parser;
+	}
+
+	public UserCommand getParsedCommand(String userInput) throws Exception {
+		UserCommand command = parser.parseInput(userInput);
+		return command;
 	}		
 }
