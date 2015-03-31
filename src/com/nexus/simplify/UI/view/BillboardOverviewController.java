@@ -1,7 +1,5 @@
 package com.nexus.simplify.UI.view;
 
-import java.text.ParseException;
-
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.observables.TaskListPackage;
@@ -31,6 +29,7 @@ import javafx.scene.input.KeyEvent;
 public class BillboardOverviewController {
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
+	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
 	//------------------//
 	// Class Attributes //
 	//------------------//
@@ -152,6 +151,7 @@ public class BillboardOverviewController {
 		initDeadlineTaskTable();
 		initTimedTaskTable();
 		initGenericTaskTable();
+
 	}
 
 	/**
@@ -203,6 +203,16 @@ public class BillboardOverviewController {
 	//-----------------------//
 	// Processing User Input //
 	//-----------------------//
+	
+	/**
+	 * Enables focus on the user input field when user starts 
+	 * to type on the keyboard.
+	 * 
+	 * */
+	@FXML
+	private void enableFocusToUserInputField() {
+		userInputField.requestFocus();
+	}
 	
 	/**
 	 * Sends input to the Logic component upon the action
@@ -279,17 +289,24 @@ public class BillboardOverviewController {
 		fillTableIndexes();
 	}
 	
+	/**
+	 * Populates the Index columns of each table, based on the updated entries.
+	 * */
 	private void fillTableIndexes() {
 		int deadlineTaskTableSize = deadlineTaskTable.getItems().size();
 		int timedTaskTableSize = timedTaskTable.getItems().size();
+		
+		int timedTaskColIndexOffset = DEADLINE_TASK_COL_INDEX_OFFSET + deadlineTaskTableSize;
+		int genericTaskColIndexOffset = timedTaskColIndexOffset + timedTaskTableSize;
+		
 		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																      deadlineTaskTable.getItems().indexOf(column.getValue()) + 1)
+																      deadlineTaskTable.getItems().indexOf(column.getValue()) + DEADLINE_TASK_COL_INDEX_OFFSET)
 																  );
 		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																	  timedTaskTable.getItems().indexOf(column.getValue()) + 1 + deadlineTaskTableSize)
+																	  timedTaskTable.getItems().indexOf(column.getValue()) + timedTaskColIndexOffset)
 															   ); 
 		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																	  genericTaskTable.getItems().indexOf(column.getValue()) + 1 + deadlineTaskTableSize + timedTaskTableSize)
+																	  genericTaskTable.getItems().indexOf(column.getValue()) + genericTaskColIndexOffset)
 																 ); 
 	}
 }
