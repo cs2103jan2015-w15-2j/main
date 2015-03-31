@@ -144,6 +144,20 @@ public class Database {
 		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
 	}
 	
+	public void clearContent() {
+		genericTaskList.clear();
+		timedTaskList.clear();
+		deadlineTaskList.clear();
+	}
+	
+	public void undoTask() {
+		
+	}
+	
+	public void searchDatabase(String[] parameter, boolean[] searchField) {
+		
+	}
+	
 	/**
 	 * returns the total size of all three task lists.
 	 * 
@@ -167,6 +181,10 @@ public class Database {
 			deadlineTaskList.sortBy(deadlineTaskList.getSortType(option));
 			timedTaskList.sortBy(timedTaskList.getSortType(option));
 		}
+	}
+	
+	public String getFileLocation(String option) {
+		return dataFileLocation;
 	}
 
 	/**
@@ -273,6 +291,12 @@ public class Database {
 			}
 		}
 		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+	}
+	
+	// check if there is missing backslash
+	public void modifyFileLocation(String newFileLocation) {
+		this.setDataFileLocation(newFileLocation);
+		storeSettingsIntoConfigFile(newFileLocation);
 	}
 	
 	//------------//
@@ -423,7 +447,7 @@ public class Database {
 	 * */
 	private void revertToDefaultSettings() {
 		this.setDataFileLocation(DEFAULT_DATA_FILE_LOCATION);
-		storeSettingsIntoConfigFile();
+		storeSettingsIntoConfigFile(DEFAULT_DATA_FILE_LOCATION);
 	}
 	
 	/**
@@ -440,9 +464,9 @@ public class Database {
 	 * 
 	 * */
 	@SuppressWarnings("unchecked") 
-	public void storeSettingsIntoConfigFile() {
+	private void storeSettingsIntoConfigFile(String fileLocation) {
 		JSONObject configJson = new JSONObject();
-		configJson.put("data file location", DEFAULT_DATA_FILE_LOCATION);
+		configJson.put("data file location", fileLocation);
 		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		// File outputConfigFile = new File(outputConfigFilePath);
 		try {

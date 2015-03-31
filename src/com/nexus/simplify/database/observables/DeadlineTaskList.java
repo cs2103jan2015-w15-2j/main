@@ -87,6 +87,10 @@ public class DeadlineTaskList {
 		}
 		delete(i);
 	}
+	
+	public void clear() {
+		taskArray.clear();
+	}
 
 	//---------//
 	// Methods //

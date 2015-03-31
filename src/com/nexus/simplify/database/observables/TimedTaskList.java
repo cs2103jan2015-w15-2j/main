@@ -88,6 +88,10 @@ public class TimedTaskList {
 		delete(i);
 	}
 	
+	public void clear() {
+		taskArray.clear();
+	}
+	
 	//---------//
 	// Methods //
 	//---------//

@@ -86,6 +86,10 @@ public class GenericTaskList {
 		delete(i);
 	}
 	
+	public void clear() {
+		taskArray.clear();
+	}
+	
 	//---------//
 	// Methods //
 	//---------//
