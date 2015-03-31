@@ -2,9 +2,9 @@ package com.nexus.simplify.logic.usercommand;
 
 /*
  * an object that holds the enumeration for operation types
+ * @author David Zhao Han
  */
 public enum OperationType {
-	DISPLAY, ADD, MODIFY, DELETE, DONE, INVALID 
-	// {CLEAR, UNDO, SEARCH, ARCHIVE, FILELOCATION} will not be included in V0.2 
+	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, UNDO, SEARCH, ARCHIVE, INVALID  
 };
 

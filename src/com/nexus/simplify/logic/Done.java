@@ -32,5 +32,17 @@ public class Done {
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){}
+	public String executeForTesting(String[] parameter){
+		int indexToMarkDone;
+		try{
+			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		}catch(NumberFormatException e){
+			String feedback = "please enter a task index to mark as done.";
+			return feedback;
+		}
+		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		String feedback = "successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
+
+		return feedback; 
+	}
 }
