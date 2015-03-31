@@ -160,7 +160,7 @@ public class BillboardOverviewController {
 	 * @param listPackage the package of observable lists obtained from database
 	 * */
 	public void initBillboard() {
-		updateTables();
+		fillTablesWithData();
 		displayWelcomeMessage();
 	}
 
@@ -192,11 +192,57 @@ public class BillboardOverviewController {
 	}
 	
 	/**
-	 * fetches updated lists from database once feedback is received from 
-	 * the Logic component.
+	 * initializes the table columns displaying the indexes of the entries
+	 * such that they are dynamically updated upon any modification to the 
+	 * number of entries in the table.
 	 * */
-	private void updateTables() {
-		fillTablesWithData();
+	private void initTableIndexes() {
+		deadlineTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<DeadlineTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
+					}
+				}
+			};
+		});
+		
+		timedTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<TimedTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() 
+								+ DEADLINE_TASK_COL_INDEX_OFFSET 
+								+ deadlineTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
+		
+		genericTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<GenericTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() 
+											   + DEADLINE_TASK_COL_INDEX_OFFSET 
+											   + deadlineTaskTable.getItems().size()
+											   + timedTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
 	}
 	
 	//-----------------------//
@@ -224,7 +270,7 @@ public class BillboardOverviewController {
 		if (event.getCode() == KeyCode.ENTER) {
 			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
-			updateTables();
+			fillTableIndexes();
 			userInputField.clear();
 		}
 	}
@@ -296,51 +342,7 @@ public class BillboardOverviewController {
 	 * Populates the Index columns of each table, based on the updated entries.
 	 * */
 	private void fillTableIndexes() {		
-		deadlineTaskIndexColumn.setCellFactory(column -> {
-			return new TableCell<DeadlineTask, Integer>() {
-				@Override
-				protected void updateItem(Integer index, boolean empty) {
-					if (index == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
-					}
-				}
-			};
-		});
-		
-		timedTaskIndexColumn.setCellFactory(column -> {
-			return new TableCell<TimedTask, Integer>() {
-				@Override
-				protected void updateItem(Integer index, boolean empty) {
-					if (index == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET + deadlineTaskTable.getItems().size()));
-					}
-				}
-			};
-		});
-		
-		genericTaskIndexColumn.setCellFactory(column -> {
-			return new TableCell<GenericTask, Integer>() {
-				@Override
-				protected void updateItem(Integer index, boolean empty) {
-					if (index == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						setText(String.valueOf(getIndex() 
-											   + DEADLINE_TASK_COL_INDEX_OFFSET 
-											   + deadlineTaskTable.getItems().size()
-											   + timedTaskTable.getItems().size()));
-					}
-				}
-			};
-		});
-	
+		initTableIndexes();
 		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
 																      		deadlineTaskTable.getItems().indexOf(column.getValue())
 																      		+ DEADLINE_TASK_COL_INDEX_OFFSET
@@ -360,4 +362,6 @@ public class BillboardOverviewController {
 																 )
 												  );
 	}
+
+
 }
