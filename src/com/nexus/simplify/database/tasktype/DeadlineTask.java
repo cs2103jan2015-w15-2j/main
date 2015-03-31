@@ -126,20 +126,4 @@ public class DeadlineTask extends GenericTask implements Serializable {
 	public StringProperty getDTAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableDeadline());
 	}
-	
-	//--------//
-	// Method //
-	//--------//
-	
-	/**
-	 * converts DeadlineTask to GenericTask
-	 * 
-	 * @param name name of DeadlineTask in StringProperty
-	 * @param workload amount of effort required to do the DeadlineTask ranging from 1 to 5 in IntegerProperty
-	 * @param id id of DeadlineTask in StringProperty
-	 * @return GenericTask
-	 * */
-	public GenericTask convertToGeneric(StringProperty name, IntegerProperty workload, StringProperty id) {
-		return new GenericTask(name, workload, id);
-	}
 }

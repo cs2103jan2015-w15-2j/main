@@ -208,20 +208,4 @@ public class TimedTask extends GenericTask implements Serializable {
 	public String getReadableEndTime() {
 		return format.print(endTime.get());
 	}
-	
-	//--------//
-	// Method //
-	//--------//
-	
-	/**
-	 * converts TimedTask to GenericTask
-	 * 
-	 * @param name name of TimedTask in StringProperty
-	 * @param workload amount of effort required to do the TimedTask ranging from 1 to 5 in IntegerProperty
-	 * @param id id of TimedTask in StringProperty
-	 * @return GenericTask
-	 * */
-	public GenericTask convertToGeneric(StringProperty name, IntegerProperty workload, StringProperty id) {
-		return new GenericTask(name, workload, id);
-	}
 }
