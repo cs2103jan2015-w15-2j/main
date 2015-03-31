@@ -2,6 +2,7 @@
     -fx-background-color: white;
 }
 
+
 .table-view {
     -fx-base: white;
     -fx-control-inner-background: white;
@@ -29,7 +30,13 @@
     -fx-opacity: 1;
 }
 
-.split-pane:horizontal > * > .split-pane-divider, .split-pane:vertical > * >.split-pane-divider {
+.split-pane:horizontal > * > .split-pane-divider {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.split-pane:vertical > * > .split-pane-divider {
     -fx-border-color: transparent;
     -fx-background-color: transparent;
     -fx-background-insets: 0;
@@ -60,4 +67,25 @@
 
 .text-area {
     -fx-alignment: center;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-button,
+.table-view *.scroll-bar:horizontal *.decrement-button {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-arrow, 
+.table-view *.scroll-bar:horizontal *.decrement-arrow {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.split-pane *.split-pane-divider {
+    -fx-padding: 0 1 0 1;
 }

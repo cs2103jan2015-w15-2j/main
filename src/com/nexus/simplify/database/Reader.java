@@ -2,6 +2,9 @@ package com.nexus.simplify.database;
 
 import java.io.*;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -14,7 +17,6 @@ import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
-import com.nexus.simplify.database.observables.*;
 
 public class Reader {
 
@@ -37,9 +39,9 @@ public class Reader {
 	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
 	
 	Database database;
-	GenericTaskList genericTaskList = new GenericTaskList();
-	TimedTaskList timedTaskList = new TimedTaskList();
-	DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
+	ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
+	ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
 	
 	public Reader(Database database) {
 		this.database = database;
@@ -91,9 +93,9 @@ public class Reader {
 				// invalid entry; ignore and continue to the next entry
 				break;
 			}
-			database.setDeadlineTL(deadlineTaskList);
-			database.setGenericTL(genericTaskList);
-			database.setTimedTL(timedTaskList);
+			database.setObservableDeadline(observableDeadline);
+			database.setObservableGeneric(observableGeneric);
+			database.setObservableTimed(observableTimed);
 		}
 	}
 
@@ -110,7 +112,7 @@ public class Reader {
 
 		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		timedTaskList.add(timedTask);
+		observableTimed.add(timedTask);
 	}
 
 	private void addDeadlineTaskToList(JSONObject jsonTask) {
@@ -120,14 +122,14 @@ public class Reader {
 				);
 		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		deadlineTaskList.add(deadlineTask);
+		observableDeadline.add(deadlineTask);
 	}
 
 	private void addGenericTaskToList(JSONObject jsonTask) {
 		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
 		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		genericTaskList.add(genericTask);
+		observableGeneric.add(genericTask);
 	}
 
 	//---------------------//
