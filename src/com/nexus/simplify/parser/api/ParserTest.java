@@ -61,11 +61,17 @@ public class ParserTest {
 	}
 	
 	private void validateParse(String input, OperationType expectedOp, String[] expectedParam) {
-		UserCommand resultCommand = _parser.parseInput(input);
-		OperationType resultOp = resultCommand.getOperationType();
-		String[] resultParam = resultCommand.getParameter();
-		assertEquals(expectedOp, resultOp);
-		assertArrayEquals(expectedParam, resultParam);
+		UserCommand resultCommand;
+		try {
+			resultCommand = _parser.parseInput(input);
+			OperationType resultOp = resultCommand.getOperationType();
+			String[] resultParam = resultCommand.getParameter();
+			assertEquals(expectedOp, resultOp);
+			assertArrayEquals(expectedParam, resultParam);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void setParameterValue(String[] paramArr, int paramType, String param) {

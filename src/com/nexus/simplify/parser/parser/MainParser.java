@@ -11,19 +11,16 @@ public class MainParser extends TokenParser {
 	final String MESSAGE_UNPARSED_TOKENS = "Unparsed tokens detected:";
 
 	@Override
-	public String[] parseTokens(String[] tokenList) {
+	public String[] parseTokens(String[] tokenList) throws Exception {
 
-		try {
-			tokenList = opParser.parseTokens(tokenList);
-			tokenList = paramParser.parseTokens(tokenList);
+		tokenList = opParser.parseTokens(tokenList);
+		tokenList = paramParser.parseTokens(tokenList);
 
-			// There should not be remaining unidentified tokens who are not recognised as operation or parameters
-			if (!isTokenListEmpty(tokenList)) {
-				throw new Exception(appendStringArr(MESSAGE_UNPARSED_TOKENS, tokenList));
-			}
-		} catch(Exception e) {
-			LOGGER.error("Parse Error on: {}", tokenList, e);
+		// There should not be remaining unidentified tokens who are not recognised as operation or parameters
+		if (!isTokenListEmpty(tokenList)) {
+			throw new Exception(appendStringArr(MESSAGE_UNPARSED_TOKENS, tokenList));
 		}
+
 		return tokenList;			
 	}
 
