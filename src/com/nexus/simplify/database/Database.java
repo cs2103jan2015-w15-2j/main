@@ -55,8 +55,6 @@ public class Database {
 	private static final String CONFIG_FILE_LOCATION = "config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
 	
-	
-	
 	Writer writer = new Writer(this);
 	
 	//------------------//
@@ -183,10 +181,6 @@ public class Database {
 		}
 	}
 	
-	public String getFileLocation(String option) {
-		return dataFileLocation;
-	}
-
 	/**
 	 * Modifies the name value of a task.
 	 * 
