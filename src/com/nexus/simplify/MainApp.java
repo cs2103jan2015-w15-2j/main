@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 /**
@@ -105,6 +106,7 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {		
 		this.primaryStage = primaryStage;
+		this.primaryStage.initStyle(StageStyle.UNDECORATED);
 		this.primaryStage.setTitle("Simplify");
 		
 		initRootLayout();
