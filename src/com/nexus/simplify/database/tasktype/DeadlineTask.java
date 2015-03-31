@@ -1,6 +1,7 @@
 package com.nexus.simplify.database.tasktype;
 
 import java.util.Date;
+import java.io.*;
 
 import javafx.beans.property.*;
 
@@ -11,7 +12,7 @@ import org.joda.time.format.*;
  * Represents an instance of a task tagged with a due date.
  * @author Tan Qian Yi 
  */
-public class DeadlineTask extends GenericTask {
+public class DeadlineTask extends GenericTask implements Serializable {
 	
 	/**
 	 * All dates will be shaped according to this format. 
@@ -28,6 +29,7 @@ public class DeadlineTask extends GenericTask {
 	// Class Attribute //
 	//-----------------//
 	
+	private static final long serialVersionUID = 42L;
 	private final ObjectProperty<DateTime> deadline;
 	
 	//--------------//
@@ -123,21 +125,5 @@ public class DeadlineTask extends GenericTask {
 	 * */
 	public StringProperty getDTAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableDeadline());
-	}
-	
-	//--------//
-	// Method //
-	//--------//
-	
-	/**
-	 * converts DeadlineTask to GenericTask
-	 * 
-	 * @param name name of DeadlineTask in StringProperty
-	 * @param workload amount of effort required to do the DeadlineTask ranging from 1 to 5 in IntegerProperty
-	 * @param id id of DeadlineTask in StringProperty
-	 * @return GenericTask
-	 * */
-	public GenericTask convertToGeneric(StringProperty name, IntegerProperty workload, StringProperty id) {
-		return new GenericTask(name, workload, id);
 	}
 }
