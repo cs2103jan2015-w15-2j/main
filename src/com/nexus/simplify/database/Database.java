@@ -235,15 +235,7 @@ public class Database {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
 			if (index <= deadlineTaskList.size()) {
-				DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
-				DeadlineTask deadlineTask = deadlineTaskList.get(index - 1);
-				String deadline = deadlineTask.getReadableDeadline();
-				int comparisonValue = format.print(new DateTime(newStartTime)).compareTo(deadline);
-				if (comparisonValue <= 0) {
-					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), newStartTime, deadlineTask.getDeadline(), deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
-				} else {
-					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newStartTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
-				}
+				deadlineTaskList.get(index - 1).setDeadline(newStartTime);
 			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
 				index = index - deadlineTaskList.size();
 				timedTaskList.get(index - 1).setStartTime(newStartTime);
@@ -270,15 +262,7 @@ public class Database {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
 			if (index <= deadlineTaskList.size()) {
-				DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
-				DeadlineTask deadlineTask = deadlineTaskList.get(index - 1);
-				String deadline = deadlineTask.getReadableDeadline();
-				int comparisonValue = format.print(new DateTime(newEndTime)).compareTo(deadline);  
-				if (comparisonValue <= 0) {
-					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), newEndTime, deadlineTask.getDeadline(), deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
-				} else {
-					timedTaskList.add(new TimedTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), newEndTime, deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty()));
-				}
+				deadlineTaskList.get(index - 1).setDeadline(newEndTime);
 			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
 				index = index - deadlineTaskList.size();
 				timedTaskList.get(index - 1).setEndTime(newEndTime);
