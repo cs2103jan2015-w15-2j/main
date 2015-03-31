@@ -4,12 +4,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javafx.collections.ObservableList;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import com.nexus.simplify.database.observables.DeadlineTaskList;
-import com.nexus.simplify.database.observables.GenericTaskList;
-import com.nexus.simplify.database.observables.TimedTaskList;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -37,16 +36,16 @@ public class Writer {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(GenericTaskList inputGenericTL, DeadlineTaskList inputDeadlineTL, TimedTaskList inputTimedTL) {
+	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric, ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed) {
 		try {
 			String fileName = database.getDataFilePath();
 			File outputFile = new File(fileName);
 			FileWriter fileWriter = new FileWriter(outputFile);
 			JSONArray jsonArrayForStorage = new JSONArray();
 			
-			convertToStore(inputDeadlineTL, jsonArrayForStorage);
-			convertToStore(inputTimedTL, jsonArrayForStorage);
-			convertToStore(inputGenericTL, jsonArrayForStorage); 
+			convertDeadlineToStore(inputObservableDeadline, jsonArrayForStorage);
+			convertTimedToStore(inputObservableTimed, jsonArrayForStorage);
+			convertGenericToStore(inputObservableGeneric, jsonArrayForStorage); 
 			
 			fileWriter.write(jsonArrayForStorage.toJSONString());
 			fileWriter.close();
@@ -60,7 +59,7 @@ public class Writer {
 	//---------------------//
 		
 	@SuppressWarnings("unchecked")
-	private void convertToStore(GenericTaskList taskList, JSONArray jsonArrayForStorage) {
+	private void convertGenericToStore(ObservableList<GenericTask> taskList, JSONArray jsonArrayForStorage) {
 		if (!taskList.isEmpty()) {
 			for (int i = 0; i < taskList.size(); i++) {
 				GenericTask currGenericTask = taskList.get(i);
@@ -77,7 +76,7 @@ public class Writer {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void convertToStore(DeadlineTaskList deadlineTaskList, JSONArray jsonArrayForStorage) {
+	private void convertDeadlineToStore(ObservableList<DeadlineTask> deadlineTaskList, JSONArray jsonArrayForStorage) {
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
 				DeadlineTask currDeadlineTask = deadlineTaskList.get(i);
@@ -95,7 +94,7 @@ public class Writer {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void convertToStore(TimedTaskList timedTaskList, JSONArray jsonArrayForStorage) {
+	private void convertTimedToStore(ObservableList<TimedTask> timedTaskList, JSONArray jsonArrayForStorage) {
 		
 		if (!timedTaskList.isEmpty()) {
 			for (int i = 0; i < timedTaskList.size(); i++) {
