@@ -13,19 +13,19 @@ public class Display {
 	
 	public Display() {}
 		
-	public String execute(String[] parameter){
+	String execute(String[] parameter){
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
 		Database database = MainApp.getDatabase();
 		if(isNumeric(option)){
 			database.toggleDisplay(option);
-			feedback = "displayed " + option + "tasks.";
+			feedback = "displayed " + option + " tasks.";
 			return feedback;
 		}
 		else{
-			if (option == null) {
+			if (option == null || option.isEmpty()) {
 				database.toggleDisplay("default");
-				feedback = "displayed tasks by default setting";
+				feedback = "displayed tasks by default setting.";
 				return feedback;
 			}
 			switch(option){
@@ -41,14 +41,19 @@ public class Display {
 				
 				case "deadline" :
 					database.toggleDisplay(option);
-					feedback = "displayed tasks by deadline";
+					feedback = "displayed tasks by deadline.";
 					return feedback;
-				
+					
 				case "workload" :
 					database.toggleDisplay(option);
-					feedback = "displayed tasks by workload";
+					feedback = "displayed tasks by workload.";
 					return feedback;
-
+					
+				case "file location" :
+					feedback = "file location displayed.";
+					feedback += database.getFileLocation(option);
+					return feedback;
+					
 				default :
 					feedback = "invalid option for display, please try again.";
 					return feedback;
@@ -62,5 +67,39 @@ public class Display {
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){}
+	public String executeForTesting(String[] parameter){
+		String option = parameter[ParameterType.INDEX_POS];
+		String feedback;
+		if(isNumeric(option)){
+			feedback = "displayed " + option + " tasks.";
+			return feedback;
+		}
+		else{
+			if (option == null || option.isEmpty()) {
+				feedback = "displayed tasks by default setting.";
+				return feedback;
+			}
+			switch(option){
+				case "all" :
+					feedback = "displayed all tasks.";
+					return feedback;
+					
+				case "week" :
+					feedback = "displayed tasks due within a week.";
+					return feedback;
+				
+				case "deadline" :
+					feedback = "displayed tasks by deadline.";
+					return feedback;
+				
+				case "workload" :
+					feedback = "displayed tasks by workload.";
+					return feedback;
+
+				default :
+					feedback = "invalid option for display, please try again.";
+					return feedback;
+			}
+		}
+	}
 }
