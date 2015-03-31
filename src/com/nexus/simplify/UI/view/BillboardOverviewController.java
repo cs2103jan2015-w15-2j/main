@@ -7,10 +7,13 @@ import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.Logic;
 
+
 import javafx.beans.property.ReadOnlyObjectWrapper;
+// import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -157,7 +160,7 @@ public class BillboardOverviewController {
 	 * @param listPackage the package of observable lists obtained from database
 	 * */
 	public void initBillboard() {
-		updateTables();
+		fillTablesWithData();
 		displayWelcomeMessage();
 	}
 
@@ -189,11 +192,57 @@ public class BillboardOverviewController {
 	}
 	
 	/**
-	 * fetches updated lists from database once feedback is received from 
-	 * the Logic component.
+	 * initializes the table columns displaying the indexes of the entries
+	 * such that they are dynamically updated upon any modification to the 
+	 * number of entries in the table.
 	 * */
-	private void updateTables() {
-		fillTablesWithData();
+	private void initTableIndexes() {
+		deadlineTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<DeadlineTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
+					}
+				}
+			};
+		});
+		
+		timedTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<TimedTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() 
+								+ DEADLINE_TASK_COL_INDEX_OFFSET 
+								+ deadlineTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
+		
+		genericTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<GenericTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() 
+											   + DEADLINE_TASK_COL_INDEX_OFFSET 
+											   + deadlineTaskTable.getItems().size()
+											   + timedTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
 	}
 	
 	//-----------------------//
@@ -221,7 +270,7 @@ public class BillboardOverviewController {
 		if (event.getCode() == KeyCode.ENTER) {
 			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
 			feedbackDisplay.setText(feedback);
-			updateTables();
+			fillTableIndexes();
 			userInputField.clear();
 		}
 	}
@@ -275,7 +324,7 @@ public class BillboardOverviewController {
 	 * Populates all three tables with from the three Observable task lists
 	 * found in the instance of Database.
 	 * 
-	 * This method will only be used once.
+	 * This method will only be called once.
 	 * */
 	private void fillTablesWithData() {
 		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadline();
@@ -292,21 +341,27 @@ public class BillboardOverviewController {
 	/**
 	 * Populates the Index columns of each table, based on the updated entries.
 	 * */
-	private void fillTableIndexes() {
-		int deadlineTaskTableSize = deadlineTaskTable.getItems().size();
-		int timedTaskTableSize = timedTaskTable.getItems().size();
-		
-		int timedTaskColIndexOffset = DEADLINE_TASK_COL_INDEX_OFFSET + deadlineTaskTableSize;
-		int genericTaskColIndexOffset = timedTaskColIndexOffset + timedTaskTableSize;
-		
+	private void fillTableIndexes() {		
+		initTableIndexes();
 		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																      deadlineTaskTable.getItems().indexOf(column.getValue()) + DEADLINE_TASK_COL_INDEX_OFFSET)
-																  );
+																      		deadlineTaskTable.getItems().indexOf(column.getValue())
+																      		+ DEADLINE_TASK_COL_INDEX_OFFSET
+																  )
+												   );
 		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																	  timedTaskTable.getItems().indexOf(column.getValue()) + timedTaskColIndexOffset)
-															   ); 
+																	  timedTaskTable.getItems().indexOf(column.getValue()) 
+																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
+																	  + deadlineTaskTable.getItems().size()
+															   )
+												); 
 		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																	  genericTaskTable.getItems().indexOf(column.getValue()) + genericTaskColIndexOffset)
-																 ); 
+																	  genericTaskTable.getItems().indexOf(column.getValue()) 
+																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
+																	  + deadlineTaskTable.getItems().size()
+																	  + timedTaskTable.getItems().size()
+																 )
+												  );
 	}
+
+
 }
