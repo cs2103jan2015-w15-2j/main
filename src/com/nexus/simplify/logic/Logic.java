@@ -38,12 +38,17 @@ public class Logic implements ILogic {
 			case DELETE:
 				Delete deleteOp = new Delete();
 				return deleteOp.execute(command.getParameter());
-			/*case DONE:
+			case DONE:
 				Done doneOp = new Done();
-				return doneOp.execute(command.getParameter());*/
+				return doneOp.execute(command.getParameter());
+			case SEARCH:
+				Search searchOp = new Search();
+				return searchOp.execute(command.getParameter());
+			case UNDO:
+				Undo undoOp = new Undo();
+				return undoOp.execute(command.getParameter());
 			default:
-				/*Invalid invalidOp = new Invalid();*/
-				return null;//invalidOp.execute();
+				return null;
 		}
 	}		
 }
