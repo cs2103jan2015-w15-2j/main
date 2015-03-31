@@ -2,7 +2,6 @@ package com.nexus.simplify.UI.view;
 
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
-import com.nexus.simplify.database.observables.TaskListPackage;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -194,9 +193,7 @@ public class BillboardOverviewController {
 	 * the Logic component.
 	 * */
 	private void updateTables() {
-		TaskListPackage listPackage = fetchDataFromDatabase(database);
-		fillTablesWithData(listPackage);
-
+		fillTablesWithData();
 	}
 	
 	//-----------------------//
@@ -273,23 +270,17 @@ public class BillboardOverviewController {
 	// Data Observation and Table Manipulation //
 	//-----------------------------------------//
 	
+
 	/**
-	 * @param database the reference to the single instance of database in main app.
-	 * @return a task list package that wraps the three observable task lists together.
+	 * Populates all three tables with from the three Observable task lists
+	 * found in the instance of Database.
+	 * 
+	 * This method will only be used once.
 	 * */
-	private TaskListPackage fetchDataFromDatabase(Database database) {
-		TaskListPackage listPackage = database.getTaskListPackage();
-		return listPackage;
-	}
-	
-	/**
-	 * Populates all three tables with data fetched from database
-	 * @param listPackage the wrapper class containing all three ObservableLists
-	 * */
-	private void fillTablesWithData(TaskListPackage listPackage) {
-		ObservableList<DeadlineTask> deadlineTaskList = listPackage.getDeadlineTL();
-		ObservableList<TimedTask> timedTaskList = listPackage.getTimedTL();
-		ObservableList<GenericTask> genericTaskList = listPackage.getGenericTL();
+	private void fillTablesWithData() {
+		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadline();
+		ObservableList<TimedTask> timedTaskList = database.getObservableTimed();
+		ObservableList<GenericTask> genericTaskList = database.getObservableGeneric();
 		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
