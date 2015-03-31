@@ -82,7 +82,7 @@ public class Modify {
 		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
 		if(newFileLocation != null && !newFileLocation.isEmpty()){
 			try {
-				database.modifyFileLocation(indexToModify, newFileLocation);
+				database.modifyFileLocation(newFileLocation);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
