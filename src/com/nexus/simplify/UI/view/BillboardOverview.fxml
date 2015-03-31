@@ -6,26 +6,26 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#enableFocusToUserInputField" prefHeight="600.0" prefWidth="1075.0" stylesheets="@billboard-styles.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nexus.simplify.UI.view.BillboardOverviewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="1075.0" stylesheets="@billboard-styles.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nexus.simplify.UI.view.BillboardOverviewController">
    <children>
-      <SplitPane dividerPositions="0.7388613861386139" layoutY="6.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.7388613861386139" focusTraversable="false" layoutY="6.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
                <children>
-                  <SplitPane dividerPositions="0.29797979797979796" layoutX="111.0" layoutY="123.0" prefHeight="400.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.29797979797979796" focusTraversable="false" layoutX="111.0" layoutY="123.0" prefHeight="400.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="775.0" SplitPane.resizableWithParent="false">
                            <children>
-                              <SplitPane dividerPositions="0.5" layoutX="75.0" layoutY="139.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="775.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <SplitPane dividerPositions="0.5" focusTraversable="false" layoutX="75.0" layoutY="139.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="775.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <items>
                                   <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="775.0" SplitPane.resizableWithParent="false">
                                        <children>
                                           <TableView fx:id="deadlineTaskTable" layoutX="69.0" layoutY="14.0" prefHeight="200.0" prefWidth="775.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columns>
-                                              <TableColumn fx:id="deadlineTaskIndexColumn" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" text="Index" />
-                                                <TableColumn fx:id="deadlineTaskNameColumn" editable="false" maxWidth="400.0" minWidth="400.0" prefWidth="400.0" resizable="false" text="Task" />
-                                                <TableColumn fx:id="deadlineTaskDueDateColumn" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" resizable="false" text="Due" />
-                                                <TableColumn fx:id="deadlineTaskWorkloadColumn" editable="false" maxWidth="95.0" minWidth="95.0" prefWidth="95.0" resizable="false" text="Workload" />
+                                              <TableColumn fx:id="deadlineTaskIndexColumn" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" sortable="false" text="Index" />
+                                                <TableColumn fx:id="deadlineTaskNameColumn" editable="false" maxWidth="400.0" minWidth="400.0" prefWidth="400.0" resizable="false" sortable="false" text="Task" />
+                                                <TableColumn fx:id="deadlineTaskDueDateColumn" editable="false" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" resizable="false" sortable="false" text="Due" />
+                                                <TableColumn fx:id="deadlineTaskWorkloadColumn" editable="false" maxWidth="95.0" minWidth="95.0" prefWidth="95.0" resizable="false" sortable="false" text="Workload" />
                                             </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -37,11 +37,11 @@
                                        <children>
                                           <TableView fx:id="timedTaskTable" layoutX="14.0" layoutY="-57.0" prefHeight="200.0" prefWidth="775.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columns>
-                                              <TableColumn fx:id="timedTaskIndexColumn" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" text="Index" />
-                                              <TableColumn fx:id="timedTaskNameColumn" editable="false" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" resizable="false" text="Task" />
-                                                <TableColumn fx:id="timedTaskStartTimeColumn" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="Start Time" />
-                                                <TableColumn fx:id="timedTaskEndTimeColumn" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" text="End Time" />
-                                                <TableColumn fx:id="timedTaskWorkloadColumn" editable="false" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" resizable="false" text="Workload" />
+                                              <TableColumn fx:id="timedTaskIndexColumn" editable="false" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" resizable="false" sortable="false" text="Index" />
+                                              <TableColumn fx:id="timedTaskNameColumn" editable="false" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" resizable="false" sortable="false" text="Task" />
+                                                <TableColumn fx:id="timedTaskStartTimeColumn" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" sortable="false" text="Start Time" />
+                                                <TableColumn fx:id="timedTaskEndTimeColumn" editable="false" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" resizable="false" sortable="false" text="End Time" />
+                                                <TableColumn fx:id="timedTaskWorkloadColumn" editable="false" maxWidth="115.0" minWidth="115.0" prefWidth="115.0" resizable="false" sortable="false" text="Workload" />
                                             </columns>
                                              <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -57,9 +57,9 @@
                            <children>
                               <TableView fx:id="genericTaskTable" layoutX="-60.0" layoutY="77.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
-                                  <TableColumn fx:id="genericTaskIndexColumn" editable="false" maxWidth="55.0" minWidth="55.0" prefWidth="55.0" resizable="false" text="Index" />
-                                  <TableColumn fx:id="genericTaskNameColumn" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Task" />
-                                    <TableColumn fx:id="genericTaskWorkloadColumn" editable="false" maxWidth="85.0" minWidth="85.0" prefWidth="85.0" resizable="false" text="Workload" />
+                                  <TableColumn fx:id="genericTaskIndexColumn" editable="false" maxWidth="55.0" minWidth="55.0" prefWidth="55.0" resizable="false" sortable="false" text="Index" />
+                                  <TableColumn fx:id="genericTaskNameColumn" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" sortable="false" text="Task" />
+                                    <TableColumn fx:id="genericTaskWorkloadColumn" editable="false" maxWidth="85.0" minWidth="85.0" prefWidth="85.0" resizable="false" sortable="false" text="Workload" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -71,22 +71,22 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-          <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
+          <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
                <children>
-                  <SplitPane dividerPositions="0.5" layoutX="108.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="200.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <SplitPane dividerPositions="0.5" focusTraversable="false" layoutX="108.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="150.0" prefWidth="1075.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
                            <children>
-                              <TextArea fx:id="feedbackDisplay" editable="false" layoutX="14.0" layoutY="-50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1075.0" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <Label fx:id="feedbackDisplay" alignment="CENTER" focusTraversable="false" layoutX="68.0" layoutY="42.0" prefHeight="100.0" prefWidth="1075.0" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
-                                    <Font name="Osaka" size="20.0" />
+                                    <Font name="PT Sans" size="16.0" />
                                  </font>
-                              </TextArea>
+                              </Label>
                            </children>
                         </AnchorPane>
-                      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
+                      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1075.0" SplitPane.resizableWithParent="false">
                            <children>
-                              <TextField fx:id="userInputField" alignment="CENTER" layoutX="133.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#processInputOnEnterKeyPressed" prefHeight="50.0" prefWidth="700.0" promptText="Enter Command..." AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="25.0">
+                              <TextField fx:id="userInputField" alignment="CENTER" layoutX="133.0" layoutY="37.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#processInputOnEnterKeyPressed" prefHeight="50.0" prefWidth="1075.0" promptText="Enter Command..." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font name="Source Code Pro Bold" size="20.0" />
                                  </font>
