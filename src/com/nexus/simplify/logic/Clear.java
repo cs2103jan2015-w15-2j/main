@@ -1,5 +1,8 @@
 package com.nexus.simplify.logic;
 
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
+
 public class Clear {
 	public Clear(){}
 	
