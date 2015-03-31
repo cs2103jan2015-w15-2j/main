@@ -7,6 +7,9 @@ package com.nexus.simplify.database;
 import java.util.*;
 import java.io.*;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -15,10 +18,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.nexus.simplify.database.observables.DeadlineTaskList;
-import com.nexus.simplify.database.observables.GenericTaskList;
-import com.nexus.simplify.database.observables.TaskListPackage;
-import com.nexus.simplify.database.observables.TimedTaskList;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -56,6 +55,8 @@ public class Database {
 	private static final String CONFIG_FILE_LOCATION = "config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
 	
+	
+	
 	Writer writer = new Writer(this);
 	
 	//------------------//
@@ -63,10 +64,9 @@ public class Database {
 	//------------------//
 	
 	private String dataFileLocation;
-	
-	private GenericTaskList genericTaskList = new GenericTaskList();
-	private TimedTaskList timedTaskList = new TimedTaskList();
-	private DeadlineTaskList deadlineTaskList = new DeadlineTaskList();
+	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
 	
 	//---------------//
 	// API for Logic //
@@ -82,11 +82,11 @@ public class Database {
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
 		if (workload == 0) {
-			timedTaskList.add(new TimedTask(name, startTime, endTime));
+			observableTimed.add(new TimedTask(name, startTime, endTime));
 		} else {
-			timedTaskList.add(new TimedTask(name, startTime, endTime, workload));
+			observableTimed.add(new TimedTask(name, startTime, endTime, workload));
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	/**
@@ -98,11 +98,11 @@ public class Database {
 	 * */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
 		if (workload == 0) {
-			deadlineTaskList.add(new DeadlineTask(name, deadline));
+			observableDeadline.add(new DeadlineTask(name, deadline));
 		} else {
-			deadlineTaskList.add(new DeadlineTask(name, deadline, workload));
+			observableDeadline.add(new DeadlineTask(name, deadline, workload));
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	/**
@@ -113,11 +113,11 @@ public class Database {
 	 * */
 	public void addGenericTask(String name, int workload) {
 		if (workload == 0) {
-			genericTaskList.add(new GenericTask(name));
+			observableGeneric.add(new GenericTask(name));
 		} else {
-			genericTaskList.add(new GenericTask(name, workload));
+			observableGeneric.add(new GenericTask(name, workload));
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	
@@ -131,23 +131,23 @@ public class Database {
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= deadlineTaskList.size()) {
-				deadlineTaskList.delete(index);
-			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
-				index = index - deadlineTaskList.size();
-				timedTaskList.delete(index);
+			if (index <= observableDeadline.size()) {
+				observableDeadline.remove(index - 1);
+			} else if (index - observableDeadline.size() <= observableTimed.size()) {
+				index = index - observableDeadline.size();
+				observableTimed.remove(index - 1);
 			} else {
-				index = index - deadlineTaskList.size() - timedTaskList.size();
-				genericTaskList.delete(index);
+				index = index - observableDeadline.size() - observableTimed.size();
+				observableGeneric.remove(index - 1);
 			}
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	public void clearContent() {
-		genericTaskList.clear();
-		timedTaskList.clear();
-		deadlineTaskList.clear();
+		observableGeneric.clear();
+		observableTimed.clear();
+		observableDeadline.clear();
 	}
 	
 	public void undoTask() {
@@ -164,7 +164,7 @@ public class Database {
 	 * @return total size of all three task lists
 	 * */
 	private int totalSizeOfAllLists() {
-		return genericTaskList.size() + deadlineTaskList.size() + timedTaskList.size();
+		return observableGeneric.size() + observableDeadline.size() + observableTimed.size();
 	}
 	
 	/**
@@ -174,12 +174,12 @@ public class Database {
 	 * */
 	public void toggleDisplay(String option) {
 		if (option.equals("deadline")) {
-			deadlineTaskList.sortBy(deadlineTaskList.getSortType(option));
-			timedTaskList.sortBy(timedTaskList.getSortType(option));
+			// deadlineTaskList.sortBy(observableDeadline.getSortType(option));
+			// observableTimed.sortBy(observableTimed.getSortType(option));
 		} else {
-			genericTaskList.sortBy(genericTaskList.getSortType(option));
-			deadlineTaskList.sortBy(deadlineTaskList.getSortType(option));
-			timedTaskList.sortBy(timedTaskList.getSortType(option));
+			// observableGeneric.sortBy(observableGeneric.getSortType(option));
+			// deadlineTaskList.sortBy(observableDeadline.getSortType(option));
+			// observableTimed.sortBy(observableTimed.getSortType(option));
 		}
 	}
 	
@@ -198,17 +198,17 @@ public class Database {
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= deadlineTaskList.size()) {
-				deadlineTaskList.get(index - 1).setName(newName);
-			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
-				index = index - deadlineTaskList.size();
-				timedTaskList.get(index - 1).setName(newName);
+			if (index <= observableDeadline.size()) {
+				observableDeadline.get(index - 1).setName(newName);
+			} else if (index - observableDeadline.size() <= observableTimed.size()) {
+				index = index - observableDeadline.size();
+				observableTimed.get(index - 1).setName(newName);
 			} else {
-				index = index - deadlineTaskList.size() - timedTaskList.size();
-				genericTaskList.get(index - 1).setName(newName);
+				index = index - observableDeadline.size() - observableTimed.size();
+				observableGeneric.get(index - 1).setName(newName);
 			}
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	/**
@@ -226,18 +226,18 @@ public class Database {
 			if (index > this.totalSizeOfAllLists() || index < 1) {
 				throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 			} else {
-				if (index <= deadlineTaskList.size()) {
-					deadlineTaskList.get(index - 1).setWorkload(newWorkloadValue);
-				} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
-					index = index - deadlineTaskList.size();
-					timedTaskList.get(index - 1).setWorkload(newWorkloadValue);
+				if (index <= observableDeadline.size()) {
+					observableDeadline.get(index - 1).setWorkload(newWorkloadValue);
+				} else if (index - observableDeadline.size() <= observableTimed.size()) {
+					index = index - observableDeadline.size();
+					observableTimed.get(index - 1).setWorkload(newWorkloadValue);
 				} else {
-					index = index - deadlineTaskList.size() - timedTaskList.size();
-					genericTaskList.get(index - 1).setWorkload(newWorkloadValue);
+					index = index - observableDeadline.size() - observableTimed.size();
+					observableGeneric.get(index - 1).setWorkload(newWorkloadValue);
 				}
 			}
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	/**
@@ -252,18 +252,18 @@ public class Database {
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= deadlineTaskList.size()) {
-				deadlineTaskList.get(index - 1).setDeadline(newStartTime);
-			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
-				index = index - deadlineTaskList.size();
-				timedTaskList.get(index - 1).setStartTime(newStartTime);
+			if (index <= observableDeadline.size()) {
+				observableDeadline.get(index - 1).setDeadline(newStartTime);
+			} else if (index - observableDeadline.size() <= observableTimed.size()) {
+				index = index - observableDeadline.size();
+				observableTimed.get(index - 1).setStartTime(newStartTime);
 			} else {
-				index = index - deadlineTaskList.size() - timedTaskList.size();
-				GenericTask task = genericTaskList.get(index - 1);
-				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				index = index - observableDeadline.size() - observableTimed.size();
+				GenericTask task = observableGeneric.get(index - 1);
+				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	/**
@@ -279,38 +279,24 @@ public class Database {
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= deadlineTaskList.size()) {
-				deadlineTaskList.get(index - 1).setDeadline(newEndTime);
-			} else if (index - deadlineTaskList.size() <= timedTaskList.size()) {
-				index = index - deadlineTaskList.size();
-				timedTaskList.get(index - 1).setEndTime(newEndTime);
+			if (index <= observableDeadline.size()) {
+				observableDeadline.get(index - 1).setDeadline(newEndTime);
+			} else if (index - observableDeadline.size() <= observableTimed.size()) {
+				index = index - observableDeadline.size();
+				observableTimed.get(index - 1).setEndTime(newEndTime);
 			} else {
-				index = index - deadlineTaskList.size() - timedTaskList.size();
-				GenericTask task = genericTaskList.get(index - 1);
-				deadlineTaskList.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				index = index - observableDeadline.size() - observableTimed.size();
+				GenericTask task = observableGeneric.get(index - 1);
+				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
 		}
-		writer.writeToFile(genericTaskList, deadlineTaskList, timedTaskList);
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	// check if there is missing backslash
 	public void modifyFileLocation(String newFileLocation) {
 		this.setDataFileLocation(newFileLocation);
 		storeSettingsIntoConfigFile(newFileLocation);
-	}
-	
-	//------------//
-	// API for UI //
-	//------------//
-	
-	/**
-	 * packages the three lists.
-	 * 
-	 * @return a package containing all three lists.
-	 * 
-	 * */
-	public TaskListPackage getTaskListPackage() {
-		return new TaskListPackage(deadlineTaskList, timedTaskList, genericTaskList);
 	}
 
 	//-------------//
@@ -347,16 +333,16 @@ public class Database {
 	// Attribute Accessors //
 	//---------------------//
 	
-	public GenericTaskList getGenericTL() {
-		return this.genericTaskList;
+	public ObservableList<GenericTask> getObservableGeneric() {
+		return this.observableGeneric;
 	}
 	
-	public TimedTaskList getTimedTL() {
-		return this.timedTaskList;
+	public ObservableList<TimedTask> getObservableTimed() {
+		return this.observableTimed;
 	}
 	
-	public DeadlineTaskList getDeadlineTL() {
-		return this.deadlineTaskList;
+	public ObservableList<DeadlineTask> getObservableDeadline() {
+		return this.observableDeadline;
 	}
 	
 	/**
@@ -379,16 +365,16 @@ public class Database {
 	// Attribute Mutators //
 	//--------------------//
 	
-	public void setGenericTL(GenericTaskList generic) {
-		this.genericTaskList = generic;
+	public void setObservableGeneric(ObservableList<GenericTask> generic) {
+		this.observableGeneric = generic;
 	}
 	
-	public void setTimedTL(TimedTaskList timed) {
-		this.timedTaskList = timed;
+	public void setObservableTimed(ObservableList<TimedTask> timed) {
+		this.observableTimed = timed;
 	}
 	
-	public void setDeadlineTL(DeadlineTaskList deadline) {
-		this.deadlineTaskList = deadline;
+	public void setObservableDeadline(ObservableList<DeadlineTask> deadline) {
+		this.observableDeadline = deadline;
 	}
 	
 	public void setDataFileLocation(String newFileLocation) {
