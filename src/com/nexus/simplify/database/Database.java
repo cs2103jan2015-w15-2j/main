@@ -177,7 +177,7 @@ public class Database {
 	 * 
 	 * @return total size of all three task lists
 	 * */
-	private int totalSizeOfAllLists() {
+	public int totalSizeOfAllLists() {
 		return observableGeneric.size() + observableDeadline.size() + observableTimed.size();
 	}
 	
@@ -383,8 +383,7 @@ public class Database {
 	}
 	
 	/**
-	 * Returns the LogicRequest object of this Database
-	 @return 
+	 * @return the LogicRequest object of this Database
 	 */
 	public LogicRequest getLogicRequest() {
 		return logicRequest;
