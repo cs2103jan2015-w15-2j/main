@@ -1,4 +1,3 @@
-.anchor-pane {
-    -fx-border-color: black;
-    -fx-border-width: 3px 3px 3px 3px;
+.root-layout {
+    -fx-background-color: black;
 }
