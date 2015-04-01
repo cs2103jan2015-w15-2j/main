@@ -10,6 +10,7 @@ public class OperationParser extends TokenParser {
 	CommandData commandData = CommandData.getInstance();
 	DisplayParser displayParser = new DisplayParser();
 	IndexParser indexParser = new IndexParser();
+	FileLocationParser fileLocationParser = new FileLocationParser();
 	Logger LOGGER = LoggerFactory.getLogger(OperationParser.class.getName());
 
 	@Override
@@ -29,7 +30,12 @@ public class OperationParser extends TokenParser {
 
 			case MODIFY :
 				commandData.setOp(userOp);
-				return indexParser.parseTokens(remainingTokens);
+				String[] postIndexParseTokens = indexParser.parseTokens(remainingTokens); 
+				if (postIndexParseTokens.equals(remainingTokens)) {
+					return fileLocationParser.parseTokens(remainingTokens); 
+				} else {
+					return postIndexParseTokens;
+				}
 
 			case DONE :
 				commandData.setOp(userOp);

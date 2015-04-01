@@ -9,8 +9,9 @@ import com.nexus.simplify.parser.api.Parser;
  * with the logic component
  */
 public class Logic implements ILogic {
-	private UserCommand userCommandFormed;
+	
 	private static Logic theOne;
+	private Parser parser = new Parser();
 	
 	private Logic() {}
 	
@@ -23,9 +24,7 @@ public class Logic implements ILogic {
 	
 	@Override
 	public String executeCommand(String userInput) throws Exception{
-		Parser parser = new Parser();
-		UserCommand command = parser.parseInput(userInput);
-		userCommandFormed = command;	// this line is for integration testing
+		UserCommand command = getParsedCommand(userInput);
 		switch(command.getOperationType()){
 			case ADD:
 				Add addOp = new Add();
@@ -44,7 +43,7 @@ public class Logic implements ILogic {
 				return doneOp.execute(command.getParameter());
 			case SEARCH:
 				Search searchOp = new Search();
-				return searchOp.execute(command.getParameter(), command.getSearchField);
+				return searchOp.execute(command.getParameter(), command.getSearchField());
 			case UNDO:
 				Undo undoOp = new Undo();
 				return undoOp.execute();
@@ -53,7 +52,12 @@ public class Logic implements ILogic {
 		}
 	}
 	
-	public UserCommand integrationTestLogic(){
-		return userCommandFormed;
+	public Parser getParser() {
+		return parser;
 	}
+
+	public UserCommand getParsedCommand(String userInput) throws Exception {
+		UserCommand command = parser.parseInput(userInput);
+		return command;
+	}		
 }

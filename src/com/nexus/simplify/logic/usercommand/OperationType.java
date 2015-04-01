@@ -5,6 +5,6 @@ package com.nexus.simplify.logic.usercommand;
  * @author David Zhao Han
  */
 public enum OperationType {
-	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, UNDO, SEARCH, ARCHIVE, INVALID  
+	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, UNDO, SEARCH, INVALID  
 };
 

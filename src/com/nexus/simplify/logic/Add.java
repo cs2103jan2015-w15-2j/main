@@ -18,7 +18,7 @@ public class Add {
 	public Add(){}
 	
 	String execute(String[] parameter) throws ParseException { 
-		String pattern = "E MMM dd hh:mm:ss zzz yyy";
+		String pattern = "E MMM dd HH:mm:ss zzz yyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
 		
 		String name = parameter[ParameterType.NEW_NAME_POS];
