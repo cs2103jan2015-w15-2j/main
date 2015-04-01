@@ -324,7 +324,7 @@ public class Database {
 	// Initialization //
 	//----------------//
 
-	private void initDatabase() {
+	public void initDatabase() {
 		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		if (!configFileExists(configFilePath)) {
 			createNewFile(configFilePath);
