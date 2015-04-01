@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Date;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -40,6 +41,15 @@ public class DatabaseAdt {
 	@Before
 	public void resetEnvironmentForTest() {
 		database.clearContent();
+	}
+	
+	//----------//
+	// Teardown //
+	//----------//
+	
+	@AfterClass
+	public static void resetDefaultDataPath() {
+		database.modifyFileLocation("SavedData/");
 	}
 	//------------------------//
 	// Data Path Manipulation //
