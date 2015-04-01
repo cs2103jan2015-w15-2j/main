@@ -148,6 +148,7 @@ public class Database {
 		observableGeneric.clear();
 		observableTimed.clear();
 		observableDeadline.clear();
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 	
 	private void saveState() {
