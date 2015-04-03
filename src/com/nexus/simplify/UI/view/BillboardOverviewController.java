@@ -40,6 +40,9 @@ public class BillboardOverviewController {
 	MainApp mainApp;
 	Database database;
 	
+	// Container to store user command history
+	CommandHistory commandHistory;
+	
 	/**
 	 * Attributes of the table displaying deadline-based tasks.
 	 * */
@@ -150,6 +153,7 @@ public class BillboardOverviewController {
      */
 	@FXML
 	private void initialize() {
+		commandHistory = new CommandHistory();
 		initDeadlineTaskTable();
 		initTimedTaskTable();
 		initGenericTaskTable();
@@ -265,16 +269,41 @@ public class BillboardOverviewController {
 	 * 
 	 * @param event the event in which a key is pressed.
 	 * */
+	
+	
+	private void processInputOnEnterKeyPressed() {
+		String userCommand = userInputField.getText();
+		commandHistory.addCommandToHistory(userCommand);
+		
+		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
+		feedbackDisplay.setText(feedback);
+		
+		fillTableIndexes();
+		userInputField.clear();
+	}
+	
 	@FXML
-	private void processInputOnEnterKeyPressed(KeyEvent event) {
+	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
 		if (event.getCode() == KeyCode.ENTER) {
-			String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userInputField.getText());
-			feedbackDisplay.setText(feedback);
-			fillTableIndexes();
-			userInputField.clear();
+			processInputOnEnterKeyPressed();
+		} else if (event.getCode() == KeyCode.UP) {
+			browsePreviousCommand();
+		} else if (event.getCode() == KeyCode.DOWN) {
+			browseNextCommand();
 		}
 	}
 	
+	private void browsePreviousCommand() {
+		String previousCommandHistory = commandHistory.browsePreviousCommand();
+		userInputField.setText(previousCommandHistory);
+	}
+	
+	private void browseNextCommand() {
+		String nextCommandHistory = commandHistory.browseNextCommand();
+		userInputField.setText(nextCommandHistory);
+	}
+	
+		
 	/**
 	 * 
 	 * 
