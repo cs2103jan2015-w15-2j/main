@@ -1,12 +1,12 @@
-package com.nexus.simplify.UI.view;
+package com.nexus.simplify.UI.controller;
 
 import com.nexus.simplify.MainApp;
+import com.nexus.simplify.UI.commandhistory.CommandHistory;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.Logic;
-
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 // import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -42,6 +42,9 @@ public class BillboardOverviewController {
 	
 	// Container to store user command history
 	CommandHistory commandHistory;
+	
+	// List of Key Combinations
+	
 	
 	/**
 	 * Attributes of the table displaying deadline-based tasks.
@@ -224,8 +227,8 @@ public class BillboardOverviewController {
 						setStyle("");
 					} else {
 						setText(String.valueOf(getIndex() 
-								+ DEADLINE_TASK_COL_INDEX_OFFSET 
-								+ deadlineTaskTable.getItems().size()));
+												+ DEADLINE_TASK_COL_INDEX_OFFSET 
+												+ deadlineTaskTable.getItems().size()));
 					}
 				}
 			};
@@ -258,7 +261,6 @@ public class BillboardOverviewController {
 	 * to type on the keyboard.
 	 * 
 	 * */
-	@FXML
 	private void enableFocusToUserInputField() {
 		userInputField.requestFocus();
 	}
@@ -266,11 +268,7 @@ public class BillboardOverviewController {
 	/**
 	 * Sends input to the Logic component upon the action
 	 * when the user presses Enter on the keyboard.
-	 * 
-	 * @param event the event in which a key is pressed.
 	 * */
-	
-	
 	private void processInputOnEnterKeyPressed() {
 		String userCommand = userInputField.getText();
 		commandHistory.addCommandToHistory(userCommand);
@@ -284,12 +282,71 @@ public class BillboardOverviewController {
 	
 	@FXML
 	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
-		if (event.getCode() == KeyCode.ENTER) {
+		if (event.getCode() == KeyCode.ENTER) { 
 			processInputOnEnterKeyPressed();
 		} else if (event.getCode() == KeyCode.UP) {
 			browsePreviousCommand();
 		} else if (event.getCode() == KeyCode.DOWN) {
 			browseNextCommand();
+		} else if (event.getCode() == KeyCode.TAB) {
+			if (!deadlineTaskTable.isFocused()) {
+				deadlineTaskTable.requestFocus();
+			}
+		}
+	}
+	
+	@FXML
+	private void processKeyCommandsFromDeadlineTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case TAB:
+				enableFocusToUserInputField();
+				break;
+			case DOWN:
+				if (event.isShiftDown()) {
+					timedTaskTable.requestFocus();
+				}
+				break;
+			case RIGHT:
+				if (event.isShiftDown()) {
+					genericTaskTable.requestFocus();
+				}
+			default:
+				break;
+		}
+	}
+	
+	@FXML
+	private void processKeyCommandsFromTimedTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case TAB:
+				enableFocusToUserInputField();
+				break;
+			case UP:
+				if (event.isShiftDown()) {
+					deadlineTaskTable.requestFocus();
+				}
+				break;
+			case RIGHT:
+				if (event.isShiftDown()) {
+					genericTaskTable.requestFocus();
+				}
+			default:
+				break;
+		}
+	}
+	
+	@FXML
+	private void processKeyCommandsFromGenericTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case TAB:
+				enableFocusToUserInputField();
+				break;
+			case LEFT:
+				if (event.isShiftDown()) {
+					deadlineTaskTable.requestFocus();
+				}
+			default:
+				break;
 		}
 	}
 	
@@ -305,16 +362,6 @@ public class BillboardOverviewController {
 		userInputField.setText(nextCommandHistory);
 	}
 	
-		
-	/**
-	 * 
-	 * 
-	 * 
-	 * */
-	@FXML
-	private void toggleFocusBetweenTableAndInputField() {
-		
-	}
 	
 	/**
 	 * passes user input to the Logic component to process
