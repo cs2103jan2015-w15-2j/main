@@ -295,7 +295,9 @@ public class BillboardOverviewController {
 	
 	private void browsePreviousCommand() {
 		String previousCommandHistory = commandHistory.browsePreviousCommand();
-		userInputField.setText(previousCommandHistory);
+		if (!previousCommandHistory.equals("")) {
+			userInputField.setText(previousCommandHistory);
+		}
 	}
 	
 	private void browseNextCommand() {

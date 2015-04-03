@@ -21,19 +21,25 @@ public class CommandHistory {
 	
 	public String browsePreviousCommand() {
 		if (!inStack.isEmpty()) {
+			String commandToBeShown = inStack.peek();
 			outStack.push(inStack.pop());
-			return inStack.peek();
+			return commandToBeShown;
+			
 		} else {
 			return EMPTY_STRING;
 		}
 	}
 	
 	public String browseNextCommand() {
-		if (!outStack.empty()) {
-			inStack.push(outStack.pop()); 
-			return outStack.peek();
+		if (!outStack.isEmpty()) {
+			inStack.push(outStack.pop());
+			if (!outStack.isEmpty()) {
+				return outStack.peek();
+			} else  {
+				return EMPTY_STRING;
+			}
 		} else {
 			return EMPTY_STRING;
-		}		
+		}
 	}
 }
