@@ -270,7 +270,7 @@ public class BillboardOverviewController {
 	 * when the user presses Enter on the keyboard.
 	 * */
 	private void processInputOnEnterKeyPressed() {
-		String userCommand = userInputField.getText();
+		String userCommand = userInputField.getText().trim();
 		commandHistory.addCommandToHistory(userCommand);
 		
 		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);

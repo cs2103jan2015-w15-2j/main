@@ -26,7 +26,13 @@ public class CommandHistory {
 	// 
 	
 	public void addCommandToHistory(String userCommand) {
-		inStack.push(userCommand);
+		if (!inStack.empty()) {
+			if (!userCommand.equals(inStack.peek())) {
+				inStack.push(userCommand);
+			}
+		} else {
+			inStack.push(userCommand);
+		}
 	}
 	
 	//----------------------------//
@@ -38,7 +44,7 @@ public class CommandHistory {
 	 * 
 	 * */
 	public String browsePreviousCommand() {
-		if (!inStack.isEmpty()) {
+		if (!inStack.empty()) {
 			String commandToBeShown = inStack.peek();
 			outStack.push(inStack.pop());
 			return commandToBeShown;
@@ -53,9 +59,9 @@ public class CommandHistory {
 	 * 
 	 * */
 	public String browseNextCommand() {
-		if (!outStack.isEmpty()) {
+		if (!outStack.empty()) {
 			inStack.push(outStack.pop());
-			if (!outStack.isEmpty()) {
+			if (!outStack.empty()) {
 				return outStack.peek();
 			} else  {
 				return EMPTY_STRING;
