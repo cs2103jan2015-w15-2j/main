@@ -67,7 +67,7 @@ public class ReaderTest {
 		expectedJsonArray.add(itemOne);
 		
 		JSONArray jsonArray = reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH);
-		assertEquals(expectedJsonArray, jsonArray);
+		assertEquals(expectedJsonArray.toString(), jsonArray.toString());
 	}
 	
 	@Test
