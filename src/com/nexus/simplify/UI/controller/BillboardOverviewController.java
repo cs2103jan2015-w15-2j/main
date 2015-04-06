@@ -405,9 +405,9 @@ public class BillboardOverviewController {
 	 * This method will only be called once.
 	 * */
 	private void fillTablesWithData() {
-		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadline();
-		ObservableList<TimedTask> timedTaskList = database.getObservableTimed();
-		ObservableList<GenericTask> genericTaskList = database.getObservableGeneric();
+		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadlineTL();
+		ObservableList<TimedTask> timedTaskList = database.getObservableTimedTL();
+		ObservableList<GenericTask> genericTaskList = database.getObservableGenericTL();
 		
 		deadlineTaskTable.setItems(deadlineTaskList);
 		timedTaskTable.setItems(timedTaskList);
