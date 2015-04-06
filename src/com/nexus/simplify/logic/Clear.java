@@ -9,7 +9,7 @@ public class Clear {
 	String execute(){
 		Database database = MainApp.getDatabase();
 		database.clearContent();
-		String feedback = "successfully cleared storage.";
+		String feedback = "All tasks cleared successfully.";
 		return feedback;
 	}
 }

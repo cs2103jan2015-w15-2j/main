@@ -17,14 +17,14 @@ public class Delete {
 		try{
 			indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to delete.";
+			String feedback = "Please enter a task index to delete.";
 			return feedback;
 		}
 		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		Database database = MainApp.getDatabase();
 
 		database.deleteTaskByIndex(indexToDelete);
-		String feedback = "successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
+		String feedback = "Successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
 
 		return feedback; 
 	}
@@ -36,11 +36,11 @@ public class Delete {
 		try{
 			indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to delete.";
+			String feedback = "Please enter a task index to delete.";
 			return feedback;
 		}
 		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		String feedback = "successfully deleted entry #" + String.valueOf(indexToDelete) + ".";
+		String feedback = "Successfully deleted entry #" + String.valueOf(indexToDelete) + ".";
 		return feedback;
 	}
 }

@@ -36,24 +36,24 @@ public class Add {
 		Database database = MainApp.getDatabase();
 		
 		if(name == null || name.isEmpty()){
-			feedback = "please enter a name for this task.";
+			feedback = "Please enter a name for this task.";
 			return feedback;
 		}
 		
 		if((newStartTime == null || newStartTime.isEmpty()) && (newEndTime == null || newEndTime.isEmpty())){
 			database.addGenericTask(name, workload);
-			feedback = "successfully added floating task \"" + name + "\".";
+			feedback = "Successfully added floating task #";
 		} else {
 			if(newStartTime.equals(newEndTime)){
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-				feedback = "successfully added deadline task \"" + name + "\".";
+				feedback = "Successfully added deadline task #";
 			} else {
 
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
-				feedback = "successfully added timed task \"" + name + "\".";
+				feedback = "Successfully added timed task #";
 			}
 		}
 		return feedback;
@@ -76,7 +76,7 @@ public class Add {
 		}
 		
 		if(name == null || name.isEmpty()){
-			feedback = "please enter a name for this task.";
+			feedback = "Please enter a name for this task.";
 			return feedback;
 		}
 		

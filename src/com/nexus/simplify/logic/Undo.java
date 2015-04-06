@@ -9,7 +9,7 @@ public class Undo {
 	String execute(){
 		Database database = MainApp.getDatabase();
 		database.undoTask();
-		String feedback = "undo operation successful.";
+		String feedback = "Undo operation is successful.";
 		return feedback;
 	}
 }

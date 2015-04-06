@@ -19,11 +19,11 @@ public class Search {
 		if(searchField[CURRENT_TIME_POS]==false && searchField[DAY_OF_WEEK_POS]==false&& 
 		searchField[DAY_OF_MONTH_POS]==false && searchField[MONTH_OF_YEAR_POS]==false && 
 		searchField[CURRENT_YEAR_POS]==false){
-			feedback = "parser failed to set truth value.";
+			feedback = "Parser failed to set truth value.";
 			return feedback;
 		} else {
 			database.searchDatabase(parameter, searchField);
-			feedback = "search result displayed.";
+			feedback = "Search result displayed.";
 			return feedback;
 		}
 	}

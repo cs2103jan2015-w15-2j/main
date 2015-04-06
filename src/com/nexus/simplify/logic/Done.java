@@ -18,14 +18,14 @@ public class Done {
 		try{
 			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to mark as done.";
+			String feedback = "Please enter a task index to mark as done.";
 			return feedback;
 		}
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		Database database = MainApp.getDatabase();
 
 		database.markTaskDone(indexToMarkDone);
-		String feedback = "successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
+		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
 
 		return feedback; 
 	}
@@ -37,11 +37,11 @@ public class Done {
 		try{
 			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to mark as done.";
+			String feedback = "Please enter a task index to mark as done.";
 			return feedback;
 		}
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		String feedback = "successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
+		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
 
 		return feedback; 
 	}
