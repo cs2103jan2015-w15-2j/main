@@ -17,7 +17,6 @@ public class DateTimeParser extends TokenParser {
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
-		LOGGER.debug("test");
 		if (isTokenListEmpty(tokenList)) {
 			return tokenList;
 		} else {
@@ -69,7 +68,7 @@ public class DateTimeParser extends TokenParser {
 //	//List of functions available from natty library
 //	public static void main(String[] args) {
 //		Parser parser = new Parser();
-//		List<DateGroup> groups = parser.parse("do " +"'CS3230' " + "tomorrow");
+//		List<DateGroup> groups = parser.parse("do homework THURSDAY");
 //		for(DateGroup group:groups) {
 //			List<Date> dates = group.getDates();
 //
@@ -78,6 +77,7 @@ public class DateTimeParser extends TokenParser {
 //			String matchingValue = group.getText();
 //
 //			String syntaxTree = group.getSyntaxTree().toStringTree();
+//			System.out.println(syntaxTree);
 //			//Map<String, List<ParseLocation>> parseMap = group.getParseLocations();
 //			boolean isRecurreing = group.isRecurring();
 //			Date recursUntil = group.getRecursUntil();

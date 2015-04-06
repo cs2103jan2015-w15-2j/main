@@ -58,18 +58,19 @@ public class Database {
 	
 	Writer writer = new Writer(this);
 	State state;
+	LogicRequest logicRequest = new LogicRequest();
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
 	
 	private String dataFileLocation;
-	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> archivedGeneric = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> archivedDeadline = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> archivedTimed = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
 	
 	//---------------//
 	// API for Logic //
@@ -84,12 +85,13 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+		logicRequest.addTimedTask(name, startTime, endTime, workload);
 		if (workload == 0) {
-			observableTimed.add(new TimedTask(name, startTime, endTime));
+			observableTimedTL.add(new TimedTask(name, startTime, endTime));
 		} else {
-			observableTimed.add(new TimedTask(name, startTime, endTime, workload));
+			observableTimedTL.add(new TimedTask(name, startTime, endTime, workload));
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	/**
@@ -100,12 +102,13 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
+		logicRequest.addDeadlineTask(name, deadline, workload);
 		if (workload == 0) {
-			observableDeadline.add(new DeadlineTask(name, deadline));
+			observableDeadlineTL.add(new DeadlineTask(name, deadline));
 		} else {
-			observableDeadline.add(new DeadlineTask(name, deadline, workload));
+			observableDeadlineTL.add(new DeadlineTask(name, deadline, workload));
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	/**
@@ -115,12 +118,13 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addGenericTask(String name, int workload) {
+		logicRequest.addGenericTask(name, workload);
 		if (workload == 0) {
-			observableGeneric.add(new GenericTask(name));
+			observableGenericTL.add(new GenericTask(name));
 		} else {
-			observableGeneric.add(new GenericTask(name, workload));
+			observableGenericTL.add(new GenericTask(name, workload));
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	
@@ -131,27 +135,32 @@ public class Database {
 	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
 	 * */
 	public void deleteTaskByIndex(int index) throws IndexOutOfBoundsException {
+		logicRequest.deleteTaskByIndex(index);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= observableDeadline.size()) {
-				observableDeadline.remove(index - 1);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				observableTimed.remove(index - 1);
+			if (index <= observableDeadlineTL.size()) {
+				observableDeadlineTL.remove(index - 1);
+			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+				index = index - observableDeadlineTL.size();
+				observableTimedTL.remove(index - 1);
 			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				observableGeneric.remove(index - 1);
+				index = index - observableDeadlineTL.size() - observableTimedTL.size();
+				observableGenericTL.remove(index - 1);
 			}
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	public void clearContent() {
-		observableGeneric.clear();
-		observableTimed.clear();
-		observableDeadline.clear();
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		logicRequest.clearContent();
+		observableGenericTL.clear();
+		observableTimedTL.clear();
+		observableDeadlineTL.clear();
+		archivedGenericTL.clear();
+		archivedTimedTL.clear();
+		archivedDeadlineTL.clear();
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	private void saveState() {
@@ -175,8 +184,8 @@ public class Database {
 	 * 
 	 * @return total size of all three task lists
 	 * */
-	private int totalSizeOfAllLists() {
-		return observableGeneric.size() + observableDeadline.size() + observableTimed.size();
+	public int totalSizeOfAllLists() {
+		return observableGenericTL.size() + observableDeadlineTL.size() + observableTimedTL.size();
 	}
 	
 	/**
@@ -203,20 +212,21 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive 
 	 * */
 	public void modifyName(int index, String newName) throws IndexOutOfBoundsException {
+		logicRequest.modifyName(index, newName);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= observableDeadline.size()) {
-				observableDeadline.get(index - 1).setName(newName);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				observableTimed.get(index - 1).setName(newName);
+			if (index <= observableDeadlineTL.size()) {
+				observableDeadlineTL.get(index - 1).setName(newName);
+			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+				index = index - observableDeadlineTL.size();
+				observableTimedTL.get(index - 1).setName(newName);
 			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				observableGeneric.get(index - 1).setName(newName);
+				index = index - observableDeadlineTL.size() - observableTimedTL.size();
+				observableGenericTL.get(index - 1).setName(newName);
 			}
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	/**
@@ -228,24 +238,25 @@ public class Database {
 	 * @throws Exception if workload is not in range of 1 - 5 inclusive.
 	 * */
 	public void modifyWorkload(int index, int newWorkloadValue) throws IndexOutOfBoundsException, Exception {
+		logicRequest.modifyWorkload(index, newWorkloadValue);
 		if (newWorkloadValue > 5 || newWorkloadValue < 1) {
 			throw new Exception("Invalid workload value entered. Supported workload values range from 1 to 5.");
 		} else {
 			if (index > this.totalSizeOfAllLists() || index < 1) {
 				throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 			} else {
-				if (index <= observableDeadline.size()) {
-					observableDeadline.get(index - 1).setWorkload(newWorkloadValue);
-				} else if (index - observableDeadline.size() <= observableTimed.size()) {
-					index = index - observableDeadline.size();
-					observableTimed.get(index - 1).setWorkload(newWorkloadValue);
+				if (index <= observableDeadlineTL.size()) {
+					observableDeadlineTL.get(index - 1).setWorkload(newWorkloadValue);
+				} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+					index = index - observableDeadlineTL.size();
+					observableTimedTL.get(index - 1).setWorkload(newWorkloadValue);
 				} else {
-					index = index - observableDeadline.size() - observableTimed.size();
-					observableGeneric.get(index - 1).setWorkload(newWorkloadValue);
+					index = index - observableDeadlineTL.size() - observableTimedTL.size();
+					observableGenericTL.get(index - 1).setWorkload(newWorkloadValue);
 				}
 			}
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	/**
@@ -257,22 +268,22 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+		logicRequest.modifyStartTime(index, newStartTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= observableDeadline.size()) {
-				observableDeadline.get(index - 1).setDeadline(newStartTime);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				observableTimed.get(index - 1).setStartTime(newStartTime);
+			if (index <= observableDeadlineTL.size()) {
+				observableDeadlineTL.get(index - 1).setDeadline(newStartTime);
+			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+				index = index - observableDeadlineTL.size();
+				observableTimedTL.get(index - 1).setStartTime(newStartTime);
 			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				GenericTask task = observableGeneric.get(index - 1);
-				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGeneric.remove(index - 1);
+				index = index - observableDeadlineTL.size() - observableTimedTL.size();
+				GenericTask task = observableGenericTL.get(index - 1);
+				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	/**
@@ -285,48 +296,50 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
+		logicRequest.modifyEndTime(index, newEndTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
-			if (index <= observableDeadline.size()) {
-				observableDeadline.get(index - 1).setDeadline(newEndTime);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				observableTimed.get(index - 1).setEndTime(newEndTime);
+			if (index <= observableDeadlineTL.size()) {
+				observableDeadlineTL.get(index - 1).setDeadline(newEndTime);
+			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+				index = index - observableDeadlineTL.size();
+				observableTimedTL.get(index - 1).setEndTime(newEndTime);
 			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				GenericTask task = observableGeneric.get(index - 1);
-				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGeneric.remove(index - 1);
+				index = index - observableDeadlineTL.size() - observableTimedTL.size();
+				GenericTask task = observableGenericTL.get(index - 1);
+				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 			}
 		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+	}
+	
+	public void markTaskDone(int indexToMarkDone) {
+		logicRequest.markTaskDone(indexToMarkDone);
+		// TODO Auto-generated method stub
+		if (indexToMarkDone > this.totalSizeOfAllLists() || indexToMarkDone < 1) {
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
+		} else {
+			if (indexToMarkDone <= observableDeadlineTL.size()) {
+				archivedDeadlineTL.add(observableDeadlineTL.get(indexToMarkDone - 1));
+				observableDeadlineTL.remove(indexToMarkDone - 1);
+			} else if (indexToMarkDone - observableDeadlineTL.size() <= observableTimedTL.size()) {
+				indexToMarkDone = indexToMarkDone - observableDeadlineTL.size();
+				archivedTimedTL.add(observableTimedTL.get(indexToMarkDone - 1));
+				observableTimedTL.remove(indexToMarkDone - 1);
+			} else {
+				indexToMarkDone = indexToMarkDone - observableDeadlineTL.size() - observableTimedTL.size();
+				archivedGenericTL.add(observableGenericTL.get(indexToMarkDone - 1));
+				observableGenericTL.remove(indexToMarkDone - 1);
+			}
+		}
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	// check if there is missing backslash
 	public void modifyFileLocation(String newFileLocation) {
 		this.setDataFileLocation(newFileLocation);
 		storeSettingsIntoConfigFile(newFileLocation);
-	}
-	
-	public void maskAsDone(int index) {
-		if (index > this.totalSizeOfAllLists() || index < 1) {
-			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
-		} else {
-			if (index <= observableDeadline.size()) {
-				archivedDeadline.add(observableDeadline.get(index - 1));
-				observableDeadline.remove(index - 1);
-			} else if (index - observableDeadline.size() <= observableTimed.size()) {
-				index = index - observableDeadline.size();
-				archivedTimed.add(observableTimed.get(index - 1));
-				observableTimed.remove(index - 1);
-			} else {
-				index = index - observableDeadline.size() - observableTimed.size();
-				archivedGeneric.add(observableGeneric.get(index - 1));
-				observableGeneric.remove(index - 1);
-			}
-		}
-		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 
 	//-------------//
@@ -350,7 +363,7 @@ public class Database {
 	// Initialization //
 	//----------------//
 
-	private void initDatabase() {
+	public void initDatabase() {
 		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		if (!configFileExists(configFilePath)) {
 			createNewFile(configFilePath);
@@ -364,16 +377,28 @@ public class Database {
 	// Attribute Accessors //
 	//---------------------//
 	
-	public ObservableList<GenericTask> getObservableGeneric() {
-		return this.observableGeneric;
+	public ObservableList<GenericTask> getObservableGenericTL() {
+		return this.observableGenericTL;
 	}
 	
-	public ObservableList<TimedTask> getObservableTimed() {
-		return this.observableTimed;
+	public ObservableList<TimedTask> getObservableTimedTL() {
+		return this.observableTimedTL;
 	}
 	
-	public ObservableList<DeadlineTask> getObservableDeadline() {
-		return this.observableDeadline;
+	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
+		return this.observableDeadlineTL;
+	}
+	
+	public ObservableList<GenericTask> getArchivedGenericTL() {
+		return this.archivedGenericTL;
+	}
+	
+	public ObservableList<TimedTask> getArchivedTimedTL() {
+		return this.archivedTimedTL;
+	}
+	
+	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
+		return this.archivedDeadlineTL;
 	}
 	
 	/**
@@ -392,20 +417,39 @@ public class Database {
 		return this.dataFileLocation;
 	}
 	
+	/**
+	 * @return the LogicRequest object of this Database
+	 */
+	public LogicRequest getLogicRequest() {
+		return logicRequest;
+	}
+	
 	//--------------------//
 	// Attribute Mutators //
 	//--------------------//
 	
-	public void setObservableGeneric(ObservableList<GenericTask> generic) {
-		this.observableGeneric = generic;
+	public void setObservableGenericTL(ObservableList<GenericTask> generic) {
+		this.observableGenericTL = generic;
 	}
 	
-	public void setObservableTimed(ObservableList<TimedTask> timed) {
-		this.observableTimed = timed;
+	public void setObservableTimedTL(ObservableList<TimedTask> timed) {
+		this.observableTimedTL = timed;
 	}
 	
-	public void setObservableDeadline(ObservableList<DeadlineTask> deadline) {
-		this.observableDeadline = deadline;
+	public void setObservableDeadlineTL(ObservableList<DeadlineTask> deadline) {
+		this.observableDeadlineTL = deadline;
+	}
+	
+	public void setArchivedGenericTL(ObservableList<GenericTask> generic) {
+		this.archivedGenericTL = generic;
+	}
+	
+	public void setArchivedTimedTL(ObservableList<TimedTask> timed) {
+		this.archivedTimedTL = timed;
+	}
+	
+	public void setArchivedDeadlineTL(ObservableList<DeadlineTask> deadline) {
+		this.archivedDeadlineTL = deadline;
 	}
 	
 	public void setDataFileLocation(String newFileLocation) {

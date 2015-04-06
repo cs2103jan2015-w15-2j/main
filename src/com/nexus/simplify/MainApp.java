@@ -1,7 +1,7 @@
 package com.nexus.simplify;
 import java.io.IOException;
 
-import com.nexus.simplify.UI.view.BillboardOverviewController;
+import com.nexus.simplify.UI.controller.BillboardOverviewController;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.Logic;
 
@@ -54,7 +54,7 @@ public class MainApp extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource("UI/view/RootLayout.fxml"));
 			rootLayout = (BorderPane) loader.load();
-			
+
 			// Sets the scene containing the root layout.
 			Scene sceneRootLayout = new Scene(rootLayout);
 			primaryStage.setScene(sceneRootLayout);

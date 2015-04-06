@@ -14,8 +14,8 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
 
 public class ParserTest {
 	private static Parser _parser;
-	
-	
+
+
 	@BeforeClass
 	public static void init() {
 		_parser = new Parser();
@@ -28,15 +28,15 @@ public class ParserTest {
 
 		// Empty string boundary case for no name partition 
 		validateParse("add", add, noParam);
-		
+
 		// " " string boundary case for whitespace parameter partition 
 		validateParse("add  ", add, noParam);
-		
+
 		// "." string boundary case for valid name partition
 		String[] expectedParam = new String[ParameterType.MAX_SIZE];
 		setParameterValue(expectedParam, ParameterType.NEW_NAME_POS, ".");
 		validateParse("add .", add, expectedParam);
-		
+
 		// very long string boundary case for valid name partition
 		String longName = "add asda asd asd add asda asdadd asda asd asd  "
 				+ "asd add asda asd asd add asda asd asd add asda asd asd add asda asd asd "
@@ -45,11 +45,16 @@ public class ParserTest {
 		setParameterValue(expectedLongParam, ParameterType.NEW_NAME_POS, longName);
 		validateParse(longName, add, expectedParam);
 	}
-	
+
 	public void testAddDeadline() {
-		
+
 	}
-	
+
+	public void testDisplayBoundaries() {
+		String noParam = "display";
+		testOneDisplay(noParam, "");
+	}
+
 	private List<String> getDates(String userInput) {
 		com.joestelmach.natty.Parser natty = new com.joestelmach.natty.Parser();
 		List<DateGroup> groups = natty.parse(userInput);
@@ -57,9 +62,9 @@ public class ParserTest {
 			// get List<String> of dates in string
 		}
 		return null;
-		
+
 	}
-	
+
 	private void validateParse(String input, OperationType expectedOp, String[] expectedParam) {
 		UserCommand resultCommand;
 		try {
@@ -71,17 +76,21 @@ public class ParserTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	private void setParameterValue(String[] paramArr, int paramType, String param) {
 		paramArr[paramType] = param;
 	}
-	
-//	private void testOneDisplay(String userInput, String displayPref) {
-//		UserCommand userCommand = _parser.parseInput(userInput);
-//		assertEquals("display", userCommand.getOperationType());
-//		assertEquals(displayPref, userCommand.getParameter()[ParameterType.INDEX_POS]);
-//	}
+
+	private void testOneDisplay(String userInput, String displayPref) {
+		try {
+			UserCommand userCommand = _parser.parseInput(userInput);
+			assertEquals("display", userCommand.getOperationType());
+			assertEquals(displayPref, userCommand.getParameter()[ParameterType.INDEX_POS]);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

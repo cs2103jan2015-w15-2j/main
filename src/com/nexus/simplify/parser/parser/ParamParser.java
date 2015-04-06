@@ -3,11 +3,13 @@ package com.nexus.simplify.parser.parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.parser.data.CommandData;
 
 
 public class ParamParser extends TokenParser {
 	DateTimeParser dtParser = new DateTimeParser();
+	DateTimeParser sdtParser = new SearchDateTimeParser();
 	WorkloadParser wlParser = new WorkloadParser();
 	NameParser nameParser = new NameParser();
 	CommandData commandData = CommandData.getInstance();
@@ -19,13 +21,17 @@ public class ParamParser extends TokenParser {
 			return tokenList;
 		} else {
 			try {
-				tokenList = dtParser.parseTokens(tokenList);
-				
+				if (commandData.getUserOp() == OperationType.SEARCH) {
+					tokenList = sdtParser.parseTokens(tokenList);
+				} else {
+					tokenList = dtParser.parseTokens(tokenList);
+				}
+
 				/* workload parameter should either be either the first or last token
 				 * as it is the second last parameter type to be parsed.
 				 */
 				tokenList = wlParser.parseTokens(tokenList);
-				
+
 				// remaining tokens are take to be new name as it is the last supported parameter
 				tokenList = nameParser.parseTokens(tokenList);
 				return tokenList;

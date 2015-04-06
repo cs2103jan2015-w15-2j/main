@@ -20,7 +20,6 @@ public class MainParser extends TokenParser {
 		if (!isTokenListEmpty(tokenList)) {
 			throw new Exception(appendStringArr(MESSAGE_UNPARSED_TOKENS, tokenList));
 		}
-
 		return tokenList;			
 	}
 

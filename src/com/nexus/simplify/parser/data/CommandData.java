@@ -18,14 +18,14 @@ public class CommandData {
 	String[] _paramArray;
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
 	Logger LOGGER = LoggerFactory.getLogger(DateTimeParser.class.getName());
-	
+
 	public static CommandData getInstance() {
 		if (instance == null) {
 			instance = new CommandData();
 		} 
 		return instance;
 	}
-	
+
 	public void setOp(OperationType userOp) {
 		_userOp = userOp;
 	}
@@ -39,7 +39,7 @@ public class CommandData {
 	public void setDisplay(String displayPref) {
 		_paramArray[ParameterType.INDEX_POS] = displayPref;
 	}
-	
+
 	public void setTaskIndex(String taskIndex) {
 		_paramArray[ParameterType.INDEX_POS] = taskIndex;
 	}
@@ -57,16 +57,27 @@ public class CommandData {
 		_paramArray[ParameterType.NEW_STARTTIME_POS] = time1;
 		_paramArray[ParameterType.NEW_ENDTIME_POS] = time2;
 	}
-	
+
 	public void setWorkload(String workload) {
 		_paramArray[ParameterType.NEW_WORKLOAD_POS] = workload;
 	}
-	
-	// unsupported for V0.2
-//	public void setFileLoc(String fileloc) {
-//		
-//	}
-	
+
+	public void setYearSearch() {
+
+	}
+	public void setMonthSearch() {
+
+	}
+	public void setDayOfMonthSearch() {
+
+	}
+	public void setDayOfWeekSearch() {
+
+	}
+	public void setTimeSearch() {
+
+	}
+
 	public UserCommand createCommand() {
 		OperationType tempOp = _userOp;
 		String[] tempArray = _paramArray.clone();
@@ -75,20 +86,20 @@ public class CommandData {
 		LOGGER.info("User Operation: {}. User Parameters: {}", tempOp, Arrays.toString(tempArray));
 		return new UserCommand(tempOp, tempArray);
 	}
-	
+
 	public OperationType getOperationType(String keyword) {
 		if (cmdHash.containsKey(keyword)) {
 			return cmdHash.get(keyword);
 		} else {
 			return OperationType.INVALID;
 		}
-		
+
 	}
-	
+
 	public OperationType getUserOp() {
 		return _userOp;
 	}
-	
+
 	/**
 	 * Initialise command string hashtable by adding all recognised command strings 
 	 * as keys to respective OperationType.
@@ -96,15 +107,19 @@ public class CommandData {
 	 */
 	private CommandData() {
 		// adding support for all supported commands 
-		// commented lines are commands not supported in V0.2
-		//cmdHash.put("display", OperationType.DISPLAY);
+		cmdHash.put("display", OperationType.DISPLAY);
 		cmdHash.put("add", OperationType.ADD);
 		cmdHash.put("modify", OperationType.MODIFY);
-		cmdHash.put("update", OperationType.MODIFY);
-		//cmdHash.put("clear", OperationType.CLEAR);
-		//cmdHash.put("done", OperationType.ARCHIVE);
 		cmdHash.put("delete", OperationType.DELETE);
-		//cmdHash.put("filelocation", OperationType.FILELOCATION);
+		cmdHash.put("done", OperationType.DONE);
+		cmdHash.put("clear", OperationType.CLEAR);
+		cmdHash.put("undo", OperationType.UNDO);
+		cmdHash.put("search", OperationType.SEARCH);	
 		_paramArray = new String[ParameterType.MAX_SIZE];
+	}
+
+	public void setFileLocation(String filePathString) {
+		_paramArray[ParameterType.NEW_FILELOCATION_POS] = filePathString;
+		
 	}
 }
