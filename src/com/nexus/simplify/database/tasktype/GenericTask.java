@@ -150,6 +150,12 @@ public class GenericTask implements Serializable {
 		return id;
 	}
 	
+	public DateTime getIDAsDT() {
+		DateTimeFormatter format = DateTimeFormat.forPattern(ID_FORMAT);
+		DateTime ID = format.parseDateTime(id.get());
+		return ID;
+	}
+	
 	/**
 	 * returns the name of the task formatted as a StringProperty Object
 	 * 

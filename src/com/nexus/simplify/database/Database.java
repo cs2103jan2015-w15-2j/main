@@ -191,16 +191,22 @@ public class Database {
 	/**
 	 * toggles the sorting order of the task lists by a keyword
 	 * 
-	 * @param option toggles the sorting order of the task lists
+	 * @param keyword toggles the sorting order of the task lists
 	 * */
-	public void toggleDisplay(String option) {
-		if (option.equals("deadline")) {
-			// deadlineTaskList.sortBy(observableDeadline.getSortType(option));
-			// observableTimed.sortBy(observableTimed.getSortType(option));
+	public void toggleDisplay(String keyword) {
+		if (keyword.equals("deadline")) {
+			Collections.sort(observableTimedTL, taskStartTimeComparator);
+			Collections.sort(observableDeadlineTL, taskDeadlineComparator);
+		} else if (keyword.equals("workload")) {
+			// Collections.sort(observableGenericTL, taskWorkloadComparator);
+			Collections.sort(observableGenericTL, taskIdComparator);
+			Collections.sort(observableTimedTL, taskWorkloadComparator);
+			Collections.sort(observableDeadlineTL, taskWorkloadComparator);
+		} else if (keyword.equals("default")){
+			Collections.sort(observableGenericTL, taskIdComparator);
+			Collections.sort(observableTimedTL, taskIdComparator);
+			Collections.sort(observableDeadlineTL, taskIdComparator);
 		} else {
-			// observableGeneric.sortBy(observableGeneric.getSortType(option));
-			// deadlineTaskList.sortBy(observableDeadline.getSortType(option));
-			// observableTimed.sortBy(observableTimed.getSortType(option));
 		}
 	}
 	
@@ -281,6 +287,7 @@ public class Database {
 				index = index - observableDeadlineTL.size() - observableTimedTL.size();
 				GenericTask task = observableGenericTL.get(index - 1);
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableGenericTL.remove(index - 1);
 			}
 		}
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
@@ -309,6 +316,7 @@ public class Database {
 				index = index - observableDeadlineTL.size() - observableTimedTL.size();
 				GenericTask task = observableGenericTL.get(index - 1);
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableGenericTL.remove(index - 1);
 			}
 		}
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
@@ -341,6 +349,54 @@ public class Database {
 		this.setDataFileLocation(newFileLocation);
 		storeSettingsIntoConfigFile(newFileLocation);
 	}
+	
+	//-------------//
+	// Comparators //
+	//-------------//
+	
+	private Comparator<GenericTask> taskWorkloadComparator = new Comparator<GenericTask>() {
+		public int compare(GenericTask t1, GenericTask t2) {
+			String t1Workload = Integer.toString(t1.getWorkload());
+			String t2Workload = Integer.toString(t2.getWorkload());
+			return t1Workload.compareTo(t2Workload);
+		}
+	};
+	
+	private Comparator<GenericTask> taskIdComparator = new Comparator<GenericTask>() {
+		public int compare(GenericTask t1, GenericTask t2) {
+			DateTime t1Id = t1.getIDAsDT();
+			DateTime t2Id = t2.getIDAsDT();
+			if(t1Id.isBefore(t2Id)) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	};
+	
+	private Comparator<DeadlineTask> taskDeadlineComparator = new Comparator<DeadlineTask>() {
+		public int compare(DeadlineTask t1, DeadlineTask t2) {
+			DateTime t1Deadline = t1.getDeadline();
+			DateTime t2Deadline = t2.getDeadline();
+			if(t1Deadline.isBefore(t2Deadline)) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	};
+	
+	private Comparator<TimedTask> taskStartTimeComparator = new Comparator<TimedTask>() {
+		public int compare(TimedTask t1, TimedTask t2) {
+			DateTime t1StartTime = t1.getStartTimeAsDT();
+			DateTime t2StartTime = t2.getStartTimeAsDT();
+			if(t1StartTime.isBefore(t2StartTime)) {
+				return -1;
+			} else {
+				return 1;
+			}
+		}
+	};
 
 	//-------------//
 	// Constructor //

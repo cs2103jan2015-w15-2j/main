@@ -55,9 +55,9 @@ public class ReaderTest {
 		JSONArray expectedJsonArray = new JSONArray();
 		
 		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
-		String deadlineId = database.getObservableDeadline().get(0).getId();
+		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
 		database.addGenericTask("generic", 1);
-		String genericId = database.getObservableGeneric().get(0).getId();
+		String genericId = database.getObservableGenericTL().get(0).getId();
 		// database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
 		// String timedId = database.getObservableTimed().get(0).getId();
 		
