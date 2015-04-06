@@ -54,17 +54,37 @@ public class ReaderTest {
 	public void testRetrieveDataFromDataFile() {
 		JSONArray expectedJsonArray = new JSONArray();
 		
-		// database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		String deadlineId = database.getObservableDeadline().get(0).getId();
 		database.addGenericTask("generic", 1);
-		String id = database.getObservableGeneric().get(0).getId();
-		// database.addTimedTask("timed", startTime, endTime, 1);
+		String genericId = database.getObservableGeneric().get(0).getId();
+		// database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		// String timedId = database.getObservableTimed().get(0).getId();
 		
 		JSONObject itemOne = new JSONObject();
-		itemOne.put("Name", "generic");
-		itemOne.put("Type", "Generic");
+		itemOne.put("Name", "deadline");
+		itemOne.put("Type", "Deadline");
 		itemOne.put("Workload", 1);
-		itemOne.put("ID", id);
+		itemOne.put("ID", deadlineId);
+		itemOne.put("DueDate", "01 Jul 2015 00:00");
 		expectedJsonArray.add(itemOne);
+		
+		JSONObject itemTwo = new JSONObject();
+		itemTwo.put("Name", "generic");
+		itemTwo.put("Type", "Generic");
+		itemTwo.put("Workload", 1);
+		itemTwo.put("ID", genericId);
+		expectedJsonArray.add(itemTwo);
+		
+		
+		/*JSONObject itemThree = new JSONObject();
+		itemThree.put("Name", "timed");
+		itemThree.put("Type", "timed");
+		itemThree.put("Workload", 1);
+		itemThree.put("ID", timedId);
+		itemThree.put("Start Time", "01 Jul 2015 00:00");
+		itemThree.put("End Time", "01 Aug 2015 00:00");
+		expectedJsonArray.add(itemThree);*/
 		
 		JSONArray jsonArray = reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH);
 		assertEquals(expectedJsonArray.toString(), jsonArray.toString());

@@ -67,6 +67,9 @@ public class Database {
 	private ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> archivedGeneric = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadline = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimed = FXCollections.observableArrayList();
 	
 	//---------------//
 	// API for Logic //
@@ -266,6 +269,7 @@ public class Database {
 				index = index - observableDeadline.size() - observableTimed.size();
 				GenericTask task = observableGeneric.get(index - 1);
 				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableGeneric.remove(index - 1);
 			}
 		}
 		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
@@ -293,6 +297,7 @@ public class Database {
 				index = index - observableDeadline.size() - observableTimed.size();
 				GenericTask task = observableGeneric.get(index - 1);
 				observableDeadline.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableGeneric.remove(index - 1);
 			}
 		}
 		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
@@ -302,6 +307,26 @@ public class Database {
 	public void modifyFileLocation(String newFileLocation) {
 		this.setDataFileLocation(newFileLocation);
 		storeSettingsIntoConfigFile(newFileLocation);
+	}
+	
+	public void maskAsDone(int index) {
+		if (index > this.totalSizeOfAllLists() || index < 1) {
+			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
+		} else {
+			if (index <= observableDeadline.size()) {
+				archivedDeadline.add(observableDeadline.get(index - 1));
+				observableDeadline.remove(index - 1);
+			} else if (index - observableDeadline.size() <= observableTimed.size()) {
+				index = index - observableDeadline.size();
+				archivedTimed.add(observableTimed.get(index - 1));
+				observableTimed.remove(index - 1);
+			} else {
+				index = index - observableDeadline.size() - observableTimed.size();
+				archivedGeneric.add(observableGeneric.get(index - 1));
+				observableGeneric.remove(index - 1);
+			}
+		}
+		writer.writeToFile(observableGeneric, observableDeadline, observableTimed);
 	}
 
 	//-------------//
