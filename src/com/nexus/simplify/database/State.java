@@ -21,9 +21,9 @@ public class State {
 	
 	public State(Database database) {
 		this.database = database;
-		this.observableGeneric = database.getObservableGeneric();
-		this.observableDeadline = database.getObservableDeadline();
-		this.observableTimed = database.getObservableTimed();
+		this.observableGeneric = database.getObservableGenericTL();
+		this.observableDeadline = database.getObservableDeadlineTL();
+		this.observableTimed = database.getObservableTimedTL();
 	}
 	
 	public void saveGenericState() {
