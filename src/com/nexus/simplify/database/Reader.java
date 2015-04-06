@@ -23,6 +23,9 @@ public class Reader {
 	private static final String TASK_TYPE_TIMED = "Timed";
 	private static final String TASK_TYPE_DEADLINE = "Deadline";
 	private static final String TASK_TYPE_GENERIC = "Generic";
+	private static final String TASK_TYPE_ARCHIVED_GENERIC = "Archived Generic";
+	private static final String TASK_TYPE_ARCHIVED_DEADLINE = "Archived Deadline";
+	private static final String TASK_TYPE_ARCHIVED_TIMED = "Archived Timed";
 	
 	private static final String JSON_KEY_DUEDATE = "DueDate";
 	private static final String JSON_KEY_ID = "ID";
@@ -39,9 +42,12 @@ public class Reader {
 	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
 	
 	Database database;
-	ObservableList<GenericTask> observableGeneric = FXCollections.observableArrayList();
-	ObservableList<DeadlineTask> observableDeadline = FXCollections.observableArrayList();
-	ObservableList<TimedTask> observableTimed = FXCollections.observableArrayList();
+	ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
+	ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+	ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
+	ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
 	
 	public Reader(Database database) {
 		this.database = database;
@@ -89,13 +95,25 @@ public class Reader {
 			case TASK_TYPE_TIMED:
 				addTimedTaskToList(jsonTask);
 				break;
+			case TASK_TYPE_ARCHIVED_GENERIC:
+				addArchivedGenericTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_ARCHIVED_DEADLINE:
+				addArchivedDeadlineTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_ARCHIVED_TIMED:
+				addArchivedTimedTaskToList(jsonTask);
+				break;
 			default:
 				// invalid entry; ignore and continue to the next entry
 				break;
 			}
-			database.setObservableDeadline(observableDeadline);
-			database.setObservableGeneric(observableGeneric);
-			database.setObservableTimed(observableTimed);
+			database.setObservableDeadlineTL(observableDeadlineTL);
+			database.setObservableGenericTL(observableGenericTL);
+			database.setObservableTimedTL(observableTimedTL);
+			database.setArchivedGenericTL(archivedGenericTL);
+			database.setArchivedDeadlineTL(archivedDeadlineTL);
+			database.setArchivedTimedTL(archivedTimedTL);
 		}
 	}
 
@@ -112,7 +130,19 @@ public class Reader {
 
 		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		observableTimed.add(timedTask);
+		observableTimedTL.add(timedTask);
+	}
+	
+	private void addArchivedTimedTaskToList(JSONObject jsonTask) {
+		TimedTask timedTask = new TimedTask (
+				(String)jsonTask.get(JSON_KEY_NAME),
+				parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
+				parseDate((String)jsonTask.get(JSON_KEY_END_TIME))
+				);
+
+		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		archivedTimedTL.add(timedTask);
 	}
 
 	private void addDeadlineTaskToList(JSONObject jsonTask) {
@@ -122,14 +152,31 @@ public class Reader {
 				);
 		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		observableDeadline.add(deadlineTask);
+		observableDeadlineTL.add(deadlineTask);
+	}
+	
+	private void addArchivedDeadlineTaskToList(JSONObject jsonTask) {
+		DeadlineTask deadlineTask = new DeadlineTask ( 
+				(String)jsonTask.get(JSON_KEY_NAME), 
+				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
+				);
+		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		archivedDeadlineTL.add(deadlineTask);
 	}
 
 	private void addGenericTaskToList(JSONObject jsonTask) {
 		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
 		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		observableGeneric.add(genericTask);
+		observableGenericTL.add(genericTask);
+	}
+	
+	private void addArchivedGenericTaskToList(JSONObject jsonTask) {
+		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
+		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableGenericTL.add(genericTask);
 	}
 
 	//---------------------//

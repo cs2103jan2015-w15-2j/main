@@ -18,6 +18,9 @@ public class Writer {
 	private static final String TASK_TYPE_TIMED = "Timed";
 	private static final String TASK_TYPE_DEADLINE = "Deadline";
 	private static final String TASK_TYPE_GENERIC = "Generic";
+	private static final String TASK_TYPE_ARCHIVED_GENERIC = "Archived Generic";
+	private static final String TASK_TYPE_ARCHIVED_DEADLINE = "Archived Deadline";
+	private static final String TASK_TYPE_ARCHIVED_TIMED = "Archived Timed";
 	
 	private static final String JSON_KEY_DUEDATE = "DueDate";
 	private static final String JSON_KEY_ID = "ID";
@@ -36,7 +39,7 @@ public class Writer {
 	// File Writing //
 	//--------------//
 	
-	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric, ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed) {
+	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric, ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed, ObservableList<GenericTask> inputArchivedGeneric, ObservableList<DeadlineTask> inputArchivedDeadline, ObservableList<TimedTask> inputArchivedTimed) {
 		try {
 			String fileName = database.getDataFilePath();
 			File outputFile = new File(fileName);
@@ -45,7 +48,10 @@ public class Writer {
 			
 			convertDeadlineToStore(inputObservableDeadline, jsonArrayForStorage);
 			convertTimedToStore(inputObservableTimed, jsonArrayForStorage);
-			convertGenericToStore(inputObservableGeneric, jsonArrayForStorage); 
+			convertGenericToStore(inputObservableGeneric, jsonArrayForStorage);
+			convertArchivedDeadlineToStore(inputArchivedDeadline, jsonArrayForStorage);
+			convertArchivedTimedToStore(inputArchivedTimed, jsonArrayForStorage);
+			convertArchivedGenericToStore(inputArchivedGeneric, jsonArrayForStorage);
 			
 			fileWriter.write(jsonArrayForStorage.toJSONString());
 			fileWriter.close();
@@ -76,6 +82,23 @@ public class Writer {
 	}
 	
 	@SuppressWarnings("unchecked")
+	private void convertArchivedGenericToStore(ObservableList<GenericTask> taskList, JSONArray jsonArrayForStorage) {
+		if (!taskList.isEmpty()) {
+			for (int i = 0; i < taskList.size(); i++) {
+				GenericTask currGenericTask = taskList.get(i);
+				JSONObject jsonTask = new JSONObject();
+				
+				jsonTask.put(JSON_KEY_NAME, currGenericTask.getName());
+				jsonTask.put(JSON_KEY_WORKLOAD, currGenericTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currGenericTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_GENERIC);
+				
+				jsonArrayForStorage.add(jsonTask);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
 	private void convertDeadlineToStore(ObservableList<DeadlineTask> deadlineTaskList, JSONArray jsonArrayForStorage) {
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
@@ -87,6 +110,24 @@ public class Writer {
 				jsonTask.put(JSON_KEY_WORKLOAD, currDeadlineTask.getWorkload());
 				jsonTask.put(JSON_KEY_ID, currDeadlineTask.getId());
 				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_DEADLINE);
+				
+				jsonArrayForStorage.add(jsonTask);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void convertArchivedDeadlineToStore(ObservableList<DeadlineTask> deadlineTaskList, JSONArray jsonArrayForStorage) {
+		if (!deadlineTaskList.isEmpty()) {
+			for (int i = 0; i < deadlineTaskList.size(); i++) {
+				DeadlineTask currDeadlineTask = deadlineTaskList.get(i);
+				JSONObject jsonTask = new JSONObject();
+				
+				jsonTask.put(JSON_KEY_NAME, currDeadlineTask.getName());
+				jsonTask.put(JSON_KEY_DUEDATE, currDeadlineTask.getReadableDeadline());
+				jsonTask.put(JSON_KEY_WORKLOAD, currDeadlineTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currDeadlineTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_DEADLINE);
 				
 				jsonArrayForStorage.add(jsonTask);
 			}
@@ -107,6 +148,26 @@ public class Writer {
 				jsonTask.put(JSON_KEY_WORKLOAD, currTimedTask.getWorkload());
 				jsonTask.put(JSON_KEY_ID, currTimedTask.getId());
 				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_TIMED);
+				
+				jsonArrayForStorage.add(jsonTask);
+			}
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void convertArchivedTimedToStore(ObservableList<TimedTask> timedTaskList, JSONArray jsonArrayForStorage) {
+		
+		if (!timedTaskList.isEmpty()) {
+			for (int i = 0; i < timedTaskList.size(); i++) {
+				TimedTask currTimedTask = timedTaskList.get(i);
+				JSONObject jsonTask = new JSONObject();
+				
+				jsonTask.put(JSON_KEY_NAME, currTimedTask.getName());
+				jsonTask.put(JSON_KEY_START_TIME, currTimedTask.getReadableStartTime());
+				jsonTask.put(JSON_KEY_END_TIME, currTimedTask.getReadableEndTime());
+				jsonTask.put(JSON_KEY_WORKLOAD, currTimedTask.getWorkload());
+				jsonTask.put(JSON_KEY_ID, currTimedTask.getId());
+				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_TIMED);
 				
 				jsonArrayForStorage.add(jsonTask);
 			}
