@@ -47,6 +47,9 @@ public class Logic implements ILogic {
 			case UNDO:
 				Undo undoOp = new Undo();
 				return undoOp.execute();
+			case CLEAR:
+				Clear clearOp = new Clear();
+				return clearOp.execute();
 			default:
 				return null;
 		}
