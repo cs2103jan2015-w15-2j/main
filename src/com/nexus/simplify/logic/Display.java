@@ -19,7 +19,11 @@ public class Display {
 		Database database = MainApp.getDatabase();
 		if(isNumeric(option)){
 			database.toggleDisplay(option);
-			feedback = "Displayed " + option + " tasks.";
+			if(Integer.parseInt(option) == 1){
+				feedback = "Displayed 1 task.";
+			} else {
+				feedback = "Displayed " + option + " tasks.";
+			}
 			return feedback;
 		}
 		else{
