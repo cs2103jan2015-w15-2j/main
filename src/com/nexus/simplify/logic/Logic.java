@@ -1,5 +1,4 @@
 package com.nexus.simplify.logic;
-import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;

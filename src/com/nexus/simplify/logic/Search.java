@@ -27,4 +27,20 @@ public class Search {
 			return feedback;
 		}
 	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(boolean[] searchField){
+		String feedback;
+		
+		if(searchField[CURRENT_TIME_POS]==false && searchField[DAY_OF_WEEK_POS]==false&& 
+		searchField[DAY_OF_MONTH_POS]==false && searchField[MONTH_OF_YEAR_POS]==false && 
+		searchField[CURRENT_YEAR_POS]==false){
+			feedback = "Parser failed to set truth value.";
+			return feedback;	// This feedback will not be displayed to the user.
+		} else {
+			feedback = "Search result displayed.";
+			return feedback;
+		}
+	}
 }
