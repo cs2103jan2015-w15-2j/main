@@ -17,7 +17,7 @@ public class CommandData {
 	OperationType _userOp;
 	String[] _paramArray;
 	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
-	Logger LOGGER = LoggerFactory.getLogger(DateTimeParser.class.getName());
+	Logger LOGGER = LoggerFactory.getLogger(CommandData.class.getName());
 
 	public static CommandData getInstance() {
 		if (instance == null) {
