@@ -71,6 +71,9 @@ public class Database {
 	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> resultantGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> resultantDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> resultantTimedTL = FXCollections.observableArrayList();
 	
 	//---------------//
 	// API for Logic //
@@ -197,9 +200,10 @@ public class Database {
 		if (keyword.equals("deadline")) {
 			Collections.sort(observableTimedTL, taskStartTimeComparator);
 			Collections.sort(observableDeadlineTL, taskDeadlineComparator);
+			// test archive
+			this.observableGenericTL.setAll(archivedGenericTL);
 		} else if (keyword.equals("workload")) {
-			// Collections.sort(observableGenericTL, taskWorkloadComparator);
-			Collections.sort(observableGenericTL, taskIdComparator);
+			Collections.sort(observableGenericTL, taskWorkloadComparator);
 			Collections.sort(observableTimedTL, taskWorkloadComparator);
 			Collections.sort(observableDeadlineTL, taskWorkloadComparator);
 		} else if (keyword.equals("default")){
@@ -207,6 +211,7 @@ public class Database {
 			Collections.sort(observableTimedTL, taskIdComparator);
 			Collections.sort(observableDeadlineTL, taskIdComparator);
 		} else {
+			// no sorting of list is performed
 		}
 	}
 	
