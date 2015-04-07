@@ -63,7 +63,8 @@ public abstract class TokenParser {
 		StringBuilder builder = new StringBuilder();
 		for(String s : strArr) {
 			builder.append(s);
+			builder.append(" ");
 		}
-		return builder.toString();
+		return builder.toString().trim();
 	}
 }
