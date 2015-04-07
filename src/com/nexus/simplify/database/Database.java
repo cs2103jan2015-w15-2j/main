@@ -179,7 +179,9 @@ public class Database {
 	}
 	
 	public void searchDatabase(String[] parameter, boolean[] searchField) {
-		
+		String pattern = "E MMM dd HH:mm:ss zzz yyy";
+		DateTimeFormatter format = DateTimeFormat.forPattern(pattern);
+		DateTime date = format.parseDateTime(parameter[0]);
 	}
 	
 	/**
