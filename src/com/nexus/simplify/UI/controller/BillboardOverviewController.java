@@ -1,5 +1,8 @@
 package com.nexus.simplify.UI.controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.UI.commandhistory.CommandHistory;
 import com.nexus.simplify.database.Database;
@@ -8,16 +11,18 @@ import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.Logic;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ListChangeListener;
 // import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -28,7 +33,7 @@ import javafx.scene.input.KeyEvent;
  * 3. generic tasks
  * @author Toh Jian Feng
  * */
-public class BillboardOverviewController {
+public class BillboardOverviewController implements Initializable {
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
 	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
@@ -121,7 +126,7 @@ public class BillboardOverviewController {
      * The constructor is called before the initialize() method.
      */
 	public BillboardOverviewController() {
-		
+		// empty method
 	}
 	
 	//--------------------//
@@ -153,13 +158,22 @@ public class BillboardOverviewController {
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
-     */
-	@FXML
-	private void initialize() {
+     * */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 		commandHistory = new CommandHistory();
 		initDeadlineTaskTable();
 		initTimedTaskTable();
 		initGenericTaskTable();
+		
+		// forces the user input field to gain focus 
+		// immediately after application starts.
+	    Platform.runLater(new Runnable() {
+	        @Override
+	        public void run() {
+	            userInputField.requestFocus();
+	        }
+	    });	
 	}
 
 	/**
@@ -169,6 +183,40 @@ public class BillboardOverviewController {
 	public void initBillboard() {
 		fillTablesWithData();
 		displayWelcomeMessage();
+		
+		deadlineTaskTable.getItems().addListener(
+				new ListChangeListener<DeadlineTask>() {
+				@Override
+				public void onChanged(
+					javafx.collections.ListChangeListener.Change<? extends DeadlineTask> arg0) {
+				    	deadlineTaskTable.scrollTo(deadlineTaskTable.getItems().size() - 1);
+				    	deadlineTaskTable.getSelectionModel().selectLast();
+				    } 				
+				}
+			);
+			
+			timedTaskTable.getItems().addListener(
+					new ListChangeListener<TimedTask>() {
+					@Override
+					public void onChanged(
+						javafx.collections.ListChangeListener.Change<? extends TimedTask> arg0) {
+					    	timedTaskTable.scrollTo(timedTaskTable.getItems().size() - 1);
+					    	timedTaskTable.getSelectionModel().selectLast();
+					    } 				
+					}
+			);
+			
+			genericTaskTable.getItems().addListener(
+					new ListChangeListener<GenericTask>() {
+					@Override
+					public void onChanged(
+						javafx.collections.ListChangeListener.Change<? extends GenericTask> arg0) {
+					    	genericTaskTable.scrollTo(genericTaskTable.getItems().size() - 1);
+					    	genericTaskTable.getSelectionModel().selectLast();
+					    } 					
+					}
+			);
+			
 	}
 
 	/**
@@ -204,36 +252,12 @@ public class BillboardOverviewController {
 	 * number of entries in the table.
 	 * */
 	private void initTableIndexes() {
-		deadlineTaskIndexColumn.setCellFactory(column -> {
-			return new TableCell<DeadlineTask, Integer>() {
-				@Override
-				protected void updateItem(Integer index, boolean empty) {
-					if (index == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
-					}
-				}
-			};
-		});
-		
-		timedTaskIndexColumn.setCellFactory(column -> {
-			return new TableCell<TimedTask, Integer>() {
-				@Override
-				protected void updateItem(Integer index, boolean empty) {
-					if (index == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						setText(String.valueOf(getIndex() 
-												+ DEADLINE_TASK_COL_INDEX_OFFSET 
-												+ deadlineTaskTable.getItems().size()));
-					}
-				}
-			};
-		});
-		
+		initDeadlineTaskIndexCol();
+		initTimedTaskIndexCol();
+		initGenericTaskIndexCol();
+	}
+
+	private void initGenericTaskIndexCol() {
 		genericTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<GenericTask, Integer>() {
 				@Override
@@ -251,19 +275,214 @@ public class BillboardOverviewController {
 			};
 		});
 	}
+
+	private void initTimedTaskIndexCol() {
+		timedTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<TimedTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() 
+												+ DEADLINE_TASK_COL_INDEX_OFFSET 
+												+ deadlineTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
+	}
+
+	private void initDeadlineTaskIndexCol() {
+		deadlineTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<DeadlineTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
+					}
+				}
+			};
+		});
+	}
+	
+	//--------------------//
+	// Key Event Handling //
+	//--------------------//
+	
+	@FXML
+	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
+		switch (event.getCode()) {
+			case ENTER:
+				processInputOnEnterKeyPressed();
+				break;
+			case UP:
+				browsePreviousCommand();
+				break;
+			case DOWN:
+				browseNextCommand();
+				break;
+			case TAB:
+				jumpToNonEmptyTable(null);
+				break;
+			default:
+				break;
+		}
+	}
+	
+	@FXML
+	private void processKeyCommandsFromDeadlineTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+				break;
+			case DOWN:
+				if (event.isShiftDown()) {
+					jumpToTimedTaskTable(deadlineTaskTable);
+					break;
+				} else {
+					jumpToNextTableRow(deadlineTaskTable);
+					break;
+				}
+			case UP:
+				jumpToPrevTableRow(deadlineTaskTable);
+				break;
+			case RIGHT:
+				if (event.isShiftDown()) {
+					jumpToGenericTaskTable(deadlineTaskTable);
+					break;
+				} 
+			default:
+				jumpToUserInputField(deadlineTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	@FXML
+	private void processKeyCommandsFromTimedTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+			case BACK_SPACE:
+			case DELETE:
+				break;
+			case UP:
+				if (event.isShiftDown()) {
+					jumpToDeadlineTaskTable(timedTaskTable);
+					break;
+				} else {
+					jumpToPrevTableRow(timedTaskTable);
+					break;
+				}
+			case DOWN:
+				jumpToNextTableRow(timedTaskTable);
+				break;
+			case RIGHT:
+				if (event.isShiftDown()) {
+					jumpToGenericTaskTable(timedTaskTable);
+					break;
+				} 
+			default:
+				jumpToUserInputField(timedTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	@FXML
+	private void processKeyCommandsFromGenericTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+				break;
+			case LEFT:
+				if (event.isShiftDown()) {
+					jumpToDeadlineTaskTable(genericTaskTable);
+					break;
+				} 
+			case UP:
+				jumpToPrevTableRow(genericTaskTable);
+				break;
+			case DOWN:
+				jumpToNextTableRow(genericTaskTable);
+				break;
+			default:
+				jumpToUserInputField(genericTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	/**
+	 * Switches focus to a non empty table when the tab
+	 * key is pressed when the user input field has focus.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * */
+	private void jumpToNonEmptyTable(@SuppressWarnings("rawtypes") TableView prevTable) {
+		if (!deadlineTaskTable.getItems().isEmpty()) {
+			jumpToDeadlineTaskTable(prevTable);
+		} else {
+			if (!timedTaskTable.getItems().isEmpty()) {
+				jumpToTimedTaskTable(prevTable);
+			} else {
+				jumpToGenericTaskTable(prevTable);
+			}
+		}
+	}
+
+	private void jumpToGenericTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
+		if (!genericTaskTable.getItems().isEmpty()) {
+			genericTaskTable.requestFocus();
+			genericTaskTable.scrollTo(genericTaskTable.getItems().size() - 1);
+			genericTaskTable.getSelectionModel().selectLast();
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
+		}
+	}
+
+	private void jumpToTimedTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
+		timedTaskTable.requestFocus();
+		timedTaskTable.scrollTo(timedTaskTable.getItems().size() - 1);
+		timedTaskTable.getSelectionModel().selectLast();
+		
+		if (!(prevTable == null)) {
+			prevTable.getSelectionModel().clearSelection();
+		}
+	}
+
+	private void jumpToDeadlineTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
+		deadlineTaskTable.requestFocus();
+		deadlineTaskTable.scrollTo(deadlineTaskTable.getItems().size() - 1);
+		deadlineTaskTable.getSelectionModel().selectLast();
+		
+		if (!(prevTable == null)) {
+			prevTable.getSelectionModel().clearSelection();
+		}
+	}
+	
+	private void jumpToNextTableRow(@SuppressWarnings("rawtypes") TableView table) {
+		table.getSelectionModel().selectBelowCell();
+	}
+	
+	private void jumpToPrevTableRow(@SuppressWarnings("rawtypes") TableView table) {
+		table.getSelectionModel().selectAboveCell();
+	}
+	
+	private void jumpToUserInputField(@SuppressWarnings("rawtypes") TableView prevTable) {
+		if (!userInputField.isFocused()) {
+			userInputField.requestFocus();
+			prevTable.getSelectionModel().clearSelection();
+		}
+	}
 	
 	//-----------------------//
 	// Processing User Input //
 	//-----------------------//
-	
-	/**
-	 * Enables focus on the user input field when user starts 
-	 * to type on the keyboard.
-	 * 
-	 * */
-	private void enableFocusToUserInputField() {
-		userInputField.requestFocus();
-	}
 	
 	/**
 	 * Sends input to the Logic component upon the action
@@ -280,76 +499,10 @@ public class BillboardOverviewController {
 		userInputField.clear();
 	}
 	
-	@FXML
-	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
-		if (event.getCode() == KeyCode.ENTER) { 
-			processInputOnEnterKeyPressed();
-		} else if (event.getCode() == KeyCode.UP) {
-			browsePreviousCommand();
-		} else if (event.getCode() == KeyCode.DOWN) {
-			browseNextCommand();
-		} else if (event.getCode() == KeyCode.TAB) {
-			if (!deadlineTaskTable.isFocused()) {
-				deadlineTaskTable.requestFocus();
-			}
-		}
-	}
-	
-	@FXML
-	private void processKeyCommandsFromDeadlineTaskTable(KeyEvent event) {
-		switch (event.getCode()) {
-			case TAB:
-				enableFocusToUserInputField();
-				break;
-			case DOWN:
-				if (event.isShiftDown()) {
-					timedTaskTable.requestFocus();
-				}
-				break;
-			case RIGHT:
-				if (event.isShiftDown()) {
-					genericTaskTable.requestFocus();
-				}
-			default:
-				break;
-		}
-	}
-	
-	@FXML
-	private void processKeyCommandsFromTimedTaskTable(KeyEvent event) {
-		switch (event.getCode()) {
-			case TAB:
-				enableFocusToUserInputField();
-				break;
-			case UP:
-				if (event.isShiftDown()) {
-					deadlineTaskTable.requestFocus();
-				}
-				break;
-			case RIGHT:
-				if (event.isShiftDown()) {
-					genericTaskTable.requestFocus();
-				}
-			default:
-				break;
-		}
-	}
-	
-	@FXML
-	private void processKeyCommandsFromGenericTaskTable(KeyEvent event) {
-		switch (event.getCode()) {
-			case TAB:
-				enableFocusToUserInputField();
-				break;
-			case LEFT:
-				if (event.isShiftDown()) {
-					deadlineTaskTable.requestFocus();
-				}
-			default:
-				break;
-		}
-	}
-	
+	/**
+	 * Navigates through user command history and displays the 
+	 * previous command typed into the user input field.
+	 * */
 	private void browsePreviousCommand() {
 		String previousCommandHistory = commandHistory.browsePreviousCommand();
 		if (!previousCommandHistory.equals("")) {
@@ -357,6 +510,10 @@ public class BillboardOverviewController {
 		}
 	}
 	
+	/**
+	 * Navigates through user command history and displays the 
+	 * next command typed into the user input field.
+	 * */
 	private void browseNextCommand() {
 		String nextCommandHistory = commandHistory.browseNextCommand();
 		userInputField.setText(nextCommandHistory);
@@ -421,17 +578,12 @@ public class BillboardOverviewController {
 	 * */
 	private void fillTableIndexes() {		
 		initTableIndexes();
-		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																      		deadlineTaskTable.getItems().indexOf(column.getValue())
-																      		+ DEADLINE_TASK_COL_INDEX_OFFSET
-																  )
-												   );
-		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
-																	  timedTaskTable.getItems().indexOf(column.getValue()) 
-																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
-																	  + deadlineTaskTable.getItems().size()
-															   )
-												); 
+		fillDeadlineTaskTableIndexes();
+		fillTimedTaskTableIndexes(); 
+		fillGenericTaskTableIndexes();
+	}
+
+	private void fillGenericTaskTableIndexes() {
 		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
 																	  genericTaskTable.getItems().indexOf(column.getValue()) 
 																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
@@ -441,5 +593,20 @@ public class BillboardOverviewController {
 												  );
 	}
 
+	private void fillTimedTaskTableIndexes() {
+		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																	  timedTaskTable.getItems().indexOf(column.getValue()) 
+																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
+																	  + deadlineTaskTable.getItems().size()
+															   )
+												);
+	}
 
+	private void fillDeadlineTaskTableIndexes() {
+		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																      		deadlineTaskTable.getItems().indexOf(column.getValue())
+																      		+ DEADLINE_TASK_COL_INDEX_OFFSET
+																  )
+												   );
+	}
 }
