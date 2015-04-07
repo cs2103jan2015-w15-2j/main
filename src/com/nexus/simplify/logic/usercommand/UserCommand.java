@@ -1,7 +1,13 @@
+//@author generated
 package com.nexus.simplify.logic.usercommand;
 
-
+//@author A0094457U
+/*
+ * methods and fields in this class are mainly
+ * for Parser to use
+ */
 public class UserCommand {
+	// these constants are for search functionality
 	public final int CURRENT_TIME_POS = 0;
 	public final int DAY_OF_WEEK_POS = 1;
 	public final int DAY_OF_MONTH_POS = 2;
@@ -10,25 +16,25 @@ public class UserCommand {
 	
 	private OperationType operation;
 	private String[] parameter;
-
 	private boolean[] searchField;
 
-	public UserCommand(OperationType operation, String[] parameter){
+	public UserCommand(OperationType operation, String[] parameter) {
 		this.operation = operation;
 		this.parameter = parameter;
 	}
 
-	public UserCommand(OperationType operation, String[] parameter, boolean[] searchField){
+	public UserCommand(OperationType operation, 
+					   String[] parameter, boolean[] searchField) {
 		this.operation = operation;
 		this.parameter = parameter;
 		this.searchField = searchField;
 	}
 	
-	public OperationType getOperationType(){
+	public OperationType getOperationType() {
 		return operation;
 	}
 
-	public String[] getParameter(){
+	public String[] getParameter() {
 		return parameter;
 	}
 
@@ -62,7 +68,7 @@ public class UserCommand {
 		return fileLocation;
 	}	
 	
-	public boolean[] getSearchField(){
+	public boolean[] getSearchField() {
 		return searchField;
 	}
 }

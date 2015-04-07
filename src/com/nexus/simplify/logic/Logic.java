@@ -1,11 +1,12 @@
+//@author generated
 package com.nexus.simplify.logic;
-import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
 
+//@author A0094457U
 /*
- * This class acts like a facade for other components to interact
- * with the logic component
+ * This class acts as a facade for other components to interact
+ * with the logic component.
  */
 public class Logic implements ILogic {
 	
@@ -14,7 +15,7 @@ public class Logic implements ILogic {
 	
 	private Logic() {}
 	
-	public static Logic getInstance(){
+	public static Logic getInstance() {
 		if(theOne == null){
 			theOne = new Logic();
 		}
@@ -22,33 +23,36 @@ public class Logic implements ILogic {
 	}
 	
 	@Override
-	public String executeCommand(String userInput) throws Exception{
+	public String executeCommand(String userInput) throws Exception {
 		UserCommand command = getParsedCommand(userInput);
-		switch(command.getOperationType()){
-			case ADD:
+		switch (command.getOperationType()) {
+			case ADD :
 				Add addOp = new Add();
 				return addOp.execute(command.getParameter());
-			case DISPLAY:
+			case DISPLAY :
 				Display displayOp = new Display();
 				return displayOp.execute(command.getParameter());
-			case MODIFY:
+			case MODIFY :
 				Modify modifyOp = new Modify();
 				return modifyOp.execute(command.getParameter());
-			case DELETE:
+			case DELETE :
 				Delete deleteOp = new Delete();
 				return deleteOp.execute(command.getParameter());
-			case DONE:
+			case DONE :
 				Done doneOp = new Done();
 				return doneOp.execute(command.getParameter());
-			case SEARCH:
+			case SEARCH :
 				Search searchOp = new Search();
 				return searchOp.execute(command.getParameter(), command.getSearchField());
-			case UNDO:
+			case UNDO :
 				Undo undoOp = new Undo();
 				return undoOp.execute();
-			case CLEAR:
+			case CLEAR :
 				Clear clearOp = new Clear();
 				return clearOp.execute();
+			case EXIT :
+				Exit exitOp = new Exit();
+				return exitOp.execute();
 			default:
 				return null;
 		}

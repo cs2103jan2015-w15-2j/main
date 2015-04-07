@@ -1,4 +1,5 @@
 package com.nexus.simplify.logic;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;

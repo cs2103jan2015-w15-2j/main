@@ -1,12 +1,13 @@
+//@author generated
 package com.nexus.simplify.logic;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+//@author A0094457U
 /*
  * This class calls database to delete a task in database
  * by passing a task index.
- * @author David Zhao Han
  */
 public class Delete {
 	
