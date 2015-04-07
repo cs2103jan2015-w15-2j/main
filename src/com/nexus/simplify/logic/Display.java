@@ -1,39 +1,42 @@
+//@author generated
 package com.nexus.simplify.logic;
 
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+//@author A0094457U
 /*
  * This class calls database to display stored tasks
  * in a format chosen by the user. Currently supporting:
- * a number, null(default), all, week, deadline, workload. 
- * @author David Zhao Han
+ * a number, null(default), all, week, deadline, workload, 
+ * file location.
  * */
 public class Display {
 	
 	public Display() {}
 		
-	String execute(String[] parameter){
+	String execute(String[] parameter) {
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
 		Database database = MainApp.getDatabase();
-		if(isNumeric(option)){
+		
+		if(isNumeric(option)) {
 			database.toggleDisplay(option);
-			if(Integer.parseInt(option) == 1){
+			if(Integer.parseInt(option) == 1) {
 				feedback = "Displayed 1 task.";
 			} else {
 				feedback = "Displayed " + option + " tasks.";
 			}
 			return feedback;
-		}
-		else{
+		} else {
 			if (option == null || option.isEmpty()) {
 				database.toggleDisplay("default");
 				feedback = "Displayed tasks by default setting.";
 				return feedback;
 			}
-			switch(option){
+			
+			switch (option) {
 				case "all" :
 					database.toggleDisplay(option);
 					feedback = "Displayed all tasks.";
@@ -55,7 +58,7 @@ public class Display {
 					return feedback;
 					
 				case "file location" :
-					feedback = "Displayed file location.";
+					feedback = "File location: ";
 					feedback += database.getDataFileLocation();
 					return feedback;
 					
@@ -66,25 +69,26 @@ public class Display {
 		}
 	}
 	
-	private static boolean isNumeric(String str){
-	  return str.matches("-?\\d+(\\.\\d+)?");
+	private static boolean isNumeric(String str) {
+		return str.matches("\\d+");	// digits: [0-9]
 	}
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){
+	public String executeForTesting(String[] parameter) {
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
-		if(isNumeric(option)){
+		
+		if(isNumeric(option)) {
 			feedback = "Displayed " + option + " tasks.";
 			return feedback;
-		}
-		else{
+		} else {
 			if (option == null || option.isEmpty()) {
 				feedback = "Displayed tasks by default setting.";
 				return feedback;
 			}
-			switch(option){
+			
+			switch (option) {
 				case "all" :
 					feedback = "Displayed all tasks.";
 					return feedback;
