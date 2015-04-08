@@ -177,11 +177,13 @@ public class Database {
 	}
 	
 	private void saveState() {
-		state.saveState(getObservableGenericTL(), getObservableDeadlineTL(), getObservableTimedTL());
+		state.saveState(getObservableGenericTL(), getObservableDeadlineTL(), getObservableTimedTL(), getArchivedGenericTL(), getArchivedDeadlineTL(), getArchivedTimedTL());
 	}
 	
 	public void undoTask() {
+		setArchivedTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
 		setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
+		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
 	public void searchDatabase(String[] parameter, boolean[] searchField) throws java.text.ParseException {
@@ -444,6 +446,12 @@ public class Database {
 		activeDeadlineTL.setAll(deadlineTL);
 		activeTimedTL.setAll(timedTL);
 		activeGenericTL.setAll(genericTL);
+	}
+	
+	private void setArchivedTL(ObservableList<GenericTask>genericTL, ObservableList<DeadlineTask> deadlineTL, ObservableList<TimedTask> timedTL) {
+		archivedDeadlineTL.setAll(deadlineTL);
+		archivedTimedTL.setAll(timedTL);
+		archivedGenericTL.setAll(genericTL);
 	}
 	
 	//-------------//

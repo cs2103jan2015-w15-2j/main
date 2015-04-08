@@ -17,13 +17,16 @@ public class State {
 	ObservableList<GenericTask> fixedGenericTL = FXCollections.observableArrayList();
 	ObservableList<DeadlineTask> fixedDeadlineTL = FXCollections.observableArrayList();
 	ObservableList<TimedTask> fixedTimedTL = FXCollections.observableArrayList();
+	ObservableList<GenericTask> fixedArchivedGenericTL = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> fixedArchivedDeadlineTL = FXCollections.observableArrayList();
+	ObservableList<TimedTask> fixedArchivedTimedTL = FXCollections.observableArrayList();
 	
 	int deadlineLimit;
 	
 	public State() {
 	}
 	
-	public void saveState(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL, ObservableList<TimedTask> timedTL) {
+	public void saveState(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL, ObservableList<TimedTask> timedTL, ObservableList<GenericTask> archivedGenericTL, ObservableList<DeadlineTask> archivedDeadlineTL, ObservableList<TimedTask> archivedTimedTL) {
 		fixedGenericTL.setAll(genericTL);
 		/*deadlineLimit = deadlineTL.size();
 		DeadlineTask deadlineT;
@@ -34,9 +37,15 @@ public class State {
 		}*/
 		fixedDeadlineTL.setAll(deadlineTL);
 		fixedTimedTL.setAll(timedTL);
+		fixedArchivedGenericTL.setAll(archivedGenericTL);
+		fixedArchivedDeadlineTL.setAll(archivedDeadlineTL);
+		fixedArchivedTimedTL.setAll(archivedTimedTL);
 		genericTLState.push(fixedGenericTL);
 		deadlineTLState.push(fixedDeadlineTL);
 		timedTLState.push(fixedTimedTL);
+		genericTLState.push(fixedArchivedGenericTL);
+		deadlineTLState.push(fixedArchivedDeadlineTL);
+		timedTLState.push(fixedArchivedTimedTL);
 	}
 	
 	public ObservableList<GenericTask> getGenericState() {
@@ -54,6 +63,18 @@ public class State {
 	}
 	
 	public ObservableList<TimedTask> getTimedState() {
+		return timedTLState.pop();
+	}
+	
+	public ObservableList<GenericTask> getArchivedGenericState() {
+		return genericTLState.pop();
+	}
+	
+	public ObservableList<DeadlineTask> getArchivedDeadlineState() {
+		return deadlineTLState.pop();
+	}
+	
+	public ObservableList<TimedTask> getArchivedTimedState() {
 		return timedTLState.pop();
 	}
 }
