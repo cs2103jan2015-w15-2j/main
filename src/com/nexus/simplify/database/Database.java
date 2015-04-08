@@ -24,7 +24,6 @@ import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.database.Writer;
 import com.nexus.simplify.database.Reader;
-import com.nexus.simplify.database.State;
 
 @SuppressWarnings("unused")
 
@@ -93,6 +92,7 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+		saveState();
 		logicRequest.addTimedTask(name, startTime, endTime, workload);
 		if (workload == 0) {
 			observableTimedTL.add(new TimedTask(name, startTime, endTime));
@@ -110,6 +110,7 @@ public class Database {
 	 * @param workload amount of effort to be put into the task from a range of 1 - 5
 	 * */
 	public void addDeadlineTask(String name, Date deadline, int workload) {
+		saveState();
 		logicRequest.addDeadlineTask(name, deadline, workload);
 		if (workload == 0) {
 			observableDeadlineTL.add(new DeadlineTask(name, deadline));
@@ -127,6 +128,7 @@ public class Database {
 	 * */
 	public void addGenericTask(String name, int workload) {
 		saveState();
+		System.out.println("State saved");
 		logicRequest.addGenericTask(name, workload);
 		if (workload == 0) {
 			observableGenericTL.add(new GenericTask(name));
@@ -144,6 +146,7 @@ public class Database {
 	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
 	 * */
 	public void deleteTaskByIndex(int index) throws IndexOutOfBoundsException {
+		saveState();
 		logicRequest.deleteTaskByIndex(index);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
@@ -162,6 +165,7 @@ public class Database {
 	}
 	
 	public void clearContent() {
+		saveState();
 		logicRequest.clearContent();
 		observableGenericTL.clear();
 		observableTimedTL.clear();
@@ -173,15 +177,11 @@ public class Database {
 	}
 	
 	private void saveState() {
-		state.saveGenericState();
-		// state.saveDeadlineState();
-		// state.saveTimedState();
+		state.saveState(getObservableGenericTL(), getObservableDeadlineTL(), getObservableTimedTL());
 	}
 	
 	public void undoTask() {
-		state.loadDeadlineState();
-		state.loadTimedState();
-		state.loadGenericState();
+		setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
 	}
 	
 	public void searchDatabase(String[] parameter, boolean[] searchField) throws java.text.ParseException {
@@ -297,6 +297,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive 
 	 * */
 	public void modifyName(int index, String newName) throws IndexOutOfBoundsException {
+		saveState();
 		logicRequest.modifyName(index, newName);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
@@ -323,6 +324,7 @@ public class Database {
 	 * @throws Exception if workload is not in range of 1 - 5 inclusive.
 	 * */
 	public void modifyWorkload(int index, int newWorkloadValue) throws IndexOutOfBoundsException, Exception {
+		saveState();
 		logicRequest.modifyWorkload(index, newWorkloadValue);
 		if (newWorkloadValue > 5 || newWorkloadValue < 1) {
 			throw new Exception("Invalid workload value entered. Supported workload values range from 1 to 5.");
@@ -353,6 +355,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+		saveState();
 		logicRequest.modifyStartTime(index, newStartTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
@@ -382,6 +385,7 @@ public class Database {
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
 	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
+		saveState();
 		logicRequest.modifyEndTime(index, newEndTime);
 		if (index > this.totalSizeOfAllLists() || index < 1) {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
@@ -402,6 +406,7 @@ public class Database {
 	}
 	
 	public void markTaskDone(int indexToMarkDone) {
+		saveState();
 		logicRequest.markTaskDone(indexToMarkDone);
 		// TODO Auto-generated method stub
 		if (indexToMarkDone > this.totalSizeOfAllLists() || indexToMarkDone < 1) {
@@ -504,7 +509,7 @@ public class Database {
 		JSONArray jsonTaskArray = reader.retrieveDataFromDataFile(getDataFilePath());
 		reader.populateTaskLists(jsonTaskArray);
 		setActiveTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-		state = new State(this);
+		state = new State();
 	}
 	
 	//----------------//
