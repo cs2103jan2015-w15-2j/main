@@ -10,7 +10,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  * This class calls database to display stored tasks
  * in a format chosen by the user. Currently supporting:
  * a number, null(default), all, week, deadline, workload, 
- * file location.
+ * done, file location.
  * */
 public class Display {
 	
@@ -62,6 +62,11 @@ public class Display {
 					feedback += database.getDataFileLocation();
 					return feedback;
 					
+				case "done" :
+					database.toggleDisplay(option);
+					feedback = "Displayed tasks that are done.";
+					return feedback;
+					
 				default :
 					feedback = "Invalid option for display, please try again.";
 					return feedback;
@@ -103,6 +108,10 @@ public class Display {
 				
 				case "workload" :
 					feedback = "Displayed tasks by workload.";
+					return feedback;
+					
+				case "done" :
+					feedback = "Displayed tasks that are done.";
 					return feedback;
 
 				default :
