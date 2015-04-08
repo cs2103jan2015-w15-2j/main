@@ -9,15 +9,15 @@ import com.nexus.simplify.database.tasktype.TimedTask;
 
 public class Search {
 	
-	Database database;
-	
 	//-------------//
 	// Constructor //
 	//-------------//
 	
-	public Search(Database database) {
-		this.database = database;
-	}
+	public Search() {}
+	
+	//---------//
+	// Methods //
+	//---------//
 	
 	public ObservableList<TimedTask> searchTimedByYear(int year, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
 		assert !timedTL.isEmpty();
