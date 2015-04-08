@@ -1,10 +1,11 @@
+//@author generated
 package com.nexus.simplify.logic.usercommand;
 
+//@author A0094457U
 /*
  * an object that holds the enumeration for operation types
- * @author David Zhao Han
  */
 public enum OperationType {
-	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, UNDO, SEARCH, INVALID  
+	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, EXIT, UNDO, SEARCH, INVALID  
 };
 
