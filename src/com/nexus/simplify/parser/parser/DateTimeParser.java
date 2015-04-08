@@ -44,6 +44,7 @@ public class DateTimeParser extends TokenParser {
 				} else {
 					String stringParsed = dateGroup.getText();
 					LOGGER.info("String parsed: {}", stringParsed);
+					
 					// Ensure that we proceed setting time elements for fully parsed words.
 					// This is because Natty will try to guess the date and time for tokens that "appear" to be valid
 					// We do not second guess the user's input. If an entire word is not parsed by natty, we reject it as a DateTime element
@@ -70,7 +71,7 @@ public class DateTimeParser extends TokenParser {
 	 * @param tokenList
 	 * @return
 	 */
-	private boolean isParsedValid(String stringParsed, String[] tokenList) {
+	protected boolean isParsedValid(String stringParsed, String[] tokenList) {
 		String[] parsedArray = stringParsed.split("\\s+");
 		boolean found = false;
 		for (int i = 0; i < parsedArray.length; i++) {

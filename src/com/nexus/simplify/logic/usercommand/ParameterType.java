@@ -11,4 +11,11 @@ public class ParameterType {
 	public final static int NEW_WORKLOAD_POS = 4;
 	public final static int NEW_FILELOCATION_POS = 5;
 	public final static int MAX_SIZE = 6;
+	
+	public final static int SEARCH_HOUR_POS = 0;
+	public final static int SEARCH_WEEKDAY_POS = 1;
+	public final static int SEARCH_DAY_POS = 2;
+	public final static int SEARCH_MONTH_POS = 3;
+	public final static int SEARCH_YEAR_POS = 4;
+	public final static int SEARCH_MAX_SIZE = 5;
 }

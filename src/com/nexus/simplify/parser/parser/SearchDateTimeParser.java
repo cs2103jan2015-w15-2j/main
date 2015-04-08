@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.joestelmach.natty.DateGroup;
+import com.nexus.simplify.parser.data.CommandData;
 
 public class SearchDateTimeParser extends DateTimeParser {
 
@@ -14,7 +15,7 @@ public class SearchDateTimeParser extends DateTimeParser {
 	final String DAY_OF_WEEK = "DAY_OF_WEEK";
 	final String HOURS = "HOURS_OF_DAY";
 	final String MINUTES = "MINUTES_OF_HOUR";
-
+	CommandData commandData = CommandData.getInstance();
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
@@ -43,27 +44,41 @@ public class SearchDateTimeParser extends DateTimeParser {
 					throw new Exception ("Please specify only one temporal element for search");
 				} else {
 					String stringParsed = dateGroup.getText();
-					commandData.setTime(dates.get(0).toString());
-					String syntaxTree = dateGroup.getSyntaxTree().toStringTree();
-					if (syntaxTree.contains(YEAR)) {
-						System.out.println("YEAR");
+					LOGGER.info("String parsed: {}", stringParsed);
+					
+					// Ensure that we proceed setting time elements for fully parsed words.
+					// This is because Natty will try to guess the date and time for tokens that "appear" to be valid
+					// We do not second guess the user's input. If an entire word is not parsed by natty, we reject it as a DateTime element
+					if (isParsedValid(stringParsed, tokenList)) {
+						if (dates.size() == 1) {
+							commandData.setTime(dates.get(0).toString());
+					
+							// By searching the syntax tree produced by natty parser, we can identity what kind
+							// of date or time was explicitly specified by the user
+							String syntaxTree = dateGroup.getSyntaxTree().toStringTree();
+							if (syntaxTree.contains(YEAR)) {
+								commandData.setYearSearch();
+							}
+							if (syntaxTree.contains(MONTH)) {
+								commandData.setMonthSearch();
+							}
+							if (syntaxTree.contains(DAY_OF_MONTH)) {
+								commandData.setDayOfMonthSearch();
+							}
+							if (syntaxTree.contains(DAY_OF_WEEK)) {
+								commandData.setDayOfWeekSearch();
+							}
+							if (syntaxTree.contains(HOURS)) {
+								commandData.setHourSearch();
+							}
+						} else {
+							throw new Exception("Please only specify one Date & Time for search");
+						}
+						return getRemainingTokens(stringParsed, tokenList);
+					} else {
+						LOGGER.info("String parsed is considered invalid");
+						return tokenList;
 					}
-					if (syntaxTree.contains(MONTH)) {
-						System.out.println("MONTH");
-					}
-					if (syntaxTree.contains(DAY_OF_MONTH)) {
-						System.out.println("DAY_OF_MONTH");
-					}
-					if (syntaxTree.contains(DAY_OF_WEEK)) {
-						System.out.println("DAY_OF_WEEK");
-					}
-					if (syntaxTree.contains(HOURS)) {
-						System.out.println("HOURS");
-					}
-					if (syntaxTree.contains(MINUTES)) {
-						System.out.println("MINUTES");
-					}
-					return getRemainingTokens(stringParsed, tokenList);
 				}
 			}
 		}

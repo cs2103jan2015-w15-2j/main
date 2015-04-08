@@ -9,21 +9,32 @@ import org.slf4j.LoggerFactory;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
-import com.nexus.simplify.parser.parser.DateTimeParser;
 
 
 public class CommandData {
 	private static CommandData instance = null;
-	OperationType _userOp;
-	String[] _paramArray;
-	HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
-	Logger LOGGER = LoggerFactory.getLogger(CommandData.class.getName());
+	private OperationType _userOp;
+	private String[] _paramArray;
+	private boolean[] _searchArray;
+	private HashMap<String, OperationType> cmdHash = new HashMap<String, OperationType>();
+	private Logger LOGGER = LoggerFactory.getLogger(CommandData.class.getName());
+	
 
 	public static CommandData getInstance() {
 		if (instance == null) {
 			instance = new CommandData();
 		} 
 		return instance;
+	}
+	
+	public UserCommand createCommand() {
+		OperationType tempOp = _userOp;
+		String[] tempParam = _paramArray.clone();
+		boolean[] tempSearch = _searchArray.clone();
+		_userOp = null;
+		_paramArray = new String[ParameterType.MAX_SIZE];
+		LOGGER.info("User Operation: {}. User Parameters: {}. Search Boolean: {}", tempOp, Arrays.toString(tempParam), Arrays.toString(tempSearch));
+		return new UserCommand(tempOp, tempParam, tempSearch);
 	}
 
 	public void setOp(OperationType userOp) {
@@ -63,30 +74,21 @@ public class CommandData {
 	}
 
 	public void setYearSearch() {
-
+		_searchArray[ParameterType.SEARCH_YEAR_POS] = true;
 	}
 	public void setMonthSearch() {
-
+		_searchArray[ParameterType.SEARCH_MONTH_POS] = true;
 	}
 	public void setDayOfMonthSearch() {
-
+		_searchArray[ParameterType.SEARCH_DAY_POS] = true;
 	}
 	public void setDayOfWeekSearch() {
-
+		_searchArray[ParameterType.SEARCH_WEEKDAY_POS] = true;
 	}
-	public void setTimeSearch() {
-
+	public void setHourSearch() {
+		_searchArray[ParameterType.SEARCH_HOUR_POS] = true;
 	}
-
-	public UserCommand createCommand() {
-		OperationType tempOp = _userOp;
-		String[] tempArray = _paramArray.clone();
-		_userOp = null;
-		_paramArray = new String[ParameterType.MAX_SIZE];
-		LOGGER.info("User Operation: {}. User Parameters: {}", tempOp, Arrays.toString(tempArray));
-		return new UserCommand(tempOp, tempArray);
-	}
-
+	
 	public OperationType getOperationType(String keyword) {
 		if (cmdHash.containsKey(keyword)) {
 			return cmdHash.get(keyword);
@@ -130,6 +132,11 @@ public class CommandData {
 		cmdHash.put("s", OperationType.SEARCH);
 		cmdHash.put("find", OperationType.SEARCH);
 		_paramArray = new String[ParameterType.MAX_SIZE];
+		_searchArray = new boolean[ParameterType.SEARCH_MAX_SIZE];
+		for (int i = 0; i < _searchArray.length; i++) {
+			_searchArray[i] = false;
+		}
+		
 	}
 
 	public void setFileLocation(String filePathString) {
