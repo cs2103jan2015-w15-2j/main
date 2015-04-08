@@ -2,34 +2,6 @@
     -fx-background-color: white;
 }
 
-
-.table-view {
-    -fx-base: white;
-    -fx-control-inner-background: white;
-    -fx-background-color: white;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-border-color: black;
-}
-
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
-
-.table-view .column-header, .table-view .filler {
-    -fx-border-width: 0 0 1 0;
-    -fx-background-color: transparent;
-    -fx-border-color: black;
-}
-
-.table-view .column-header .label {
-    -fx-font-size: 10pt;
-    -fx-font-family: "Monaco";
-    -fx-text-fill: black;
-    -fx-alignment: center;
-    -fx-opacity: 1;
-}
-
 .split-pane:horizontal > * > .split-pane-divider {
     -fx-border-color: transparent;
     -fx-background-color: transparent;
@@ -57,6 +29,12 @@
     -fx-shape: " ";
 }
 
+.split-pane *.split-pane-divider {
+    -fx-padding: 0 0 0 0;
+    -fx-border-color: black;
+}
+
+
 .table-cell {
     -fx-font-size: 9pt;
     -fx-alignment: center;
@@ -64,41 +42,10 @@
     -fx-text-fill: black;
 }
 
-.table-view *.scroll-bar:horizontal *.increment-button,
-.table-view *.scroll-bar:horizontal *.decrement-button {
-    -fx-background-color: null;
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
+.table-row-cell:selected {
+	-fx-background-color: #d1fdf7;
 }
 
-.table-view *.scroll-bar:horizontal *.increment-arrow, 
-.table-view *.scroll-bar:horizontal *.decrement-arrow {
-    -fx-background-color: null;
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-shape: null;
-}
-
-.table-view *.scroll-bar:vertical *.increment-button,
-.table-view *.scroll-bar:vertical *.decrement-button {
-    -fx-background-color: null;
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-}
-
-.table-view *.scroll-bar:vertical *.increment-arrow, 
-.table-view *.scroll-bar:vertical *.decrement-arrow {
-    -fx-background-color: null;
-    -fx-background-radius: 0;
-    -fx-background-insets: 0;
-    -fx-padding: 0;
-    -fx-shape: null;
-}
-
-
-.split-pane *.split-pane-divider {
-    -fx-padding: 0 1 0 1;
+.table-column {
+	-fx-border-color: transparent;
 }

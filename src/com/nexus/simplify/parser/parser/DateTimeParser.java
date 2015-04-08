@@ -26,6 +26,7 @@ public class DateTimeParser extends TokenParser {
 
 			// Do not proceed with parsing if no DateTime is parsed from tokenString
 			if (groupList.size() <1) {
+				LOGGER.info("No DateTime is parsed.");
 				return tokenList;
 			} else {
 				// Gets a list of all dates in the only group of dates parsed.
@@ -42,62 +43,75 @@ public class DateTimeParser extends TokenParser {
 					throw new Exception ("Too many temporal elements in specifed time range");
 				} else {
 					String stringParsed = dateGroup.getText();
-					if (dates.size() == 1) {
-						commandData.setTime(dates.get(0).toString());
-					} else if (dates.size() == 2) {
-						commandData.setTime(dates.get(0).toString(), dates.get(1).toString());
+					LOGGER.info("String parsed: {}", stringParsed);
+					// Ensure that we proceed setting time elements for fully parsed words.
+					// This is because Natty will try to guess the date and time for tokens that "appear" to be valid
+					// We do not second guess the user's input. If an entire word is not parsed by natty, we reject it as a DateTime element
+					if (isParsedValid(stringParsed, tokenList)) {
+						if (dates.size() == 1) {
+							commandData.setTime(dates.get(0).toString());
+						} else if (dates.size() == 2) {
+							commandData.setTime(dates.get(0).toString(), dates.get(1).toString());
+						}
+						return getRemainingTokens(stringParsed, tokenList);
+					} else {
+						LOGGER.info("String parsed is considered invalid");
+						return tokenList;
 					}
-					return getRemainingTokens(stringParsed, tokenList);
 				}
 			}
 		}
 	}
 
-
-	@Override
-	protected String tokenListToStr(String[] strArr) {
-		StringBuilder builder = new StringBuilder();
-		for(String s : strArr) {
-			builder.append(s);
-			builder.append(" ");
+	/**
+	 * Return false if natty parser parsed a word partially.
+	 * E.g "CS3230" is parsed into "230"
+	 * @param stringParsed
+	 * @param tokenList
+	 * @return
+	 */
+	private boolean isParsedValid(String stringParsed, String[] tokenList) {
+		String[] parsedArray = stringParsed.split("\\s+");
+		boolean found = false;
+		for (int i = 0; i < parsedArray.length; i++) {
+			for (int j = 0; j < tokenList.length; j++) {
+				found = false;
+				if (parsedArray[i].equals(tokenList[j])) {
+					found = true;
+					break;
+				}
+			}
+			if (found) {
+				continue;
+			} else {
+				return false;
+			}
 		}
-		return builder.toString().trim();
+		return found;
 	}
 
+	//	//List of functions available from natty library
+	//	public static void main(String[] args) {
+	//		Parser parser = new Parser();
+	//		List<DateGroup> groups = parser.parse("do homework THURSDAY");
+	//		for(DateGroup group:groups) {
+	//			List<Date> dates = group.getDates();
+	//
+	//			int line = group.getLine();
+	//			int column = group.getPosition();
+	//			String matchingValue = group.getText();
+	//
+	//			String syntaxTree = group.getSyntaxTree().toStringTree();
+	//			System.out.println(syntaxTree);
+	//			//Map<String, List<ParseLocation>> parseMap = group.getParseLocations();
+	//			boolean isRecurreing = group.isRecurring();
+	//			Date recursUntil = group.getRecursUntil();
+	//
+	//			System.out.println(dates.toString());
+	//			System.out.println(matchingValue);
+	//		}
+	//	}
 
-//	//List of functions available from natty library
-//	public static void main(String[] args) {
-//		Parser parser = new Parser();
-//		List<DateGroup> groups = parser.parse("do homework THURSDAY");
-//		for(DateGroup group:groups) {
-//			List<Date> dates = group.getDates();
-//
-//			int line = group.getLine();
-//			int column = group.getPosition();
-//			String matchingValue = group.getText();
-//
-//			String syntaxTree = group.getSyntaxTree().toStringTree();
-//			System.out.println(syntaxTree);
-//			//Map<String, List<ParseLocation>> parseMap = group.getParseLocations();
-//			boolean isRecurreing = group.isRecurring();
-//			Date recursUntil = group.getRecursUntil();
-//
-//			System.out.println(dates.toString());
-//			System.out.println(matchingValue);
-//		}
-//	}
-
-//	public static void main(String[] args) {
-//		String a = "";
-//		System.out.println(a.split("//s").length);
-//		DateTimeParser parser = new DateTimeParser();
-//		String test = "from today until next week";
-//		try {
-//			parser.parseTokens(test.split("//s"));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 }
 
 
