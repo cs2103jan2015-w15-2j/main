@@ -1,5 +1,7 @@
 package com.nexus.simplify.UI.controller;
 
+// @author A0108361M
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -14,7 +16,6 @@ import com.nexus.simplify.logic.Logic;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ListChangeListener;
-// import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,17 +27,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 /**
- * Controller class of the Object BillBoardOverview.
- * BillboardOverview displays three tables for each type of task:
- * 1. deadline-based tasks
- * 2. timed tasks
- * 3. generic tasks
- * @author Toh Jian Feng
+ * <p>Controller class of the Object BillBoardOverview.</p>
+ * <p>BillboardOverview displays three tables for each type of task:</p>
+ * <ol>
+ * 	<li>deadline-based tasks</li>
+ * 	<li>timed tasks</li>
+ *  <li>generic tasks</li>
+ * </ol>
  * */
 public class BillboardOverviewController implements Initializable {
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
 	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
+	
 	//------------------//
 	// Class Attributes //
 	//------------------//
@@ -48,12 +51,8 @@ public class BillboardOverviewController implements Initializable {
 	// Container to store user command history
 	CommandHistory commandHistory;
 	
-	// List of Key Combinations
 	
-	
-	/**
-	 * Attributes of the table displaying deadline-based tasks.
-	 * */
+	// Attributes of the table displaying deadline-based tasks.
 	@FXML
 	private TableView<DeadlineTask> deadlineTaskTable;
 	
@@ -69,9 +68,7 @@ public class BillboardOverviewController implements Initializable {
 	@FXML
 	private TableColumn<DeadlineTask, Integer> deadlineTaskWorkloadColumn;
 	
-	/**
-	 * Attributes of the table displaying timed tasks.
-	 * */
+	// Attributes of the table displaying timed tasks.
 	@FXML
 	private TableView<TimedTask> timedTaskTable;
 	
@@ -90,10 +87,8 @@ public class BillboardOverviewController implements Initializable {
 	@FXML
 	private TableColumn<TimedTask, Integer> timedTaskWorkloadColumn;
 	
-	/**
-	 * Attributes of the table displaying generic tasks.
-	 * 
-	 * */
+
+	// Attributes of the table displaying generic tasks.
 	@FXML
 	private TableView<GenericTask> genericTaskTable;
 	
@@ -178,7 +173,6 @@ public class BillboardOverviewController implements Initializable {
 
 	/**
 	 * Initializes the 3 tables on the interface.
-	 * @param listPackage the package of observable lists obtained from database
 	 * */
 	public void initBillboard() {
 		fillTablesWithData();
@@ -314,6 +308,18 @@ public class BillboardOverviewController implements Initializable {
 	// Key Event Handling //
 	//--------------------//
 	
+	/**
+	 * <p>Listens for any keys pressed by the user when
+	 * current focus is on user input field.</p>
+	 * <p>Valid key commands are as follows:</p>
+	 * <ul>
+	 * 	<li><strong>Enter</strong>: sends input to logic component.</li>
+	 * 	<li><strong>up/down</strong> arrow keys: navigate through user command history.</li>
+	 * 	<li><strong>tab</strong>: switches focus to a non-empty table.</li>
+	 * </ul>
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
 	@FXML
 	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
 		switch (event.getCode()) {
@@ -416,8 +422,10 @@ public class BillboardOverviewController implements Initializable {
 	}
 	
 	/**
-	 * Switches focus to a non empty table when the tab
-	 * key is pressed when the user input field has focus.
+	 * <p>Switches focus to a table that has at least one entry
+	 * when the tab key is pressed.</p> 
+	 * <br>
+	 * <p> Pre-condition: Current focus is on the user input field. </p>
 	 * 
 	 * @param prevTable the previous table that had focus
 	 * */
