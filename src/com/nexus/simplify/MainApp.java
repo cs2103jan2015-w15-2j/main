@@ -1,4 +1,5 @@
 package com.nexus.simplify;
+
 import java.io.IOException;
 
 import com.nexus.simplify.UI.controller.BillboardOverviewController;
@@ -13,11 +14,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
+// @author A0108361M
 /**
- * Main class for Simplify.
- * @author tohjianfeng
- * 
+ * Main class for Simplify. 
  * */
 public class MainApp extends Application {
 	
@@ -93,7 +92,8 @@ public class MainApp extends Application {
 	//------------------//
 	
 	/**
-	 * default main function.
+	 * This main function serves as a fallback,
+	 * should the start() method fail.
 	 * */
 	public static void main(String[] args) {
 		launch(args);
