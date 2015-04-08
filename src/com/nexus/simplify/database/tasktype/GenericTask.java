@@ -5,13 +5,11 @@ import javafx.beans.property.*;
 import org.joda.time.DateTime;
 import org.joda.time.format.*;
 
-import java.io.*;
-
 /**
  * Represents an instance of a task without due date or start and end time
  * @author Tan Qian Yi
  * */
-public class GenericTask implements Serializable {
+public class GenericTask {
 	
 	/**
 	 * Default value of workload when user does not specify is 1
@@ -23,7 +21,6 @@ public class GenericTask implements Serializable {
 	// Class Attributes //
 	//------------------//
 	
-	private static final long serialVersionUID = 41L;
 	private final StringProperty id;
 	private final StringProperty name;
 	private final IntegerProperty workload;
@@ -148,6 +145,12 @@ public class GenericTask implements Serializable {
 	 * */
 	public StringProperty getIDAsStringProperty() {
 		return id;
+	}
+	
+	public DateTime getIDAsDT() {
+		DateTimeFormatter format = DateTimeFormat.forPattern(ID_FORMAT);
+		DateTime ID = format.parseDateTime(id.get());
+		return ID;
 	}
 	
 	/**

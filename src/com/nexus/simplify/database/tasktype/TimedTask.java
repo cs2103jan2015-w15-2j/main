@@ -1,7 +1,6 @@
 package com.nexus.simplify.database.tasktype;
 
 import java.util.Date;
-import java.io.*;
 
 import javafx.beans.property.*;
 
@@ -12,7 +11,7 @@ import org.joda.time.format.*;
  * Represents an instance of task tagged with start and end times.
  * @author Tan Qian Yi
  */
-public class TimedTask extends GenericTask implements Serializable {
+public class TimedTask extends GenericTask {
 	
 	/**
 	 * All dates will be shaped according to this format. 
@@ -28,7 +27,7 @@ public class TimedTask extends GenericTask implements Serializable {
 	/**
 	 * @author tohjianfeng
 	 * */
-	private static final long serialVersionUID = 43L;
+
 	private final ObjectProperty<DateTime> startTime;
 	private final ObjectProperty<DateTime> endTime;
 	
