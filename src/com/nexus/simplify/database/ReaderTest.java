@@ -11,10 +11,10 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.joda.time.DateTime;
+import org.json.simple.*;
 
-import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.*;
 
 public class ReaderTest {
 
@@ -90,16 +90,47 @@ public class ReaderTest {
 		assertEquals(expectedJsonArray.toString(), jsonArray.toString());
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void testPopulateTaskLists() {
 		ObservableList<GenericTask> expectedGenericTL = FXCollections.observableArrayList(); 
+		ObservableList<DeadlineTask> expectedDeadlineTL = FXCollections.observableArrayList();
+		ObservableList<TimedTask> expectedTimedTL = FXCollections.observableArrayList();
 		
 		database.addGenericTask("generic", 1);
+		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
 		reader.populateTaskLists(reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH));
 		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(database.getObservableGenericTL());
+		ObservableList<DeadlineTask> deadlineTL = FXCollections.observableArrayList(database.getObservableDeadlineTL());
+		ObservableList<TimedTask> timedTL = FXCollections.observableArrayList();
 		
 		expectedGenericTL.add(new GenericTask(new SimpleStringProperty("generic"), new SimpleIntegerProperty(1), genericTL.get(0).getIDAsStringProperty()));
+		expectedDeadlineTL.add(new DeadlineTask(new SimpleStringProperty("deadline"), new Date(115, 6, 1), new SimpleIntegerProperty(1), deadlineTL.get(0).getIDAsStringProperty()));
+		expectedTimedTL.add(new TimedTask(new SimpleStringProperty("timed"), new DateTime(new Date(115, 6, 1)), new DateTime(new Date(115, 7, 1)), new SimpleIntegerProperty(1), deadlineTL.get(0).getIDAsStringProperty()));
 		
-		assertEquals(expectedGenericTL, genericTL);
+		for (GenericTask generic: genericTL) {
+			int index = genericTL.indexOf(generic);
+			assertEquals(generic.getName(), expectedGenericTL.get(index).getName());
+			assertEquals(generic.getWorkload(), expectedGenericTL.get(index).getWorkload());
+			assertEquals(generic.getId(), expectedGenericTL.get(index).getId());
+		}
+		
+		for (DeadlineTask deadline: deadlineTL) {
+			int index = deadlineTL.indexOf(deadline);
+			assertEquals(deadline.getName(), expectedDeadlineTL.get(index).getName());
+			assertEquals(deadline.getReadableDeadline(), expectedDeadlineTL.get(index).getReadableDeadline());
+			assertEquals(deadline.getWorkload(), expectedDeadlineTL.get(index).getWorkload());
+			assertEquals(deadline.getId(), expectedDeadlineTL.get(index).getId());
+		}
+		
+		for (TimedTask timed: timedTL) {
+			int index = timedTL.indexOf(timed);
+			assertEquals(timed.getName(), expectedTimedTL.get(index).getName());
+			assertEquals(timed.getReadableStartTime(), expectedTimedTL.get(index).getReadableStartTime());
+			assertEquals(timed.getReadableEndTime(), expectedTimedTL.get(index).getReadableEndTime());
+			assertEquals(timed.getWorkload(), expectedTimedTL.get(index).getWorkload());
+			assertEquals(timed.getId(), expectedTimedTL.get(index).getId());
+		}
 	}
 }
