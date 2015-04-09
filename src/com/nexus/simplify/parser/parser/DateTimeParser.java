@@ -85,18 +85,23 @@ public class DateTimeParser extends TokenParser {
 							// of date or time was explicitly specified by the user
 							String syntaxTree = dateGroup.getSyntaxTree().toStringTree();
 							if (syntaxTree.contains(YEAR)) {
+								commandData.setTime(dates.get(0).toString());
 								commandData.setYearSearch();
 							}
 							if (syntaxTree.contains(MONTH)) {
+								commandData.setTime(dates.get(0).toString());
 								commandData.setMonthSearch();
 							}
 							if (syntaxTree.contains(DAY_OF_MONTH)) {
+								commandData.setTime(dates.get(0).toString());
 								commandData.setDayOfMonthSearch();
 							}
 							if (syntaxTree.contains(DAY_OF_WEEK)) {
+								commandData.setTime(dates.get(0).toString());
 								commandData.setDayOfWeekSearch();
 							}
 							if (syntaxTree.contains(HOURS)) {
+								commandData.setTime(dates.get(0).toString());
 								commandData.setHourSearch();
 							}
 						} else {
