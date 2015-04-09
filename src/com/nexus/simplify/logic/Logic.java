@@ -1,6 +1,7 @@
 //@author generated
 package com.nexus.simplify.logic;
 
+import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
 
@@ -10,7 +11,7 @@ import com.nexus.simplify.parser.api.Parser;
  * with the logic component.
  */
 public class Logic implements ILogic {
-	
+	private OperationType savedCommandType;
 	private static Logic theOne;
 	private Parser parser = new Parser();
 	
@@ -26,34 +27,52 @@ public class Logic implements ILogic {
 	@Override
 	public String executeCommand(String userInput) throws Exception {
 		UserCommand command = getParsedCommand(userInput);
+		String feedback;
 		switch (command.getOperationType()) {
 			case ADD :
 				Add addOp = new Add();
-				return addOp.execute(command.getParameter());
+				feedback = addOp.execute(command.getParameter());
+				savedCommandType = null;
+				return feedback;
 			case DISPLAY :
 				Display displayOp = new Display();
-				return displayOp.execute(command.getParameter());
+				feedback = displayOp.execute(command.getParameter());
+				savedCommandType = null;
+				return feedback;
 			case MODIFY :
 				Modify modifyOp = new Modify();
-				return modifyOp.execute(command.getParameter());
+				feedback = modifyOp.execute(command.getParameter());
+				savedCommandType = null;
+				return feedback;
 			case DELETE :
 				Delete deleteOp = new Delete();
-				return deleteOp.execute(command.getParameter());
+				feedback = deleteOp.execute(command.getParameter());
+				savedCommandType = null;
+				return feedback;
 			case DONE :
 				Done doneOp = new Done();
-				return doneOp.execute(command.getParameter());
+				feedback = doneOp.execute(command.getParameter());
+				savedCommandType = OperationType.DONE;
+				return feedback;
 			case SEARCH :
 				Search searchOp = new Search();
-				return searchOp.execute(command.getParameter(), command.getSearchField());
+				feedback = searchOp.execute(command.getParameter(), command.getSearchField());
+				savedCommandType = OperationType.SEARCH;
+				return feedback;
 			case UNDO :
 				Undo undoOp = new Undo();
-				return undoOp.execute();
+				feedback = undoOp.execute();
+				savedCommandType = null;
+				return feedback;
 			case CLEAR :
 				Clear clearOp = new Clear();
-				return clearOp.execute();
+				feedback = clearOp.execute();
+				savedCommandType = null;
+				return feedback;
 			case EXIT :
 				Exit exitOp = new Exit();
-				return exitOp.execute();
+				exitOp.execute();
+				return null;
 			default:
 				return null;
 		}
@@ -66,5 +85,9 @@ public class Logic implements ILogic {
 	public UserCommand getParsedCommand(String userInput) throws Exception {
 		UserCommand command = parser.parseInput(userInput);
 		return command;
-	}		
+	}
+	
+	OperationType getSavedCommandType(){
+		return savedCommandType;
+	}
 }
