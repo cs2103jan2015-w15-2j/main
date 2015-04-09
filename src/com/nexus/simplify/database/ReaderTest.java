@@ -7,6 +7,7 @@ import org.junit.*;
 import java.io.IOException;
 import java.util.*;
 
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -49,7 +50,7 @@ public class ReaderTest {
 		assertEquals(expectedJsonArray, jsonArray);
 	}
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Test
 	public void testRetrieveDataFromDataFile() {
 		JSONArray expectedJsonArray = new JSONArray();
@@ -58,33 +59,32 @@ public class ReaderTest {
 		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
 		database.addGenericTask("generic", 1);
 		String genericId = database.getObservableGenericTL().get(0).getId();
-		// database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
-		// String timedId = database.getObservableTimed().get(0).getId();
+		database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		String timedId = database.getObservableTimedTL().get(0).getId();
 		
 		JSONObject itemOne = new JSONObject();
 		itemOne.put("Name", "deadline");
-		itemOne.put("Type", "Deadline");
+		itemOne.put("DueDate", "01 Jul 2015 00:00");
 		itemOne.put("Workload", 1);
 		itemOne.put("ID", deadlineId);
-		itemOne.put("DueDate", "01 Jul 2015 00:00");
+		itemOne.put("Type", "Deadline");
 		expectedJsonArray.add(itemOne);
+		
+		JSONObject itemThree = new JSONObject();
+		itemThree.put("Name", "timed");
+		itemThree.put("Start Time", "01 Jul 2015 00:00");
+		itemThree.put("End Time", "01 Aug 2015 00:00");
+		itemThree.put("Workload", 1);
+		itemThree.put("ID", timedId);
+		itemThree.put("Type", "Timed");
+		expectedJsonArray.add(itemThree);
 		
 		JSONObject itemTwo = new JSONObject();
 		itemTwo.put("Name", "generic");
-		itemTwo.put("Type", "Generic");
 		itemTwo.put("Workload", 1);
 		itemTwo.put("ID", genericId);
+		itemTwo.put("Type", "Generic");
 		expectedJsonArray.add(itemTwo);
-		
-		
-		/*JSONObject itemThree = new JSONObject();
-		itemThree.put("Name", "timed");
-		itemThree.put("Type", "timed");
-		itemThree.put("Workload", 1);
-		itemThree.put("ID", timedId);
-		itemThree.put("Start Time", "01 Jul 2015 00:00");
-		itemThree.put("End Time", "01 Aug 2015 00:00");
-		expectedJsonArray.add(itemThree);*/
 		
 		JSONArray jsonArray = reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH);
 		assertEquals(expectedJsonArray.toString(), jsonArray.toString());
@@ -92,10 +92,14 @@ public class ReaderTest {
 	
 	@Test
 	public void testPopulateTaskLists() {
-		ObservableList<GenericTask> expectedGeneric = FXCollections.observableArrayList();
+		ObservableList<GenericTask> expectedGenericTL = FXCollections.observableArrayList(); 
 		
 		database.addGenericTask("generic", 1);
 		reader.populateTaskLists(reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH));
+		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(database.getObservableGenericTL());
 		
+		expectedGenericTL.add(new GenericTask(new SimpleStringProperty("generic"), new SimpleIntegerProperty(1), genericTL.get(0).getIDAsStringProperty()));
+		
+		assertEquals(expectedGenericTL, genericTL);
 	}
 }
