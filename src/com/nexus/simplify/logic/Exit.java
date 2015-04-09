@@ -8,8 +8,7 @@ package com.nexus.simplify.logic;
 public class Exit {
 	public Exit() {}
 	
-	String execute() {
-		String feedback = "Thank you for using Simplify. See you next time!";
-		return feedback;
+	void execute() {
+		System.exit(0);
 	}
 }
