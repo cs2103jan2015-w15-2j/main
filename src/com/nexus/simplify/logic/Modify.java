@@ -93,6 +93,7 @@ public class Modify {
 			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
 			&& (newFileLocation==null || newFileLocation.isEmpty())){
 			feedback = "Please specify something to modify.";
+			return feedback;
 		}
 		feedback += "modified.";
 		return feedback;
