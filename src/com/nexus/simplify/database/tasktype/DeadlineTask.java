@@ -129,4 +129,13 @@ public class DeadlineTask extends GenericTask {
 	public StringProperty getDTAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableDeadline());
 	}
+	
+	public DeadlineTask getCopy() {
+		StringProperty cName = new SimpleStringProperty(getName());
+		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
+		StringProperty cID = new SimpleStringProperty(getId());
+		DateTime cDeadline = getDeadline();
+		DeadlineTask copy = new DeadlineTask(cName, cDeadline, cWorkload, cID);
+		return copy;
+	}
 }

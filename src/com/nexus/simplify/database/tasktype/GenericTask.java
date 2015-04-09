@@ -170,4 +170,12 @@ public class GenericTask {
 	public IntegerProperty getWorkloadAsIntegerProperty() {
 		return workload;
 	}
+	
+	public GenericTask getCopy() {
+		StringProperty cName = new SimpleStringProperty(getName());
+		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
+		StringProperty cID = new SimpleStringProperty(getId());
+		GenericTask copy = new GenericTask(cName, cWorkload, cID);
+		return copy;
+	}
 }
