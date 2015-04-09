@@ -333,6 +333,7 @@ public class BillboardOverviewController implements Initializable {
 				browseNextCommand();
 				break;
 			case TAB:
+				clearSelectionsInAllTables();
 				jumpToNonEmptyTable(null);
 				break;
 			default:
@@ -502,11 +503,20 @@ public class BillboardOverviewController implements Initializable {
 		String userCommand = userInputField.getText().trim();
 		commandHistory.addCommandToHistory(userCommand);
 		
+		clearSelectionsInAllTables();
+		
+		
 		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
 		feedbackDisplay.setText(feedback);
 		
 		fillTableIndexes();
 		userInputField.clear();
+	}
+
+	private void clearSelectionsInAllTables() {
+		deadlineTaskTable.getSelectionModel().clearSelection();
+		timedTaskTable.getSelectionModel().clearSelection();
+		genericTaskTable.getSelectionModel().clearSelection();
 	}
 	
 	/**
