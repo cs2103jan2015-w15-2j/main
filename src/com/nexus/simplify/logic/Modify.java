@@ -24,13 +24,13 @@ public class Modify {
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to modify.";
+			String feedback = "Please enter a task index to modify.";
 			return feedback;
 		}
 		
 		Database database = MainApp.getDatabase();
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		String feedback = "task ";
+		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
 		if(newName != null && !newName.isEmpty()){
 			database.modifyName(indexToModify, newName);
@@ -67,7 +67,7 @@ public class Modify {
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
 			}catch(NumberFormatException e){
-				return "please enter a valid workload.";
+				return "Please enter a valid workload.";
 			}
 			
 			newWorkload = Integer.parseInt(newWorkloadStr);
@@ -92,7 +92,7 @@ public class Modify {
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
 			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
 			&& (newFileLocation==null || newFileLocation.isEmpty())){
-			feedback = "please specify something to modify.";
+			feedback = "Please specify something to modify.";
 		}
 		feedback += "modified.";
 		return feedback;
@@ -105,7 +105,7 @@ public class Modify {
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		}catch(NumberFormatException e){
-			String feedback = "please enter a task index to modify.";
+			String feedback = "Please enter a task index to modify.";
 			return feedback;
 		}
 		
@@ -132,7 +132,7 @@ public class Modify {
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
 			}catch(NumberFormatException e){
-				feedback = "please enter a valid workload.";
+				feedback = "Please enter a valid workload.";
 				return feedback;
 			}
 			newWorkload = Integer.parseInt(newWorkloadStr);
@@ -141,7 +141,7 @@ public class Modify {
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
 				(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())){
-				feedback = "please specify something to modify.";
+				feedback = "Please specify something to modify.";
 				return feedback;
 		}
 		feedback += "modified.";

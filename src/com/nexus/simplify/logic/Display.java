@@ -1,103 +1,121 @@
+//@author generated
 package com.nexus.simplify.logic;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+//@author A0094457U
 /*
  * This class calls database to display stored tasks
  * in a format chosen by the user. Currently supporting:
- * a number, null(default), all, week, deadline, workload. 
- * @author David Zhao Han
+ * a number, null(default), all, week, deadline, workload, 
+ * done, file location.
  * */
 public class Display {
 	
 	public Display() {}
 		
-	String execute(String[] parameter){
+	String execute(String[] parameter) {
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
 		Database database = MainApp.getDatabase();
-		if(isNumeric(option)){
+		
+		if(isNumeric(option)) {
 			database.toggleDisplay(option);
-			feedback = "displayed " + option + " tasks.";
+			if(Integer.parseInt(option) == 1) {
+				feedback = "Displayed 1 task.";
+			} else {
+				feedback = "Displayed " + option + " tasks.";
+			}
 			return feedback;
-		}
-		else{
+		} else {
 			if (option == null || option.isEmpty()) {
 				database.toggleDisplay("default");
-				feedback = "displayed tasks by default setting.";
+				feedback = "Displayed tasks by default setting.";
 				return feedback;
 			}
-			switch(option){
+			
+			switch (option) {
 				case "all" :
 					database.toggleDisplay(option);
-					feedback = "displayed all tasks.";
+					feedback = "Displayed all tasks.";
 					return feedback;
 					
 				case "week" :
 					database.toggleDisplay(option);
-					feedback = "displayed tasks due within a week.";
+					feedback = "Displayed tasks due within a week.";
 					return feedback;
 				
 				case "deadline" :
 					database.toggleDisplay(option);
-					feedback = "displayed tasks by deadline.";
+					feedback = "Displayed tasks by deadline.";
 					return feedback;
 					
 				case "workload" :
 					database.toggleDisplay(option);
-					feedback = "displayed tasks by workload.";
+					feedback = "Displayed tasks by workload.";
 					return feedback;
 					
 				case "file location" :
-					feedback = "file location displayed.";
+					feedback = "File location: ";
 					feedback += database.getDataFileLocation();
 					return feedback;
 					
+				case "done" :
+					database.toggleDisplay(option);
+					feedback = "Displayed tasks that are done.";
+					return feedback;
+					
 				default :
-					feedback = "invalid option for display, please try again.";
+					feedback = "Invalid option for display, please try again.";
 					return feedback;
 			}
 		}
 	}
 	
-	private static boolean isNumeric(String str){
-	  return str.matches("-?\\d+(\\.\\d+)?");
+	private static boolean isNumeric(String str) {
+		return str.matches("\\d+");	// digits: [0-9]
 	}
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){
+	public String executeForTesting(String[] parameter) {
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
-		if(isNumeric(option)){
-			feedback = "displayed " + option + " tasks.";
+		
+		if(isNumeric(option)) {
+			feedback = "Displayed " + option + " tasks.";
 			return feedback;
-		}
-		else{
+		} else {
 			if (option == null || option.isEmpty()) {
-				feedback = "displayed tasks by default setting.";
+				feedback = "Displayed tasks by default setting.";
 				return feedback;
 			}
-			switch(option){
+			
+			switch (option) {
 				case "all" :
-					feedback = "displayed all tasks.";
+					feedback = "Displayed all tasks.";
 					return feedback;
 					
 				case "week" :
-					feedback = "displayed tasks due within a week.";
+					feedback = "Displayed tasks due within a week.";
 					return feedback;
 				
 				case "deadline" :
-					feedback = "displayed tasks by deadline.";
+					feedback = "Displayed tasks by deadline.";
 					return feedback;
 				
 				case "workload" :
-					feedback = "displayed tasks by workload.";
+					feedback = "Displayed tasks by workload.";
+					return feedback;
+					
+				case "done" :
+					feedback = "Displayed tasks that are done.";
 					return feedback;
 
 				default :
-					feedback = "invalid option for display, please try again.";
+					feedback = "Invalid option for display, please try again.";
 					return feedback;
 			}
 		}

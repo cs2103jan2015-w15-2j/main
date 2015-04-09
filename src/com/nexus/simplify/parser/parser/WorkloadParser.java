@@ -20,7 +20,7 @@ public class WorkloadParser extends TokenParser {
 			String workloadValueString = null;
 			if (tokenList[0].matches("[wW][1-5]")) {
 				workloadString = tokenList[0];
-				workloadString = workloadString.substring(INDEX_START_OF_WORKLOAD);
+				workloadValueString = workloadString.substring(INDEX_START_OF_WORKLOAD);
 			}
 			
 			if (tokenList[tokenList.length - 1].matches("[wW][1-5]")) {
