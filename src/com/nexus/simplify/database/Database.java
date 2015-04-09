@@ -183,15 +183,29 @@ public class Database {
 	}
 	
 	public void undoTask() {
-		setArchivedTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
+		setArchivedTL(state.getArchivedGenericState(), state.getArchivedDeadlineState(), state.getArchivedTimedState());
 		setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 	
+	public void retrieveActiveTasklists() {
+		setObservableTL(activeGenericTL, activeDeadlineTL, activeTimedTL);
+	}
+	
 	public void searchDatabase(String[] parameter, boolean[] searchField) throws java.text.ParseException {
+		if (parameter[1] != null) {
+			searchInName(parameter[1]);
+		} else if (parameter[2] != null) {
+			searchForTime(parameter[2], searchField);
+		} else {
+			searchForWorkload(Integer.valueOf(parameter[4]));
+		}
+	}
+	
+	private void searchForTime(String dateInString, boolean[] searchField) throws java.text.ParseException {
 		String pattern = "E MMM dd HH:mm:ss zzz yyy";
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
-		DateTime date = new DateTime(format.parse(parameter[0]));
+		DateTime date = new DateTime(format.parse(dateInString));
 		Search search = new Search();
 		resultantGenericTL.clear();
 		resultantDeadlineTL.clear();
@@ -223,7 +237,7 @@ public class Database {
 		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
 	}
 	
-	public void searchInName(String term){
+	private void searchInName(String term){
 		Search search = new Search();
 		resultantGenericTL.clear();
 		resultantDeadlineTL.clear();
@@ -235,7 +249,7 @@ public class Database {
 		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
 	}
 	
-	public void searchForWorkload(int workload){
+	private void searchForWorkload(int workload){
 		Search search = new Search();
 		resultantGenericTL.clear();
 		resultantDeadlineTL.clear();
@@ -351,29 +365,58 @@ public class Database {
 	}
 	
 	/**
-	 * Modifies the start time of a task.
-	 * Changes GenericTask to DeadlineTask when start time is added.
+	 * Modifies the start and/or time of a task.
+	 * Convert deadline tasks to timed tasks when start or end time is introduced
+	 * Convert timed tasks to deadline tasks when start or end time is removed
+	 * Convert generic task to deadline or timed task when start and/or end time is introduced
 	 * 
 	 * @param index index of task with respect to the billboard
 	 * @param newStartTime new value of start time to be written to the task
-	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * @param newEndTime new value of end time to be written to the task
+	 * @throws Exception when start time is later than end time
 	 * */
-	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+	public void modifyStartEnd(int index, Date newStartTime, Date newEndTime) throws Exception {
 		saveState();
-		logicRequest.modifyStartTime(index, newStartTime);
-		if (index > this.totalSizeOfAllLists() || index < 1) {
-			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
-		} else {
-			if (index <= observableDeadlineTL.size()) {
+		// logicRequest.modifyStartTime(index, newStartTime);
+		assert index > 1;
+		assert index < this.totalSizeOfAllLists();
+		
+		DateTime startTime = new DateTime(newStartTime);
+		DateTime endTime = new DateTime(newEndTime);
+		
+		if (index <= observableDeadlineTL.size()) {
+			if (newStartTime.equals(newEndTime)) {
 				observableDeadlineTL.get(index - 1).setDeadline(newStartTime);
-			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
-				index = index - observableDeadlineTL.size();
-				observableTimedTL.get(index - 1).setStartTime(newStartTime);
+			} else if (newStartTime.before(newEndTime)){
+				DeadlineTask task = observableDeadlineTL.get(index - 1);
+				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableDeadlineTL.remove(index - 1);
 			} else {
-				index = index - observableDeadlineTL.size() - observableTimedTL.size();
-				GenericTask task = observableGenericTL.get(index - 1);
+				throw new Exception("Please provide a start time that is earlier than the end time.");
+			}
+		} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
+			index = index - observableDeadlineTL.size();
+			TimedTask task = observableTimedTL.get(index - 1);
+			if (newStartTime.equals(newEndTime)) {
+				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), startTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableTimedTL.remove(index - 1);
+			} else if (newStartTime.before(newEndTime)) {
+				task.setStartTime(newStartTime);
+				task.setEndTime(newEndTime);
+			} else {
+				throw new Exception("Please provide a start time that is earlier than the end time.");
+			}
+		} else {
+			index = index - observableDeadlineTL.size() - observableTimedTL.size();
+			GenericTask task = observableGenericTL.get(index - 1);
+			if (newStartTime.equals(newEndTime)) {
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 				observableGenericTL.remove(index - 1);
+			} else if (newStartTime.before(newEndTime)) {
+				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
+				observableGenericTL.remove(index - 1);
+			} else {
+				throw new Exception("Please provide a start time that is earlier than the end time.");
 			}
 		}
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
@@ -388,26 +431,6 @@ public class Database {
 	 * @param newEndTime new value of end time to be written to the task
 	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
 	 * */
-	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
-		saveState();
-		logicRequest.modifyEndTime(index, newEndTime);
-		if (index > this.totalSizeOfAllLists() || index < 1) {
-			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
-		} else {
-			if (index <= observableDeadlineTL.size()) {
-				observableDeadlineTL.get(index - 1).setDeadline(newEndTime);
-			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
-				index = index - observableDeadlineTL.size();
-				observableTimedTL.get(index - 1).setEndTime(newEndTime);
-			} else {
-				index = index - observableDeadlineTL.size() - observableTimedTL.size();
-				GenericTask task = observableGenericTL.get(index - 1);
-				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newEndTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGenericTL.remove(index - 1);
-			}
-		}
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
-	}
 	
 	public void markTaskDone(int indexToMarkDone) {
 		saveState();
