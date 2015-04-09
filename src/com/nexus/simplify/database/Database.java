@@ -278,7 +278,7 @@ public class Database {
 	public void toggleDisplay(String keyword) {
 		if (keyword.equals("done")) {
 			setActiveTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-			setObservableTL(archivedGenericTL, observableDeadlineTL, observableTimedTL);
+			setObservableTL(archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 		} else {
 			setObservableTL(activeGenericTL, activeDeadlineTL, activeTimedTL);
 			if (keyword.equals("deadline")) {
