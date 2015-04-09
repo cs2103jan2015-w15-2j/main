@@ -502,6 +502,11 @@ public class BillboardOverviewController implements Initializable {
 		String userCommand = userInputField.getText().trim();
 		commandHistory.addCommandToHistory(userCommand);
 		
+		deadlineTaskTable.getSelectionModel().clearSelection();
+		timedTaskTable.getSelectionModel().clearSelection();
+		genericTaskTable.getSelectionModel().clearSelection();
+		
+		
 		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
 		feedbackDisplay.setText(feedback);
 		
