@@ -18,11 +18,13 @@ public abstract class TokenParser {
 		assert(usedTokenList.length <= tokenList.length);
 		String[] newTokenList = new String[tokenList.length - usedTokenList.length];
 
-		// Replacing tokens in tokenList with null if they are used
-		for (int i = 0; i < tokenList.length; i++) {
+		// Replacing tokens in temp of TokenList with null if they are used
+		// TokenList is cloned just in case tokenList is to be reused after calling getRemainingTokens method
+		String[] tempTokenList = tokenList.clone();
+		for (int i = 0; i < tempTokenList.length; i++) {
 			for (int j = 0; j < usedTokenList.length; j++) {
 				if (usedTokenList[j].equals(tokenList[i])) {
-					tokenList[i] = null;
+					tempTokenList[i] = null;
 				}
 			}
 		}
@@ -31,9 +33,9 @@ public abstract class TokenParser {
 			return newTokenList;
 		} else {
 			int count = 0;
-			for (int i = 0; i < tokenList.length; i++) {
-				if (tokenList[i] != null) {
-					newTokenList[count] = tokenList[i];
+			for (int i = 0; i < tempTokenList.length; i++) {
+				if (tempTokenList[i] != null) {
+					newTokenList[count] = tempTokenList[i];
 					count++;
 				}
 			}

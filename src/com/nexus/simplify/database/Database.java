@@ -18,12 +18,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.database.Writer;
 import com.nexus.simplify.database.Reader;
+import com.nexus.simplify.parser.parser.DateTimeParser;
 
 @SuppressWarnings("unused")
 
@@ -128,7 +131,6 @@ public class Database {
 	 * */
 	public void addGenericTask(String name, int workload) {
 		saveState();
-		System.out.println("State saved");
 		logicRequest.addGenericTask(name, workload);
 		if (workload == 0) {
 			observableGenericTL.add(new GenericTask(name));
