@@ -475,10 +475,12 @@ public class BillboardOverviewController implements Initializable {
 	
 	private void jumpToNextTableRow(@SuppressWarnings("rawtypes") TableView table) {
 		table.getSelectionModel().selectBelowCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
 	private void jumpToPrevTableRow(@SuppressWarnings("rawtypes") TableView table) {
 		table.getSelectionModel().selectAboveCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
 	private void jumpToUserInputField(@SuppressWarnings("rawtypes") TableView prevTable) {
