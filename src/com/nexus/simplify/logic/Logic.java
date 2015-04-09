@@ -87,7 +87,7 @@ public class Logic implements ILogic {
 		return command;
 	}
 	
-	public OperationType getSavedCommandType(){
+	OperationType getSavedCommandType(){
 		return savedCommandType;
 	}
 }

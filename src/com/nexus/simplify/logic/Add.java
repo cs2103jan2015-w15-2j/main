@@ -16,6 +16,8 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  */
 public class Add {
 	private final String DATE_FORMAT_PATTERN = "E MMM dd HH:mm:ss zzz yyy";
+	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
+	private final String NO_NAME = "Please enter a name for this task.";
 	
 	public Add() {}
 	
@@ -30,6 +32,7 @@ public class Add {
 		int workload;
 		Database database = MainApp.getDatabase();
 		
+		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
 		// this if-else statement caters to workload
 		if (workloadStr == null || workloadStr.isEmpty()) {
 			workload = 0;
@@ -37,30 +40,30 @@ public class Add {
 			try {
 				workload = Integer.parseInt(workloadStr);
 			} catch (NumberFormatException e) {
-				feedback = "Please enter a valid workload.";
+				feedback = INVALID_WORKLOAD;
 				return feedback;
 			}
 		}
 		
 		if(name == null || name.isEmpty()) {
-			feedback = "Please enter a name for this task.";
+			feedback = NO_NAME;
 			return feedback;
 		}
 		
 		if((newStartTime == null || newStartTime.isEmpty()) &&
 		   (newEndTime == null || newEndTime.isEmpty())) {
 			database.addGenericTask(name, workload);
-			feedback = "Successfully added floating task #";
+			feedback =  MESSAGE_TASK_ADDED;
 		} else {
 			if(newStartTime.equals(newEndTime)) {
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-				feedback = "Successfully added deadline task #";
+				feedback = MESSAGE_TASK_ADDED;
 			} else {
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
-				feedback = "Successfully added timed task #";
+				feedback = MESSAGE_TASK_ADDED;
 			}
 		}
 		return feedback;
