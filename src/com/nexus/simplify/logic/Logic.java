@@ -11,6 +11,7 @@ import com.nexus.simplify.parser.api.Parser;
  * with the logic component.
  */
 public class Logic implements ILogic {
+	private final String MESSAGE_INVALID = "Please enter a valid command.";
 	private OperationType savedCommandType;
 	private static Logic theOne;
 	private Parser parser = new Parser();
@@ -74,7 +75,7 @@ public class Logic implements ILogic {
 				exitOp.execute();
 				return null;
 			default:
-				return null;
+				throw new Exception(MESSAGE_INVALID);
 		}
 	}
 	
