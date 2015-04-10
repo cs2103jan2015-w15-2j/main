@@ -1,6 +1,7 @@
 //@author generated
 package com.nexus.simplify.logic;
 
+import com.nexus.simplify.MainApp;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
@@ -29,9 +30,14 @@ public class Logic implements ILogic {
 	public String executeCommand(String userInput) throws Exception {
 		UserCommand command = getParsedCommand(userInput);
 		String feedback;
-		switch (command.getOperationType()) {
+		OperationType operationType = command.getOperationType();
+		switch (operationType) {
 			case ADD :
 				Add addOp = new Add();
+				if(operationType.equals(OperationType.SEARCH)
+					|| operationType.equals(OperationType.DONE)) {
+					MainApp.getDatabase().retrieveActiveTasklist();
+				}
 				feedback = addOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
@@ -42,11 +48,19 @@ public class Logic implements ILogic {
 				return feedback;
 			case MODIFY :
 				Modify modifyOp = new Modify();
+				if(operationType.equals(OperationType.SEARCH)
+					|| operationType.equals(OperationType.DONE)) {
+					MainApp.getDatabase().retrieveActiveTasklist();
+				}
 				feedback = modifyOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
 			case DELETE :
 				Delete deleteOp = new Delete();
+				if(operationType.equals(OperationType.SEARCH)
+					|| operationType.equals(OperationType.DONE)) {
+					MainApp.getDatabase().retrieveActiveTasklist();
+				}
 				feedback = deleteOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
@@ -86,9 +100,5 @@ public class Logic implements ILogic {
 	public UserCommand getParsedCommand(String userInput) throws Exception {
 		UserCommand command = parser.parseInput(userInput);
 		return command;
-	}
-	
-	OperationType getSavedCommandType(){
-		return savedCommandType;
 	}
 }
