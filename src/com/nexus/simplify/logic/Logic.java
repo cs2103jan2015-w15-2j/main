@@ -36,7 +36,7 @@ public class Logic implements ILogic {
 				Add addOp = new Add();
 				if(operationType.equals(OperationType.SEARCH)
 					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				feedback = addOp.execute(command.getParameter());
 				savedCommandType = null;
@@ -50,7 +50,7 @@ public class Logic implements ILogic {
 				Modify modifyOp = new Modify();
 				if(operationType.equals(OperationType.SEARCH)
 					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				feedback = modifyOp.execute(command.getParameter());
 				savedCommandType = null;
@@ -59,7 +59,7 @@ public class Logic implements ILogic {
 				Delete deleteOp = new Delete();
 				if(operationType.equals(OperationType.SEARCH)
 					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				feedback = deleteOp.execute(command.getParameter());
 				savedCommandType = null;
