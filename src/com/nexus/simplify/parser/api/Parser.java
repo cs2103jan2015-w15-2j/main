@@ -1,3 +1,5 @@
+//@author A0111035A
+
 package com.nexus.simplify.parser.api;
 
 import java.io.BufferedReader;
@@ -13,10 +15,6 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 /**
  * 	
- * For V0.1, the input is fixed to be 
- * 
- * <command> "name" <name> "deadline" <deadline> "workload"
- *
  * 
  * Coding Style: 
  * https://docs.google.com/a/nuscomputing.com/document/pub?id=1iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp

@@ -1,3 +1,5 @@
+//@author A0111035A
+
 package com.nexus.simplify.parser.data;
 
 import java.util.Arrays;
