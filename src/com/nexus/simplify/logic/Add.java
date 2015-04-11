@@ -9,7 +9,7 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
-//@author A0094457U 
+//@author A0094457U
 /*
  * This class determines task type and calls database
  * to add a task into the storage.

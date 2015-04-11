@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.unittesting;
 import static org.junit.Assert.*;
 
@@ -5,6 +6,7 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.Delete;
 
+//@author A0094457U
 public class TestDelete {
 	
 	// This method tests boundary cases for unit testing
@@ -17,11 +19,11 @@ public class TestDelete {
 		// for invalid index
 		testParameter = new String[]{"","dummy","dummy","dummy","dummy"};
 		feedback = stubDelete.executeForTesting(testParameter);
-		assertEquals(feedback,"please enter a task index to delete.");
+		assertEquals(feedback,"Please enter a task index to delete.");
 		
 		// for valid command
 		testParameter = new String[]{"5","dummy","dummy","dummy","dummy"};
 		feedback = stubDelete.executeForTesting(testParameter);
-		assertEquals(feedback,"successfully deleted entry #5.");
+		assertEquals(feedback,"Successfully deleted entry #5.");
 	}
 }
