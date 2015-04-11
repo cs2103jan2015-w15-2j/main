@@ -101,7 +101,6 @@ public class MainApp extends Application {
 
 	/**
 	 * Main driver method to start the app.
-	 * 
 	 * */
 	@Override
 	public void start(Stage primaryStage) throws Exception {		

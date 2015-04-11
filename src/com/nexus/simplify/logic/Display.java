@@ -17,6 +17,7 @@ public class Display {
 	public Display() {}
 		
 	String execute(String[] parameter) {
+		final String FILE_LOCATION = "file";
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
 		Database database = MainApp.getDatabase();
@@ -57,7 +58,7 @@ public class Display {
 					feedback = "Displayed tasks by workload.";
 					return feedback;
 					
-				case "file location" :
+				case FILE_LOCATION :
 					feedback = "File location: ";
 					feedback += database.getDataFileLocation();
 					return feedback;

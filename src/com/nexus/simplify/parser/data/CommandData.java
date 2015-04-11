@@ -110,7 +110,6 @@ public class CommandData {
 	private CommandData() {
 		// adding support for all supported commands 
 		cmdHash.put("display", OperationType.DISPLAY);
-		cmdHash.put("d", OperationType.DISPLAY);
 		cmdHash.put("show", OperationType.DISPLAY);
 		cmdHash.put("add", OperationType.ADD);
 		cmdHash.put("a", OperationType.ADD);
@@ -121,11 +120,12 @@ public class CommandData {
 		cmdHash.put("change", OperationType.MODIFY);
 		cmdHash.put("update", OperationType.MODIFY);
 		cmdHash.put("delete", OperationType.DELETE);
-		cmdHash.put("d", OperationType.DELETE);
 		cmdHash.put("remove", OperationType.DELETE);
 		cmdHash.put("done", OperationType.DONE);
 		cmdHash.put("finish", OperationType.DONE);
 		cmdHash.put("clear", OperationType.CLEAR);
+		cmdHash.put("exit", OperationType.EXIT);
+		cmdHash.put("quit", OperationType.EXIT);
 		cmdHash.put("undo", OperationType.UNDO);
 		cmdHash.put("u", OperationType.UNDO);
 		cmdHash.put("search", OperationType.SEARCH);
