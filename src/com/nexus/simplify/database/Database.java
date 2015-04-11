@@ -321,13 +321,19 @@ public class Database {
 			throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 		} else {
 			if (index <= observableDeadlineTL.size()) {
-				observableDeadlineTL.get(index - 1).setName(newName);
+				DeadlineTask modifiedTask = observableDeadlineTL.remove(index-1);
+				modifiedTask.setName(newName);
+				observableDeadlineTL.add(index-1, modifiedTask);
 			} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
 				index = index - observableDeadlineTL.size();
-				observableTimedTL.get(index - 1).setName(newName);
+				TimedTask modifiedTask = observableTimedTL.remove(index-1);
+				modifiedTask.setName(newName);
+				observableTimedTL.add(index-1, modifiedTask);
 			} else {
 				index = index - observableDeadlineTL.size() - observableTimedTL.size();
-				observableGenericTL.get(index - 1).setName(newName);
+				GenericTask modifiedTask = observableGenericTL.remove(index-1);
+				modifiedTask.setName(newName);
+				observableGenericTL.add(index-1, modifiedTask);
 			}
 		}
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL, archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
@@ -351,13 +357,19 @@ public class Database {
 				throw new IndexOutOfBoundsException(MSG_INDEX_OOR);
 			} else {
 				if (index <= observableDeadlineTL.size()) {
-					observableDeadlineTL.get(index - 1).setWorkload(newWorkloadValue);
+					DeadlineTask modifiedTask = observableDeadlineTL.remove(index-1);
+					modifiedTask.setWorkload(newWorkloadValue);
+					observableDeadlineTL.add(index-1, modifiedTask);
 				} else if (index - observableDeadlineTL.size() <= observableTimedTL.size()) {
 					index = index - observableDeadlineTL.size();
-					observableTimedTL.get(index - 1).setWorkload(newWorkloadValue);
+					TimedTask modifiedTask = observableTimedTL.remove(index-1);
+					modifiedTask.setWorkload(newWorkloadValue);
+					observableTimedTL.add(index-1, modifiedTask);
 				} else {
 					index = index - observableDeadlineTL.size() - observableTimedTL.size();
-					observableGenericTL.get(index - 1).setWorkload(newWorkloadValue);
+					GenericTask modifiedTask = observableGenericTL.remove(index-1);
+					modifiedTask.setWorkload(newWorkloadValue);
+					observableGenericTL.add(index-1, modifiedTask);
 				}
 			}
 		}
@@ -386,7 +398,9 @@ public class Database {
 		
 		if (index <= observableDeadlineTL.size()) {
 			if (newStartTime.equals(newEndTime)) {
-				observableDeadlineTL.get(index - 1).setDeadline(newStartTime);
+				DeadlineTask modifiedTask = observableDeadlineTL.remove(index-1);
+				modifiedTask.setDeadline(newStartTime);
+				observableDeadlineTL.add(index-1, modifiedTask);
 			} else if (newStartTime.before(newEndTime)){
 				DeadlineTask task = observableDeadlineTL.get(index - 1);
 				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
@@ -401,8 +415,10 @@ public class Database {
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), startTime, task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
 				observableTimedTL.remove(index - 1);
 			} else if (newStartTime.before(newEndTime)) {
-				task.setStartTime(newStartTime);
-				task.setEndTime(newEndTime);
+				TimedTask modifiedTask = observableTimedTL.remove(index-1);
+				modifiedTask.setStartTime(newStartTime);
+				modifiedTask.setEndTime(newEndTime);
+				observableTimedTL.add(index-1, modifiedTask);
 			} else {
 				throw new Exception("Please provide a start time that is earlier than the end time.");
 			}
