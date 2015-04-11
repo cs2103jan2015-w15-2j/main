@@ -1,7 +1,8 @@
 //@author generated
 package com.nexus.simplify.logic;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -24,9 +25,9 @@ public class Done {
 		}
 		
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		DatabaseConnector databaseConnector = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 
-		databaseConnector.markTaskDone(indexToMarkDone);
+		database.markTaskDone(indexToMarkDone);
 		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
 		return feedback; 
 	}
@@ -34,7 +35,6 @@ public class Done {
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
 	public String executeForTesting(String[] parameter) {
-		@SuppressWarnings("unused")
 		int indexToMarkDone;
 		
 		try {

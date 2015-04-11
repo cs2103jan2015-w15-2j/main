@@ -1,13 +1,14 @@
 package com.nexus.simplify.logic;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
 
 public class Undo {
 	public Undo(){}
 	
 	String execute(){
-		DatabaseConnector databaseConnector = new DatabaseConnector();
-		databaseConnector.undoTask();
+		Database database = MainApp.getDatabase();
+		database.undoTask();
 		String feedback = "Undo operation is successful.";
 		return feedback;
 	}

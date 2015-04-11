@@ -1,8 +1,6 @@
 package com.nexus.simplify.database;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,18 +18,8 @@ import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 
-/**
- * Represents an instance of a reader used to read from JSON formatted file.
- * */
-
 public class Reader {
 
-	/**
-	 * All dates will be shaped according to this format. 
-	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
-	 * */
-	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
-	
 	private static final String TASK_TYPE_TIMED = "Timed";
 	private static final String TASK_TYPE_DEADLINE = "Deadline";
 	private static final String TASK_TYPE_GENERIC = "Generic";
@@ -47,17 +35,19 @@ public class Reader {
 	private static final String JSON_KEY_NAME = "Name";
 	private static final String JSON_KEY_TYPE = "Type";
 	
-	private Database database;
-	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
-
-	//-------------//
-	// Constructor //
-	//-------------//
+	/**
+	 * All dates will be shaped according to this format. 
+	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
+	 * */
+	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
+	
+	Database database;
+	ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
+	ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+	ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
+	ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
+	ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
 	
 	public Reader(Database database) {
 		this.database = database;
@@ -67,13 +57,7 @@ public class Reader {
 	// File Reading //
 	//--------------//
 
-	/**
-	 * Retrieves task lists in JSON array format from given data file.
-	 * 
-	 * @param dataFileName specified file to retrieve data from.
-	 * */
 	public JSONArray retrieveDataFromDataFile(String dataFileName) {
-		
 		JSONArray jsonTaskArray = new JSONArray();
 
 		try {
@@ -90,17 +74,14 @@ public class Reader {
 		}
 
 		return jsonTaskArray;
-		
 	}
 
 	/**
 	 * Populates all three task lists (generic, deadline, timed)
 	 * with their corresponding data obtained from the JSON file.
 	 * 
-	 * @param jsonTaskArray JSON array to retrieve task list from
 	 * */
 	public void populateTaskLists(JSONArray jsonTaskArray) {
-		
 		for (Object object : jsonTaskArray) {
 			JSONObject jsonTask = (JSONObject) object;
 			String taskType = (String) jsonTask.get(JSON_KEY_TYPE);
@@ -127,45 +108,20 @@ public class Reader {
 				// invalid entry; ignore and continue to the next entry
 				break;
 			}
-			
-			database.setObservableGenericTL(observableGenericTL);
 			database.setObservableDeadlineTL(observableDeadlineTL);
+			database.setObservableGenericTL(observableGenericTL);
 			database.setObservableTimedTL(observableTimedTL);
 			database.setArchivedGenericTL(archivedGenericTL);
 			database.setArchivedDeadlineTL(archivedDeadlineTL);
 			database.setArchivedTimedTL(archivedTimedTL);
 		}
-		
 	}
 
 	//------------------//
 	// Populating Lists //
 	//------------------//
 
-
-	private void addGenericTaskToList(JSONObject jsonTask) {
-		
-		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
-		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
-		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		observableGenericTL.add(genericTask);
-		
-	}
-
-	private void addDeadlineTaskToList(JSONObject jsonTask) {
-		
-		DeadlineTask deadlineTask = new DeadlineTask ( 
-				(String)jsonTask.get(JSON_KEY_NAME), 
-				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
-				);
-		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
-		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
-		observableDeadlineTL.add(deadlineTask);
-		
-	}
-	
 	private void addTimedTaskToList(JSONObject jsonTask) {
-		
 		TimedTask timedTask = new TimedTask (
 				(String)jsonTask.get(JSON_KEY_NAME),
 				parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
@@ -175,11 +131,9 @@ public class Reader {
 		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		observableTimedTL.add(timedTask);
-		
 	}
 	
 	private void addArchivedTimedTaskToList(JSONObject jsonTask) {
-		
 		TimedTask timedTask = new TimedTask (
 				(String)jsonTask.get(JSON_KEY_NAME),
 				parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
@@ -189,11 +143,19 @@ public class Reader {
 		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		archivedTimedTL.add(timedTask);
-		
+	}
+
+	private void addDeadlineTaskToList(JSONObject jsonTask) {
+		DeadlineTask deadlineTask = new DeadlineTask ( 
+				(String)jsonTask.get(JSON_KEY_NAME), 
+				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
+				);
+		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableDeadlineTL.add(deadlineTask);
 	}
 	
 	private void addArchivedDeadlineTaskToList(JSONObject jsonTask) {
-		
 		DeadlineTask deadlineTask = new DeadlineTask ( 
 				(String)jsonTask.get(JSON_KEY_NAME), 
 				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
@@ -201,16 +163,20 @@ public class Reader {
 		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		archivedDeadlineTL.add(deadlineTask);
-		
 	}
-	
-	private void addArchivedGenericTaskToList(JSONObject jsonTask) {
-		
+
+	private void addGenericTaskToList(JSONObject jsonTask) {
 		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
 		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
 		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
 		observableGenericTL.add(genericTask);
-		
+	}
+	
+	private void addArchivedGenericTaskToList(JSONObject jsonTask) {
+		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
+		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableGenericTL.add(genericTask);
 	}
 
 	//---------------------//
@@ -225,10 +191,8 @@ public class Reader {
 	 * @return date in DateTime format
 	 * */
 	private DateTime parseDate(String date) {
-		
 		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
 		DateTime dueDate = format.parseDateTime(date);
 		return dueDate;
-		
 	}
 }

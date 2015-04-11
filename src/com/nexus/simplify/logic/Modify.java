@@ -3,7 +3,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 /*
@@ -27,12 +28,12 @@ public class Modify {
 			return feedback;
 		}
 		
-		DatabaseConnector databaseConnector = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
 		if(newName != null && !newName.isEmpty()){
-			databaseConnector.modifyName(indexToModify, newName);
+			database.modifyName(indexToModify, newName);
 			feedback += "name, ";
 		}
 		
@@ -44,7 +45,7 @@ public class Modify {
 			try {
 				startTime = df.parse(newStartTime);
 				endTime = df.parse(newEndTime);
-				databaseConnector.modifyStartEnd(indexToModify, startTime, endTime);
+				database.modifyStartEnd(indexToModify, startTime, endTime);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -64,7 +65,7 @@ public class Modify {
 			
 			newWorkload = Integer.parseInt(newWorkloadStr);
 			try {
-				databaseConnector.modifyWorkload(indexToModify, newWorkload);
+				database.modifyWorkload(indexToModify, newWorkload);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -74,7 +75,7 @@ public class Modify {
 		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
 		if(newFileLocation != null && !newFileLocation.isEmpty()){
 			try {
-				databaseConnector.modifyFileLocation(newFileLocation);
+				database.modifyFileLocation(newFileLocation);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
