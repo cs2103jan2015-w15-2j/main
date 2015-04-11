@@ -39,6 +39,19 @@ public class CommandHistory {
 		downStack = new LinkedList<String>();
 	}
 	
+	//------------------//
+	// Attribute Access //
+	//------------------//
+	
+	public Deque<String> getUpStack() {
+		return upStack;
+	}
+	
+	public Deque<String> getDownStack() {
+		return downStack;
+	}
+	
+	
 	//-----------------------//
 	// Storing User Commands //
 	//-----------------------//
