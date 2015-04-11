@@ -16,6 +16,9 @@ public class NameParser extends TokenParser {
 		if (isTokenListEmpty(tokenList)) {
 			return tokenList;
 		} else {
+			if (enclosedInDoubleQuotes(tokenList)) {
+				tokenList = trimQuotesInTokens(tokenList);
+			}
 			String name = tokenListToStr(tokenList);
 			commandData.setNewName(name);
 			return getRemainingTokens(name, tokenList);

@@ -1,3 +1,4 @@
+//@author A0111035A
 package com.nexus.simplify.parser.parser;
 
 import java.util.Date;
@@ -11,11 +12,18 @@ import com.nexus.simplify.parser.data.CommandData;
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 
+/**
+ * 
+ * This DateTime parser relies heavily on Natty library @ http://natty.joestelmach.com}
+ * 
+ * @author Davis
+ *
+ */
 public class DateTimeParser extends TokenParser {
 	Logger LOGGER = LoggerFactory.getLogger(DateTimeParser.class.getName());
 	Parser natty = new Parser();
 	CommandData commandData = CommandData.getInstance();
-	
+
 	// Key strings to search for in user input parse tree
 	// Used to identify what aspect of time the user is searching for
 	final String YEAR = "YEAR_OF";
@@ -32,7 +40,7 @@ public class DateTimeParser extends TokenParser {
 		} else {
 			String[] remainingValid = tokenList.clone();
 			while (enclosedInDoubleQuotes(remainingValid)) {
-				remainingValid = trimInQuotes(remainingValid);
+				remainingValid = trimTokensInQuotes(remainingValid);
 			}
 			// Convert remaingValid tokens to string to use natty library.
 			String tokenString = tokenListToStr(remainingValid);
@@ -40,47 +48,81 @@ public class DateTimeParser extends TokenParser {
 
 			// Do not proceed with parsing if no DateTime is parsed from tokenString
 			if (groupList.size() <1) {
-				LOGGER.info("No DateTime is parsed.");
-				return tokenList;
-			} else {
-				// Gets a list of all dates in the only group of dates parsed.
-				DateGroup dateGroup = groupList.get(0);
-				List<Date> dates = groupList.get(0).getDates();
-				String stringParsed = dateGroup.getText();
-				LOGGER.info("String parsed: {}", stringParsed);				
-
-				// Ensure that we proceed setting time elements for fully parsed words.
-				// This is because Natty will try to guess the date and time for tokens that "appear" to be valid
-				// We do not second guess the user's input. If an entire word is not parsed by natty, we reject it as a DateTime element
-				while (!isParsedValid(stringParsed, remainingValid)) {
-					// need retrieve the actual correct stringParsed variable
-					String misparsedToken = findFullToken(stringParsed, remainingValid);
-					remainingValid = getRemainingTokens(misparsedToken, remainingValid);
-					String remainingString = tokenListToStr(remainingValid);
-					if (remainingString.equals("")) {
-						// no actual correct DateTime token is found
-						LOGGER.info("No valid DateTime token is found");
-						return tokenList;
+				String invalidTokens = "";
+				// Natty has cornercase bug where it does not detect DateTime elements that 
+				// follows a word containing timezone letters and IN token
+				// for example, add testing 1600, where EST is a timezone and IN is a valid token
+				// other examples are psting 1800, cstin 
+				boolean retrySuccess = false;
+				for (int i = 0; i < remainingValid.length; i++) {
+					String string = remainingValid[i];
+					groupList = natty.parse(string);
+					if (groupList.size() > 0) {
+						retrySuccess = true;
+						invalidTokens = invalidTokens.trim();
+						remainingValid = getRemainingTokens(invalidTokens, remainingValid);
+						break;
+					} else {
+						invalidTokens += " " + remainingValid[i];
 					}
-					groupList = natty.parse(remainingString);
-					dateGroup = groupList.get(0);
-					stringParsed = groupList.get(0).getText();
-					dates = groupList.get(0).getDates();
+				}
+				if (!retrySuccess) {
+					LOGGER.info("No DateTime is parsed.");
+					return tokenList;
+				}
+			}
+			// Gets a list of all dates in the only group of dates parsed.
+			DateGroup dateGroup = groupList.get(0);
+			List<Date> dates = groupList.get(0).getDates();
+			String stringParsed = dateGroup.getText();
+			LOGGER.info("String parsed: {}", stringParsed);				
 
-				} 
+			// Ensure that we proceed setting time elements for fully parsed words.
+			// This is because Natty will try to guess the date and time for tokens that "appear" to be valid
+			// We do not second guess the user's input. If an entire word is not parsed by natty, we reject it as a DateTime element
+			while (!isParsedValid(stringParsed, remainingValid)) {
+				// need retrieve the actual correct stringParsed variable
+				String misparsedToken = findFullToken(stringParsed, remainingValid);
+				remainingValid = getRemainingTokens(misparsedToken, remainingValid);
+				String remainingString = tokenListToStr(remainingValid);
+				groupList = natty.parse(remainingString);
+				if (groupList.size() < 1) {
+					// no actual correct DateTime token is found
+					LOGGER.info("No valid DateTime token is found");
+					return tokenList;
+				}
+				dateGroup = groupList.get(0);				
+				stringParsed = groupList.get(0).getText();
+				dates = groupList.get(0).getDates();
 
-				// Throw exception when user includes too many groups of dates.
-				// e.g ... from 03/04 to 03/05 starting tomorrow
-				if (groupList.size() > 1) {
-					throw new Exception ("Too many groups of temporal elements provided.");
-					// Throw exception when user input a range with too many temporal elements
-					// e.g ... from 03/04 to 03/05 to 03/06
-				} else if (dates.size() > 3) {
-					throw new Exception ("Too many temporal elements in specifed time range");
-				} else {
-					// Finally, depending on the operation, we process the dates (which should be the correct by now...)
-					if (dates.size() == 1) {
-						if (commandData.getUserOp() == OperationType.SEARCH) {
+			} 
+
+			// Throw exception when user includes too many groups of dates.
+			// e.g ... from 03/04 to 03/05 starting tomorrow
+			if (groupList.size() > 1) {
+				throw new Exception ("Too many groups of temporal elements provided.");
+				// Throw exception when user input a range with too many temporal elements
+				// e.g ... from 03/04 to 03/05 to 03/06
+			} else if (dates.size() > 3) {
+				throw new Exception ("Too many temporal elements in specifed time range");
+			} else {
+				// Finally, depending on the operation, we process the dates (which should be the correct by now...)
+				if (dates.size() == 1) {
+					if (commandData.getUserOp() == OperationType.SEARCH) {
+
+						// natty does not support user specifying the year only
+						// we have to support simple "search year XXXX" and "search XXXX year"
+						if (containsYear(tokenList)) {
+							String yearDigits = stringParsed;
+							String forcedFormalDate = "1 Jan " + yearDigits;
+							groupList = natty.parse(forcedFormalDate);		
+							dates = groupList.get(0).getDates();
+							commandData.setTime(dates.get(0).toString());
+							commandData.setYearSearch();
+							// add "year" to list of used tokens
+							stringParsed += " " + "year";
+						} else {
+
 							// By searching the syntax tree produced by natty parser, we can identity what kind
 							// of date or time was explicitly specified by the user
 							String syntaxTree = dateGroup.getSyntaxTree().toStringTree();
@@ -104,62 +146,17 @@ public class DateTimeParser extends TokenParser {
 								commandData.setTime(dates.get(0).toString());
 								commandData.setHourSearch();
 							}
-						} else {
-							commandData.setTime(dates.get(0).toString());
 						}
-					} else if (dates.size() == 2) {
-						commandData.setTime(dates.get(0).toString(), dates.get(1).toString());
+					} else {
+						commandData.setTime(dates.get(0).toString());
 					}
-					return getRemainingTokens(stringParsed, tokenList);
+				} else if (dates.size() == 2) {
+					commandData.setTime(dates.get(0).toString(), dates.get(1).toString());
 				}
+				return getRemainingTokens(stringParsed, tokenList);
 			}
 		}
 	}
-
-	private boolean enclosedInDoubleQuotes(String[] tokenList) {
-		final char DOUBLE_QUOTE = 34;
-		boolean first = false;
-		boolean second = false;
-		String[] temp = tokenList.clone();
-		for (int i = 0; i < temp.length; i++) {
-			String string = temp[i];
-			if (string.charAt(0) == DOUBLE_QUOTE) {
-				first = true;
-			}
-			if (first && string.charAt(string.length()-1) == DOUBLE_QUOTE) {
-				second = true;
-			}
-		}
-		return first&&second;
-	}
-
-	private String[] trimInQuotes(String[] tokenList) {
-		final char DOUBLE_QUOTE = 34;
-		String[] temp = tokenList.clone();
-		int start = -1;
-		int end = -1;
-		for (int i = 0; i < temp.length; i++) {
-			String string = temp[i];
-			if (string.charAt(0) == DOUBLE_QUOTE) {
-				start = i;
-			}
-			if (start >= 0 && string.charAt(string.length()-1) == DOUBLE_QUOTE) {
-				end = i;
-			}
-		}
-		int lengthOfTrimmed = (end - start + 1);
-		String[] remaining = new String[temp.length - lengthOfTrimmed];
-		// keep partition that is left of trimmed
-		for (int i = 0; i < start; i++) {
-			remaining[i] = temp[i];
-		}
-		// keep partition that is right of trimmed
-		for (int i = (end + 1); i < temp.length; i++) {
-			remaining[i - lengthOfTrimmed] = temp[i];
-		}
-		return remaining;
-	}
-
 
 	/**
 	 * Return false if natty parser parsed a word partially.
@@ -195,19 +192,90 @@ public class DateTimeParser extends TokenParser {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String findFullToken(String partialToken, String[] tokenList) throws Exception {
-		// partialToken cannot be more than 1 word
-		assert(partialToken.trim().split("\\s+").length == 1);
+	protected String findFullToken(String partialTokens, String[] tokenList) throws Exception {
+		String[] partialArray = partialTokens.trim().split("\\s+");
 		for (int i = 0; i < tokenList.length; i++) {
-			String current = tokenList[i];
-			if (current.contains(partialToken)) {
-				return current;
+			for (int j = 0; j < partialArray.length; j++) {
+				String currentToken = tokenList[i];
+				String currentPartial = partialArray[j];
+				if (currentToken.equals(currentPartial)) {
+					continue;
+				} else if (currentToken.contains(currentPartial)) {
+					return currentToken;
+				}
+
 			}
 		}
-		LOGGER.warn("findFullToken failed on {} and {}", partialToken, tokenList);
+		LOGGER.warn("findFullToken failed on {} and {}", partialTokens, tokenList);
 		throw new Exception("Partial token given is not found in the provided token list");
 	}
 
+	/**
+	 * getRemainingTokens is modified to ignore tokens enclosed in double quotation marks
+	 * 
+	 * @param tokenList
+	 * @return tokenList without elements usedTokens, ignoring tokens between double quotation marks
+	 */
+	@Override
+	protected String[] getRemainingTokens(String usedTokens, String[] tokenList){
+		assert(usedTokens != null);
+
+		if (usedTokens.equals("")) {
+			return tokenList;
+		}
+
+		boolean ignoreToken = false;
+		String[] usedTokenList = strToTokenList(usedTokens);
+		assert(usedTokenList.length <= tokenList.length);
+		String[] newTokenList = new String[tokenList.length - usedTokenList.length];
+
+		// Replacing tokens in temp of TokenList with null if they are used
+		// TokenList is cloned just in case tokenList is to be reused after calling getRemainingTokens method
+		String[] tempTokenList = tokenList.clone();
+		for (int i = 0; i < tempTokenList.length; i++) {
+			String currentUserToken = tempTokenList[i];
+			// case where single word within double quotes 
+			if (currentUserToken.charAt(0) == DOUBLE_QUOTE && currentUserToken.charAt(currentUserToken.length() - 1) == DOUBLE_QUOTE) {
+				continue;
+			}
+			// case where single word within double quotes
+			if (currentUserToken.charAt(0) == DOUBLE_QUOTE || currentUserToken.charAt(currentUserToken.length() - 1) == DOUBLE_QUOTE) {
+				ignoreToken = !ignoreToken;
+			}
+			if (!ignoreToken) {
+				for (int j = 0; j < usedTokenList.length; j++) {
+					if (usedTokenList[j].equals(tempTokenList[i])) {
+						tempTokenList[i] = null;
+					}
+				}
+			}
+		}
+		// Populating newTokenList with remaining unused tokens
+		if (newTokenList.length == 0) {
+			return newTokenList;
+		} else {
+			int count = 0;
+			for (int i = 0; i < tempTokenList.length; i++) {
+				if (tempTokenList[i] != null) {
+					newTokenList[count] = tempTokenList[i];
+					count++;
+				}
+			}
+			assert(!containsNull(newTokenList));
+			return newTokenList;
+		}
+	}
+
+	private boolean containsYear(String[] tokenList) {
+		final String year = "year";
+		for (int i = 0; i < tokenList.length; i++) {
+			String string = tokenList[i];
+			if (string.equalsIgnoreCase(year)) {
+				return true;
+			}			
+		}
+		return false;
+	}
 
 	//	//List of functions available from natty library
 	//	public static void main(String[] args) {
