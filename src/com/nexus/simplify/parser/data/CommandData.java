@@ -126,6 +126,8 @@ public class CommandData {
 		cmdHash.put("done", OperationType.DONE);
 		cmdHash.put("finish", OperationType.DONE);
 		cmdHash.put("clear", OperationType.CLEAR);
+		cmdHash.put("exit", OperationType.EXIT);
+		cmdHash.put("quit", OperationType.EXIT);
 		cmdHash.put("undo", OperationType.UNDO);
 		cmdHash.put("u", OperationType.UNDO);
 		cmdHash.put("search", OperationType.SEARCH);
