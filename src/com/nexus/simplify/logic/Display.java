@@ -1,8 +1,7 @@
 //@author generated
 package com.nexus.simplify.logic;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -19,10 +18,10 @@ public class Display {
 	String execute(String[] parameter) {
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
-		Database database = MainApp.getDatabase();
+		DatabaseConnector databaseConnector = new DatabaseConnector();
 		
 		if(isNumeric(option)) {
-			database.toggleDisplay(option);
+			databaseConnector.toggleDisplay(option);
 			if(Integer.parseInt(option) == 1) {
 				feedback = "Displayed 1 task.";
 			} else {
@@ -31,39 +30,39 @@ public class Display {
 			return feedback;
 		} else {
 			if (option == null || option.isEmpty()) {
-				database.toggleDisplay("default");
+				databaseConnector.toggleDisplay("default");
 				feedback = "Displayed tasks by default setting.";
 				return feedback;
 			}
 			
 			switch (option) {
 				case "all" :
-					database.toggleDisplay(option);
+					databaseConnector.toggleDisplay(option);
 					feedback = "Displayed all tasks.";
 					return feedback;
 					
 				case "week" :
-					database.toggleDisplay(option);
+					databaseConnector.toggleDisplay(option);
 					feedback = "Displayed tasks due within a week.";
 					return feedback;
 				
 				case "deadline" :
-					database.toggleDisplay(option);
+					databaseConnector.toggleDisplay(option);
 					feedback = "Displayed tasks by deadline.";
 					return feedback;
 					
 				case "workload" :
-					database.toggleDisplay(option);
+					databaseConnector.toggleDisplay(option);
 					feedback = "Displayed tasks by workload.";
 					return feedback;
 					
 				case "file location" :
 					feedback = "File location: ";
-					feedback += database.getDataFileLocation();
+					feedback += databaseConnector.getDataFileLocation();
 					return feedback;
 					
 				case "done" :
-					database.toggleDisplay(option);
+					databaseConnector.toggleDisplay(option);
 					feedback = "Displayed tasks that are done.";
 					return feedback;
 					

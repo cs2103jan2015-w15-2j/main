@@ -5,8 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U 
@@ -30,7 +29,7 @@ public class Add {
 		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
 		String feedback;
 		int workload;
-		Database database = MainApp.getDatabase();
+		DatabaseConnector databaseConnector = new DatabaseConnector();
 		
 		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
 		// this if-else statement caters to workload
@@ -52,17 +51,17 @@ public class Add {
 		
 		if((newStartTime == null || newStartTime.isEmpty()) &&
 		   (newEndTime == null || newEndTime.isEmpty())) {
-			database.addGenericTask(name, workload);
+			databaseConnector.addGenericTask(name, workload);
 			feedback =  MESSAGE_TASK_ADDED;
 		} else {
 			if(newStartTime.equals(newEndTime)) {
 				Date deadline = df.parse(newStartTime);
-				database.addDeadlineTask(name,deadline,workload);
+				databaseConnector.addDeadlineTask(name,deadline,workload);
 				feedback = MESSAGE_TASK_ADDED;
 			} else {
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
-				database.addTimedTask(name,startTime,endTime,workload);
+				// databaseConnector.addTimedTask(name,startTime,endTime,workload);
 				feedback = MESSAGE_TASK_ADDED;
 			}
 		}
