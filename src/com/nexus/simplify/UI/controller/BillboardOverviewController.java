@@ -36,6 +36,10 @@ import javafx.scene.input.KeyEvent;
  * </ol>
  * */
 public class BillboardOverviewController implements Initializable {
+	private static final int INDEX_OFFSET = 1;
+
+	private static final String EMPTY_STRING = "";
+
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
 	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
@@ -176,41 +180,56 @@ public class BillboardOverviewController implements Initializable {
 	 * */
 	public void initBillboard() {
 		fillTablesWithData();
+		setTablesToListenForChanges();
 		displayWelcomeMessage();
-		
+	}
+	
+	private void setTablesToListenForChanges() {
 		deadlineTaskTable.getItems().addListener(
-				new ListChangeListener<DeadlineTask>() {
+			new ListChangeListener<DeadlineTask>() {
 				@Override
-				public void onChanged(
-					javafx.collections.ListChangeListener.Change<? extends DeadlineTask> arg0) {
-				    	deadlineTaskTable.scrollTo(deadlineTaskTable.getItems().size() - 1);
-				    	deadlineTaskTable.getSelectionModel().selectLast();
-				    } 				
-				}
-			);
-			
-			timedTaskTable.getItems().addListener(
-					new ListChangeListener<TimedTask>() {
-					@Override
-					public void onChanged(
-						javafx.collections.ListChangeListener.Change<? extends TimedTask> arg0) {
-					    	timedTaskTable.scrollTo(timedTaskTable.getItems().size() - 1);
-					    	timedTaskTable.getSelectionModel().selectLast();
-					    } 				
-					}
-			);
-			
-			genericTaskTable.getItems().addListener(
-					new ListChangeListener<GenericTask>() {
-					@Override
-					public void onChanged(
-						javafx.collections.ListChangeListener.Change<? extends GenericTask> arg0) {
-					    	genericTaskTable.scrollTo(genericTaskTable.getItems().size() - 1);
-					    	genericTaskTable.getSelectionModel().selectLast();
-					    } 					
-					}
-			);
-			
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends DeadlineTask> change) {
+					change.next(); // transit to the next instance of change
+					
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
+						deadlineTaskTable.scrollTo(locationIndexOfChange);
+						deadlineTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+			    } 				
+			}
+		);
+		
+		timedTaskTable.getItems().addListener(
+			new ListChangeListener<TimedTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TimedTask> change) {
+					change.next();
+						
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
+						timedTaskTable.scrollTo(locationIndexOfChange);
+						timedTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+					
+			    } 				
+			}
+		);
+		
+		genericTaskTable.getItems().addListener(
+			new ListChangeListener<GenericTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends GenericTask> change) {
+					change.next();		
+					
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
+						genericTaskTable.scrollTo(locationIndexOfChange);
+						genericTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+			    } 						
+			}
+		);
 	}
 
 	/**
@@ -258,7 +277,7 @@ public class BillboardOverviewController implements Initializable {
 				protected void updateItem(Integer index, boolean empty) {
 					if (index == null || empty) {
 						setText(null);
-						setStyle("");
+						setStyle(EMPTY_STRING);
 					} else {
 						setText(String.valueOf(getIndex() 
 											   + DEADLINE_TASK_COL_INDEX_OFFSET 
@@ -277,7 +296,7 @@ public class BillboardOverviewController implements Initializable {
 				protected void updateItem(Integer index, boolean empty) {
 					if (index == null || empty) {
 						setText(null);
-						setStyle("");
+						setStyle(EMPTY_STRING);
 					} else {
 						setText(String.valueOf(getIndex() 
 												+ DEADLINE_TASK_COL_INDEX_OFFSET 
@@ -295,7 +314,7 @@ public class BillboardOverviewController implements Initializable {
 				protected void updateItem(Integer index, boolean empty) {
 					if (index == null || empty) {
 						setText(null);
-						setStyle("");
+						setStyle(EMPTY_STRING);
 					} else {
 						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
 					}
@@ -333,6 +352,7 @@ public class BillboardOverviewController implements Initializable {
 				browseNextCommand();
 				break;
 			case TAB:
+				clearSelectionsInAllTables();
 				jumpToNonEmptyTable(null);
 				break;
 			default:
@@ -475,10 +495,12 @@ public class BillboardOverviewController implements Initializable {
 	
 	private void jumpToNextTableRow(@SuppressWarnings("rawtypes") TableView table) {
 		table.getSelectionModel().selectBelowCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
 	private void jumpToPrevTableRow(@SuppressWarnings("rawtypes") TableView table) {
 		table.getSelectionModel().selectAboveCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
 	private void jumpToUserInputField(@SuppressWarnings("rawtypes") TableView prevTable) {
@@ -500,11 +522,20 @@ public class BillboardOverviewController implements Initializable {
 		String userCommand = userInputField.getText().trim();
 		commandHistory.addCommandToHistory(userCommand);
 		
+		clearSelectionsInAllTables();
+		
+		
 		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
 		feedbackDisplay.setText(feedback);
 		
 		fillTableIndexes();
 		userInputField.clear();
+	}
+
+	private void clearSelectionsInAllTables() {
+		deadlineTaskTable.getSelectionModel().clearSelection();
+		timedTaskTable.getSelectionModel().clearSelection();
+		genericTaskTable.getSelectionModel().clearSelection();
 	}
 	
 	/**
@@ -513,7 +544,7 @@ public class BillboardOverviewController implements Initializable {
 	 * */
 	private void browsePreviousCommand() {
 		String previousCommandHistory = commandHistory.browsePreviousCommand();
-		if (!previousCommandHistory.equals("")) {
+		if (!previousCommandHistory.equals(EMPTY_STRING)) {
 			userInputField.setText(previousCommandHistory);
 		}
 	}

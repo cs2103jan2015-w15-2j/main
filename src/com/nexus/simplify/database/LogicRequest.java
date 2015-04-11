@@ -159,25 +159,14 @@ public class LogicRequest {
 	 *  
 	 * @param index index of task with respect to the billboard
 	 * @param newStartTime new value of start time to be written to the task
-	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
+	 * @param newEndTime new value of end time to be written to the task
+	 * @throws Exception if the start time is later than the end time
 	 * */
-	public void modifyStartTime(int index, Date newStartTime) throws IndexOutOfBoundsException {
+	public void modifyStartEnd(int index, Date newStartTime, Date newEndTime) throws Exception {
+		LOGGER.info("modifyStartTime is called. Index: {}, StartTime: {}, EndTime: {}", index, newStartTime, newEndTime);
 		setOperationType(_modifyOp);
 		setIndex(index);
 		setStartTime(newStartTime);
-	}
-	
-	/**
-	 * Track the parameter called onto modifyEndTime in Database.
-	 * 
-	 * @param index index of task with respect to the billboard
-	 * @param newEndTime new value of end time to be written to the task
-	 * @throws IndexOutofBoundsException if index is not within range of 1 - 15 inclusive
-	 * */
-	public void modifyEndTime(int index, Date newEndTime) throws IndexOutOfBoundsException {
-		LOGGER.info("modifyEndTime is called. Index: {}, EndTime: {}", index, newEndTime);
-		setOperationType(_modifyOp);
-		setIndex(index);
 		setEndTime(newEndTime);
 	}
 	

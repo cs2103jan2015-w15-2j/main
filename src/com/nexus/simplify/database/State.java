@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import com.nexus.simplify.database.tasktype.*;
 
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class State {
 	}
 	
 	public void saveState(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL, ObservableList<TimedTask> timedTL, ObservableList<GenericTask> archivedGenericTL, ObservableList<DeadlineTask> archivedDeadlineTL, ObservableList<TimedTask> archivedTimedTL) {
-		fixedGenericTL = FXCollections.observableArrayList(genericTL);
+		fixedGenericTL = copyGenericTL(genericTL);
 		/*deadlineLimit = deadlineTL.size();
 		DeadlineTask deadlineT;
 		assert !deadlineTL.isEmpty();
@@ -40,11 +41,11 @@ public class State {
 			deadlineT = new DeadlineTask(deadlineTask.getNameAsStringProperty(), deadlineTask.getDeadline(), deadlineTask.getWorkloadAsIntegerProperty(), deadlineTask.getIDAsStringProperty());
 			fixedDeadlineTL.add(deadlineT);
 		}*/
-		fixedDeadlineTL= FXCollections.observableArrayList(deadlineTL);
-		fixedTimedTL = FXCollections.observableArrayList(timedTL);
-		fixedArchivedGenericTL  = FXCollections.observableArrayList(archivedGenericTL);
-		fixedArchivedDeadlineTL = FXCollections.observableArrayList(archivedDeadlineTL);
-		fixedArchivedTimedTL = FXCollections.observableArrayList(archivedTimedTL);
+		fixedDeadlineTL= copyDeadlineTL(deadlineTL);
+		fixedTimedTL = copyTimedTL(timedTL);
+		fixedArchivedGenericTL  = copyGenericTL(archivedGenericTL);
+		fixedArchivedDeadlineTL = copyDeadlineTL(archivedDeadlineTL);
+		fixedArchivedTimedTL = copyTimedTL(archivedTimedTL);
 		genericTLState.push(fixedGenericTL);
 		deadlineTLState.push(fixedDeadlineTL);
 		timedTLState.push(fixedTimedTL);
@@ -89,4 +90,32 @@ public class State {
 		LOGGER.info("Archived timed state retrieved");
 		return timedTLState.pop();
 	}
+	
+	private ObservableList<GenericTask> copyGenericTL(ObservableList<GenericTask> genericTL) {
+		ObservableList<GenericTask> copy = FXCollections.observableArrayList();
+		for (GenericTask genericTask : genericTL) {
+			GenericTask taskCopy = genericTask.getCopy();
+			copy.add(taskCopy);
+		}
+		return copy;
+	}
+	
+	private ObservableList<DeadlineTask> copyDeadlineTL(ObservableList<DeadlineTask> deadlineTL) {
+		ObservableList<DeadlineTask> copy = FXCollections.observableArrayList();
+		for (DeadlineTask deadlineTask : deadlineTL) {
+			DeadlineTask taskCopy = deadlineTask.getCopy();
+			copy.add(taskCopy);
+		}
+		return copy;
+	}
+	
+	private ObservableList<TimedTask> copyTimedTL(ObservableList<TimedTask> timedTL) {
+		ObservableList<TimedTask> copy = FXCollections.observableArrayList();
+		for (TimedTask timedTask : timedTL) {
+			TimedTask taskCopy = timedTask.getCopy();
+			copy.add(taskCopy);
+		}
+		return copy;
+	}
+
 }
