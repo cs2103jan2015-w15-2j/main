@@ -99,6 +99,30 @@ public class DatabaseConnector implements IDatabaseConnector {
 		return logicRequest;
 	}
 	
+	public ObservableList<GenericTask> getObservableGenericTL() {
+		return observableGenericTL;
+	}
+
+	public ObservableList<TimedTask> getObservableTimedTL() {
+		return observableTimedTL;
+	}
+
+	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
+		return observableDeadlineTL;
+	}
+
+	public ObservableList<GenericTask> getArchivedGenericTL() {
+		return archivedGenericTL;
+	}
+
+	public ObservableList<TimedTask> getArchivedTimedTL() {
+		return archivedTimedTL;
+	}
+
+	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
+		return archivedDeadlineTL;
+	}
+	
 	//---------------//
 	// API for Logic //
 	//---------------//

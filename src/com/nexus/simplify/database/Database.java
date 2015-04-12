@@ -124,6 +124,7 @@ public class Database {
 	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
 		return this.archivedDeadlineTL;
 	}
+	
 	public State getState() {
 		return this.state;
 	}
