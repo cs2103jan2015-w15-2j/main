@@ -1,6 +1,7 @@
 package com.nexus.simplify.database;
 
 import java.util.*;
+import java.io.IOException;
 import java.text.*;
 
 import javafx.collections.FXCollections;
@@ -22,16 +23,16 @@ public class DatabaseConnector implements IDatabaseConnector {
 	
 	private Database database;
 	private Search search = new Search();
-	private State state = database.getState();
-	private Writer writer = new Writer(database);
+	private State state;
+	private Writer writer;	
 	private LogicRequest logicRequest = new LogicRequest();
 
-	private ObservableList<GenericTask> archivedGenericTL = database.getArchivedGenericTL();
-	private ObservableList<DeadlineTask> archivedDeadlineTL = database.getArchivedDeadlineTL();
-	private ObservableList<TimedTask> archivedTimedTL = database.getArchivedTimedTL();
-	private ObservableList<GenericTask> observableGenericTL = database.getObservableGenericTL();
-	private ObservableList<DeadlineTask> observableDeadlineTL = database.getObservableDeadlineTL();
-	private ObservableList<TimedTask> observableTimedTL = database.getObservableTimedTL();
+	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
 	private ObservableList<GenericTask> resultantGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> resultantDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> resultantTimedTL = FXCollections.observableArrayList();
@@ -44,11 +45,31 @@ public class DatabaseConnector implements IDatabaseConnector {
 	//-------------//
 	
 	public DatabaseConnector() {
+		
 		this.database = MainApp.getDatabase();
+		state = database.getState();
+		writer = new Writer(database);
+		archivedGenericTL = database.getArchivedGenericTL();
+		archivedDeadlineTL = database.getArchivedDeadlineTL();
+		archivedTimedTL = database.getArchivedTimedTL();
+		observableGenericTL = database.getObservableGenericTL();
+		observableDeadlineTL = database.getObservableDeadlineTL();
+		observableTimedTL = database.getObservableTimedTL();
+		
 	}
 	
 	public DatabaseConnector(Database database) {
+		
 		this.database = database;
+		state = database.getState();
+		writer = new Writer(database);
+		archivedGenericTL = database.getArchivedGenericTL();
+		archivedDeadlineTL = database.getArchivedDeadlineTL();
+		archivedTimedTL = database.getArchivedTimedTL();
+		observableGenericTL = database.getObservableGenericTL();
+		observableDeadlineTL = database.getObservableDeadlineTL();
+		observableTimedTL = database.getObservableTimedTL();
+	
 	}
 	
 	//---------------//
@@ -440,7 +461,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 	}
 
 	// check if there is missing backslash
-	public void modifyFileLocation(String newFileLocation) {
+	public void modifyFileLocation(String newFileLocation) throws IOException {
 		database.setDataFileLocation(newFileLocation);
 	}
 	

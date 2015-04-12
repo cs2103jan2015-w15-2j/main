@@ -5,14 +5,9 @@
 package com.nexus.simplify.database;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-
-
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -69,7 +64,7 @@ public class Database {
 	// Initialization //
 	//----------------//
 
-	public void initDatabase() {
+	public void initDatabase() throws IOException {
 		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		if (!configFileExists(configFilePath)) {
 			createNewFile(configFilePath);
@@ -161,16 +156,13 @@ public class Database {
 		this.archivedDeadlineTL = deadline;
 	}
 
-	public void setDataFileLocation(String newFileLocation) {
-		Path path = Paths.get(newFileLocation);
-		Path newAddressPath = path.getRoot();
+	public void setDataFileLocation(String newFileLocation) throws IOException {
+				
+		file = new File(newFileLocation + DEFAULT_FILE_NAME);
+		file.mkdirs();
+		file.createNewFile();
+		dataFileLocation = newFileLocation;
 		
-		for (int i = 0; i < path.getNameCount(); i++) {
-			Path partialPath = path.getName(i);
-			newAddressPath.resolve(partialPath);
-		}
-		
-		file = new File(newAddressPath.toString() + DEFAULT_FILE_NAME);
 	}
 
 	/**
@@ -222,8 +214,9 @@ public class Database {
 	/**
 	 * sets the location of the data file to its default location
 	 * and stores the default settings into the configuration file.
+	 * @throws IOException 
 	 * */
-	private void revertToDefaultSettings() {
+	private void revertToDefaultSettings() throws IOException {
 		this.setDataFileLocation(DEFAULT_DATA_FILE_LOCATION);
 		storeSettingsIntoConfigFile(DEFAULT_DATA_FILE_LOCATION);
 	}

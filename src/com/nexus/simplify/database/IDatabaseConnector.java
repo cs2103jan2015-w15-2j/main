@@ -1,5 +1,6 @@
 package com.nexus.simplify.database;
 
+import java.io.IOException;
 import java.util.Date;
 
 public interface IDatabaseConnector {
@@ -17,7 +18,7 @@ public interface IDatabaseConnector {
 	void modifyWorkload(int index, int newWorkloadValue);
 	void modifyStartEnd(int index, Date newStartTime, Date newEndTime) throws Exception;
 	void markTaskDone(int indexToMarkDone);
-	void modifyFileLocation(String newFileLocation);
+	void modifyFileLocation(String newFileLocation) throws IOException;
 	String getDataFileLocation();
 	
 }

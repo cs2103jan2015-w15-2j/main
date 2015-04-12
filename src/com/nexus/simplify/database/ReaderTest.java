@@ -37,9 +37,9 @@ public class ReaderTest {
 		try {
 			database = new Database();
 			databaseConnector = new DatabaseConnector(database);
-			databaseConnector.clearContent();
 			reader = new Reader(database);
 			DATA_FILE_PATH = database.getDataFilePath();
+			System.out.println(DATA_FILE_PATH);
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -70,8 +70,13 @@ public class ReaderTest {
 		String genericId = database.getObservableGenericTL().get(0).getId();
 		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
 		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
-		// databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
-		// String timedId = database.getObservableTimedTL().get(0).getId();
+		try {
+			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String timedId = database.getObservableTimedTL().get(0).getId();
 		
 		JSONObject itemOne = new JSONObject();
 		itemOne.put("Name", "generic");
@@ -88,14 +93,14 @@ public class ReaderTest {
 		itemTwo.put("Type", "Deadline");
 		expectedJsonArray.add(itemTwo);
 		
-		/*JSONObject itemThree = new JSONObject();
+		JSONObject itemThree = new JSONObject();
 		itemThree.put("Name", "timed");
 		itemThree.put("Start Time", "01 Jul 2015 00:00");
 		itemThree.put("End Time", "01 Aug 2015 00:00");
 		itemThree.put("Workload", 1);
 		itemThree.put("ID", timedId);
 		itemThree.put("Type", "Timed");
-		expectedJsonArray.add(itemThree);*/
+		expectedJsonArray.add(itemThree);
 		
 		JSONArray jsonArray = reader.retrieveDataFromDataFile(DATA_FILE_PATH);
 		assertEquals(expectedJsonArray.toString(), jsonArray.toString());
@@ -108,19 +113,24 @@ public class ReaderTest {
 		
 		ObservableList<GenericTask> expectedGenericTL = FXCollections.observableArrayList(); 
 		ObservableList<DeadlineTask> expectedDeadlineTL = FXCollections.observableArrayList();
-		// ObservableList<TimedTask> expectedTimedTL = FXCollections.observableArrayList();
+		ObservableList<TimedTask> expectedTimedTL = FXCollections.observableArrayList();
 		
 		databaseConnector.addGenericTask("generic", 1);
 		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
-		// databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		try {
+			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		reader.populateTaskLists(reader.retrieveDataFromDataFile(DATA_FILE_PATH));
 		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(database.getObservableGenericTL());
 		ObservableList<DeadlineTask> deadlineTL = FXCollections.observableArrayList(database.getObservableDeadlineTL());
-		// ObservableList<TimedTask> timedTL = FXCollections.observableArrayList();
+		ObservableList<TimedTask> timedTL = FXCollections.observableArrayList();
 		
 		expectedGenericTL.add(new GenericTask(new SimpleStringProperty("generic"), new SimpleIntegerProperty(1), genericTL.get(0).getIDAsStringProperty()));
 		expectedDeadlineTL.add(new DeadlineTask(new SimpleStringProperty("deadline"), new Date(115, 6, 1), new SimpleIntegerProperty(1), deadlineTL.get(0).getIDAsStringProperty()));
-		// expectedTimedTL.add(new TimedTask(new SimpleStringProperty("timed"), new DateTime(new Date(115, 6, 1)), new DateTime(new Date(115, 7, 1)), new SimpleIntegerProperty(1), deadlineTL.get(0).getIDAsStringProperty()));
+		expectedTimedTL.add(new TimedTask(new SimpleStringProperty("timed"), new DateTime(new Date(115, 6, 1)), new DateTime(new Date(115, 7, 1)), new SimpleIntegerProperty(1), deadlineTL.get(0).getIDAsStringProperty()));
 		
 		for (GenericTask generic: genericTL) {
 			int index = genericTL.indexOf(generic);
@@ -137,14 +147,14 @@ public class ReaderTest {
 			assertEquals(deadline.getId(), expectedDeadlineTL.get(index).getId());
 		}
 		
-		/*for (TimedTask timed: timedTL) {
+		for (TimedTask timed: timedTL) {
 			int index = timedTL.indexOf(timed);
 			assertEquals(timed.getName(), expectedTimedTL.get(index).getName());
 			assertEquals(timed.getReadableStartTime(), expectedTimedTL.get(index).getReadableStartTime());
 			assertEquals(timed.getReadableEndTime(), expectedTimedTL.get(index).getReadableEndTime());
 			assertEquals(timed.getWorkload(), expectedTimedTL.get(index).getWorkload());
 			assertEquals(timed.getId(), expectedTimedTL.get(index).getId());
-		}*/
+		}
 		
 	}
 	
