@@ -1,5 +1,6 @@
 package com.nexus.simplify.logic.usercommand;
 
+//@author A0094457U
 public class ParameterType {
 	/**
 	 * An object to hold properties of parameter array passed from parser to logic

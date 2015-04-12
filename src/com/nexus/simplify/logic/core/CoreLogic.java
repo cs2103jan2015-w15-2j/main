@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.core;
 
 import java.util.logging.Level;
@@ -6,6 +7,11 @@ import java.util.logging.Logger;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.OperationType;
 
+//@author A0094457U
+/*
+ * This class acts as a switch for different type of operations and creates
+ * classes related to specific operations to operate on parameters passed.
+ */
 public class CoreLogic {
 	private final String MESSAGE_INVALID = "Please enter a valid command.";
 	private static Logger logger = Logger.getLogger("Logic");

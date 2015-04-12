@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.core;
 
 import java.text.ParseException;
@@ -5,6 +6,10 @@ import java.text.ParseException;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
+//@author A0094457U
+/*
+ * This class calls database to search for something.
+ */
 public class Search {
 	
 	public Search() {}
