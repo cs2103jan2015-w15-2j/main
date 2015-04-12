@@ -4,6 +4,9 @@ package com.nexus.simplify.UI.commandhistory;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Serves as a cache to store commands previously entered by the user
  * so that the user can access and modify them easily, rather
@@ -17,6 +20,16 @@ import java.util.LinkedList;
  * */
 public class CommandHistory {
 	
+	private static final String LOGGER_INFO_USER_COMMAND_ADDED = "User command added to command history: {}";
+
+	private static final String LOGGER_INFO_NEXT_COMMAND_ACCESSED = "Next command in command history accessed: {}";
+
+	private static final String LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED = "Previous command in command history accessed: {}";
+
+	private static final String LOGGER_WARNING_DOWNSTACK_EMPTY = "downStack is empty";
+
+	private static final String LOGGER_WARNING_UPSTACK_EMPTY = "upStack is empty";
+
 	private static final String EMPTY_STRING = "";
 	
 	//-----------------//
@@ -30,6 +43,8 @@ public class CommandHistory {
 	private Deque<String> upStack;
 	private Deque<String> downStack;
 	
+	private Logger logger;
+	
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -37,6 +52,8 @@ public class CommandHistory {
 	public CommandHistory() {
 		upStack = new LinkedList<String>();
 		downStack = new LinkedList<String>();
+		
+		logger = LoggerFactory.getLogger(CommandHistory.class.getName());
 	}
 	
 	//------------------//
@@ -64,9 +81,11 @@ public class CommandHistory {
 		if (!upStack.isEmpty()) {
 			if (!userCommand.equals(upStack.peek())) {
 				upStack.push(userCommand);
+				logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
 			}
 		} else {
 			upStack.push(userCommand);
+			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
 		}
 	}
 	
@@ -89,10 +108,12 @@ public class CommandHistory {
 	 * */
 	public String browsePreviousCommand() {
 		if (!upStack.isEmpty()) {
-			String commandToBeShown = upStack.peek();
-			downStack.push(upStack.pop());
+			String commandToBeShown = upStack.pop();
+			logger.info(LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED, commandToBeShown);
+			downStack.push(commandToBeShown);
 			return commandToBeShown;	
 		} else {
+			logger.warn(LOGGER_WARNING_UPSTACK_EMPTY);
 			return EMPTY_STRING;
 		}
 	}
@@ -108,11 +129,15 @@ public class CommandHistory {
 		if (!downStack.isEmpty()) {
 			upStack.push(downStack.pop());
 			if (!downStack.isEmpty()) {
+				String commandToBeShown = downStack.peek();
+				logger.info(LOGGER_INFO_NEXT_COMMAND_ACCESSED, commandToBeShown);
 				return downStack.peek();
 			} else  {
+				logger.warn(LOGGER_WARNING_DOWNSTACK_EMPTY);
 				return EMPTY_STRING;
 			}
 		} else {
+			logger.warn(LOGGER_WARNING_DOWNSTACK_EMPTY);
 			return EMPTY_STRING;
 		}
 	}

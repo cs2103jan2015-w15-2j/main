@@ -5,6 +5,9 @@ package com.nexus.simplify.UI.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.UI.commandhistory.CommandHistory;
 import com.nexus.simplify.database.Database;
@@ -34,15 +37,23 @@ import javafx.scene.input.KeyEvent;
  *  - generic tasks
  * */
 public class BillboardOverviewController implements Initializable {
+	private static final String LOGGER_ERROR_PROCESSING_FAILED = "Feedback from logic (input processing failed): {}";
+
+	private static final String LOGGER_INFO_PROCESSING_SUCCESSFUL = "Feedback from logic (input processing successful): {}";
+
 	private static final int INDEX_OF_FIRST_ROW_IN_TABLE = 0;
+	
 	private static final int GENERIC_TASK_TABLE_VISIBLE_ROW_SIZE = 15;
 	private static final int DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE = 7;
-	private static final String WARNING_SUPPRESSION_RAWTYPES = "rawtypes";
-	private static final String EMPTY_STRING = "";
-	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+	private static final int TIMED_TASK_TABLE_VISIBLE_ROW_SIZE = 7;
 	
 	private static final int LIST_INDEX_OFFSET = 1;
 	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
+	
+	private static final String WARNING_SUPPRESSION_RAWTYPES = "rawtypes";
+	private static final String EMPTY_STRING = "";
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+
 	
 	//------------------//
 	// Class Attributes //
@@ -59,6 +70,9 @@ public class BillboardOverviewController implements Initializable {
 	int previousDeadlineTaskTableRowIndex;
 	int previousTimedTaskTableRowIndex;
 	int previousGenericTaskTableRowIndex;
+	
+	// logging purposes
+	Logger logger;
 	
 	
 	// Attributes of the table displaying deadline-based tasks.
@@ -166,6 +180,8 @@ public class BillboardOverviewController implements Initializable {
 		previousDeadlineTaskTableRowIndex = 0;
 		previousTimedTaskTableRowIndex = 0;
 		previousGenericTaskTableRowIndex = 0;
+		
+		logger = LoggerFactory.getLogger(BillboardOverviewController.class.getName());
 		
 		commandHistory = new CommandHistory();
 		initDeadlineTaskTable();
@@ -493,10 +509,10 @@ public class BillboardOverviewController implements Initializable {
 				jumpToNextTableRow(timedTaskTable);
 				break;
 			case LEFT:
-				jumpMultipleTableRows(timedTaskTable, Direction.UPWARDS, DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE);
+				jumpMultipleTableRows(timedTaskTable, Direction.UPWARDS, TIMED_TASK_TABLE_VISIBLE_ROW_SIZE);
 				break;
 			case RIGHT:
-				jumpMultipleTableRows(timedTaskTable, Direction.DOWNWARDS, DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE);
+				jumpMultipleTableRows(timedTaskTable, Direction.DOWNWARDS, TIMED_TASK_TABLE_VISIBLE_ROW_SIZE);
 				break;
 			default:
 				previousTimedTaskTableRowIndex = timedTaskTable.getSelectionModel().getSelectedIndex();
@@ -780,9 +796,11 @@ public class BillboardOverviewController implements Initializable {
 		String resultantFeedback;
 		try {
 			resultantFeedback = logic.executeCommand(userInput);
+			logger.info(LOGGER_INFO_PROCESSING_SUCCESSFUL, resultantFeedback);
 			return resultantFeedback;
 		} catch (Exception e) {
 			String exceptionFeedback = e.getMessage();
+			logger.error(LOGGER_ERROR_PROCESSING_FAILED, exceptionFeedback);
 			return exceptionFeedback;
 		}
 	}
