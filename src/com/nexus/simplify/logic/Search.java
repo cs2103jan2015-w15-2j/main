@@ -9,7 +9,7 @@ public class Search {
 	
 	public Search() {}
 	
-	String execute(String[] parameter, boolean[] searchField) {
+	public String execute(String[] parameter, boolean[] searchField) {
 		Database database = MainApp.getDatabase();
 		String feedback;
 		try {

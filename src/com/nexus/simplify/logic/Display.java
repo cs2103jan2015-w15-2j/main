@@ -16,7 +16,7 @@ public class Display {
 	
 	public Display() {}
 		
-	String execute(String[] parameter) {
+	public String execute(String[] parameter) {
 		final String FILE_LOCATION = "file";
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;

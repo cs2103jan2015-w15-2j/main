@@ -11,7 +11,7 @@ import com.nexus.simplify.database.Database;
 public class Clear {
 	public Clear() {}
 	
-	String execute() {
+	public String execute() {
 		Database database = MainApp.getDatabase();
 		database.clearContent();
 		String feedback = "All tasks cleared successfully.";

@@ -8,7 +8,7 @@ package com.nexus.simplify.logic;
 public class Exit {
 	public Exit() {}
 	
-	void execute() {
+	public void execute() {
 		System.exit(0);
 	}
 }

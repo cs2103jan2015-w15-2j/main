@@ -6,7 +6,7 @@ import com.nexus.simplify.database.Database;
 public class Undo {
 	public Undo(){}
 	
-	String execute(){
+	public String execute(){
 		Database database = MainApp.getDatabase();
 		database.undoTask();
 		String feedback = "Undo operation is successful.";

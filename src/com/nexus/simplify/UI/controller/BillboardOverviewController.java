@@ -11,7 +11,7 @@ import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
-import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.api.Logic;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;

@@ -1,4 +1,4 @@
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.api;
 
 //@author A0094457U
 public interface ILogic {

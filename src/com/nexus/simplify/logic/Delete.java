@@ -13,7 +13,7 @@ public class Delete {
 	
 	public Delete() {}
 	
-	String execute(String[] parameter) {
+	public String execute(String[] parameter) {
 		int indexToDelete;
 		
 		try {

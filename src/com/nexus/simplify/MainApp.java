@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.nexus.simplify.UI.controller.BillboardOverviewController;
 import com.nexus.simplify.database.Database;
-import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.api.Logic;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

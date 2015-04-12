@@ -11,12 +11,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
+
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.LogicRequest;
-import com.nexus.simplify.logic.Logic;
+import com.nexus.simplify.logic.api.Logic;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.data.CommandData;
 

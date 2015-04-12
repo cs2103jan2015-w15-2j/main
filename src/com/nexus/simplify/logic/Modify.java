@@ -15,7 +15,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 public class Modify {
 	public Modify() {}
 	
-	String execute(String[] parameter) {
+	public String execute(String[] parameter) {
 		// pattern follows Java.util.Date toString() method
 		String pattern = "E MMM dd hh:mm:ss zzz yyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);

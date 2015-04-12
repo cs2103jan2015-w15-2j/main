@@ -24,7 +24,7 @@ public class Add {
 	
 	public Add() {}
 	
-	String execute(String[] parameter) throws ParseException { 
+	public String execute(String[] parameter) throws ParseException { 
 		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_PATTERN);
 		
 		String name = parameter[ParameterType.NEW_NAME_POS];

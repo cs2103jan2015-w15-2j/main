@@ -1,10 +1,19 @@
 //@author generated
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.api;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.nexus.simplify.MainApp;
+import com.nexus.simplify.logic.Add;
+import com.nexus.simplify.logic.Clear;
+import com.nexus.simplify.logic.Delete;
+import com.nexus.simplify.logic.Display;
+import com.nexus.simplify.logic.Done;
+import com.nexus.simplify.logic.Exit;
+import com.nexus.simplify.logic.Modify;
+import com.nexus.simplify.logic.Search;
+import com.nexus.simplify.logic.Undo;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
