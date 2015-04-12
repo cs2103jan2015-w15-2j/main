@@ -4,8 +4,6 @@ package com.nexus.simplify.logic.api;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-<<<<<<< HEAD:src/com/nexus/simplify/logic/api/Logic.java
-import com.nexus.simplify.MainApp;
 import com.nexus.simplify.logic.Add;
 import com.nexus.simplify.logic.Clear;
 import com.nexus.simplify.logic.Delete;
@@ -15,9 +13,7 @@ import com.nexus.simplify.logic.Exit;
 import com.nexus.simplify.logic.Modify;
 import com.nexus.simplify.logic.Search;
 import com.nexus.simplify.logic.Undo;
-=======
 import com.nexus.simplify.database.DatabaseConnector;
->>>>>>> 9b7a91f828c35b6ca1ca95ca483c51a3f5406e3f:src/com/nexus/simplify/logic/Logic.java
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
