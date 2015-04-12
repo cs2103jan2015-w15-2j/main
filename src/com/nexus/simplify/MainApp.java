@@ -20,6 +20,10 @@ import javafx.stage.StageStyle;
  * */
 public class MainApp extends Application {
 	
+	private static final String FILE_LOCATION_BILLBOARD_OVERVIEW_FXML = "UI/view/BillboardOverview.fxml";
+	private static final String FILE_LOCATION_ROOT_LAYOUT_FXML = "UI/view/RootLayout.fxml";
+	private static final String APP_TITLE = "Simplify";
+	
 	//-----------------//
 	// Class Variables //
 	//-----------------//
@@ -51,7 +55,7 @@ public class MainApp extends Application {
 		try {
 			// load root layout from FXML file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("UI/view/RootLayout.fxml"));
+			loader.setLocation(MainApp.class.getResource(FILE_LOCATION_ROOT_LAYOUT_FXML));
 			rootLayout = (BorderPane) loader.load();
 
 			// Sets the scene containing the root layout.
@@ -71,7 +75,7 @@ public class MainApp extends Application {
 		try {
 			// loads main interface from FXML file.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("UI/view/BillboardOverview.fxml"));
+			loader.setLocation(MainApp.class.getResource(FILE_LOCATION_BILLBOARD_OVERVIEW_FXML));
 			AnchorPane billboardOverview = (AnchorPane) loader.load();
 			
 			// sets main interface onto the center of root layout.
@@ -106,15 +110,15 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) throws Exception {		
 		this.primaryStage = primaryStage;
 		this.primaryStage.initStyle(StageStyle.UNDECORATED);
-		this.primaryStage.setTitle("Simplify");
+		this.primaryStage.setTitle(APP_TITLE);
 		
 		initRootLayout();
 		showBillboardOverview();
 	}
 	
-	//---------------------//
-	// Attribute Accessors //
-	//---------------------//
+	//------------------//
+	// Attribute Access //
+	//------------------//
 	
 	/**
 	 * default getter for class attribute primaryStage.
