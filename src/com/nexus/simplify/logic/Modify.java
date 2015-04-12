@@ -1,5 +1,5 @@
+//@author generated
 package com.nexus.simplify.logic;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,15 +7,15 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
+//@author A0094457U
 /*
  * This class determines what fields of a task to modify 
  * and calls APIs provided by database to modify storage.
- * @author David Zhao Han
  */
 public class Modify {
 	public Modify() {}
 	
-	String execute(String[] parameter){
+	String execute(String[] parameter) {
 		// pattern follows Java.util.Date toString() method
 		String pattern = "E MMM dd hh:mm:ss zzz yyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
@@ -23,7 +23,7 @@ public class Modify {
 		
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		}catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			String feedback = "Please enter a task index to modify.";
 			return feedback;
 		}
@@ -32,22 +32,21 @@ public class Modify {
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
-		if(newName != null && !newName.isEmpty()){
+		if(newName != null && !newName.isEmpty()) {
 			database.modifyName(indexToModify, newName);
 			feedback += "name, ";
 		}
 		
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
-		if(newStartTime != null && !newStartTime.isEmpty() && newEndTime != null && !newEndTime.isEmpty()){
+		if(newStartTime != null && !newStartTime.isEmpty() && 
+			newEndTime != null && !newEndTime.isEmpty()) {
 			Date startTime;
 			Date endTime;
 			try {
 				startTime = df.parse(newStartTime);
 				endTime = df.parse(newEndTime);
 				database.modifyStartEnd(indexToModify, startTime, endTime);
-			} catch (ParseException e) {
-				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -55,11 +54,11 @@ public class Modify {
 		}
 		
 		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
-		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()){
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
 			int newWorkload;
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
-			}catch(NumberFormatException e){
+			} catch (NumberFormatException e) {
 				return "Please enter a valid workload.";
 			}
 			
@@ -73,7 +72,7 @@ public class Modify {
 		}
 		
 		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
-		if(newFileLocation != null && !newFileLocation.isEmpty()){
+		if(newFileLocation != null && !newFileLocation.isEmpty()) {
 			try {
 				database.modifyFileLocation(newFileLocation);
 			} catch (Exception e) {
@@ -84,7 +83,7 @@ public class Modify {
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
 			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
-			&& (newFileLocation==null || newFileLocation.isEmpty())){
+			&& (newFileLocation==null || newFileLocation.isEmpty())) { // if everything if null
 			feedback = "Please specify something to modify.";
 			return feedback;
 		}
@@ -94,11 +93,11 @@ public class Modify {
 	
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
-	public String executeForTesting(String[] parameter){
+	public String executeForTesting(String[] parameter) {
 		int indexToModify;
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		}catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			String feedback = "Please enter a task index to modify.";
 			return feedback;
 		}
@@ -106,22 +105,22 @@ public class Modify {
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
-		if(newName != null && !newName.isEmpty()){
+		if(newName != null && !newName.isEmpty()) {
 			feedback += "name, ";
 		}
 		
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
-		if(newStartTime != null && !newStartTime.isEmpty()){
+		if(newStartTime != null && !newStartTime.isEmpty()) {
 			feedback += "start time, ";
 		}
 		
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
-		if(newEndTime != null && !newEndTime.isEmpty()){
+		if(newEndTime != null && !newEndTime.isEmpty()) {
 			feedback += "end time, ";
 		}
 		
 		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
-		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()){
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
 			int newWorkload;
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
@@ -134,7 +133,8 @@ public class Modify {
 		}
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
-				(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())){
+				(newEndTime==null || newEndTime.isEmpty()) && 
+				(newWorkloadStr==null || newWorkloadStr.isEmpty())) {
 				feedback = "Please specify something to modify.";
 				return feedback;
 		}

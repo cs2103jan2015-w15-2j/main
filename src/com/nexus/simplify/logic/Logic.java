@@ -1,6 +1,9 @@
 //@author generated
 package com.nexus.simplify.logic;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
@@ -13,9 +16,11 @@ import com.nexus.simplify.parser.api.Parser;
  */
 public class Logic implements ILogic {
 	private final String MESSAGE_INVALID = "Please enter a valid command.";
-	private OperationType savedCommandType;
 	private static Logic theOne;
+	private static Logger logger = Logger.getLogger("Logic");
+	private OperationType savedCommandType;
 	private Parser parser = new Parser();
+
 	
 	private Logic() {}
 	
@@ -38,11 +43,13 @@ public class Logic implements ILogic {
 					|| operationType.equals(OperationType.DONE)) {
 					MainApp.getDatabase().retrieveActiveTasklist();
 				}
+				logger.log(Level.INFO, "Calling database to add");
 				feedback = addOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
 			case DISPLAY :
 				Display displayOp = new Display();
+				logger.log(Level.INFO, "Calling database to display");
 				feedback = displayOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
@@ -52,6 +59,7 @@ public class Logic implements ILogic {
 					|| operationType.equals(OperationType.DONE)) {
 					MainApp.getDatabase().retrieveActiveTasklist();
 				}
+				logger.log(Level.INFO, "Calling database to modify");
 				feedback = modifyOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
@@ -61,31 +69,37 @@ public class Logic implements ILogic {
 					|| operationType.equals(OperationType.DONE)) {
 					MainApp.getDatabase().retrieveActiveTasklist();
 				}
+				logger.log(Level.INFO, "Calling database to delete");
 				feedback = deleteOp.execute(command.getParameter());
 				savedCommandType = null;
 				return feedback;
 			case DONE :
 				Done doneOp = new Done();
+				logger.log(Level.INFO, "Calling database to mark done");
 				feedback = doneOp.execute(command.getParameter());
 				savedCommandType = OperationType.DONE;
 				return feedback;
 			case SEARCH :
 				Search searchOp = new Search();
+				logger.log(Level.INFO, "Calling database to search");
 				feedback = searchOp.execute(command.getParameter(), command.getSearchField());
 				savedCommandType = OperationType.SEARCH;
 				return feedback;
 			case UNDO :
 				Undo undoOp = new Undo();
+				logger.log(Level.INFO, "Calling database to undo");
 				feedback = undoOp.execute();
 				savedCommandType = null;
 				return feedback;
 			case CLEAR :
 				Clear clearOp = new Clear();
+				logger.log(Level.INFO, "Calling database to clear");
 				feedback = clearOp.execute();
 				savedCommandType = null;
 				return feedback;
 			case EXIT :
 				Exit exitOp = new Exit();
+				logger.log(Level.INFO, "Calling system to exit");
 				exitOp.execute();
 				return null;
 			default:

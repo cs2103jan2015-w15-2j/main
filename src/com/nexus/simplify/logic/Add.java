@@ -4,6 +4,8 @@ package com.nexus.simplify.logic;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.Database;
@@ -18,6 +20,7 @@ public class Add {
 	private final String DATE_FORMAT_PATTERN = "E MMM dd HH:mm:ss zzz yyy";
 	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
 	private final String NO_NAME = "Please enter a name for this task.";
+	private static Logger logger = Logger.getLogger("AddOp"); 
 	
 	public Add() {}
 	
@@ -53,16 +56,19 @@ public class Add {
 		if((newStartTime == null || newStartTime.isEmpty()) &&
 		   (newEndTime == null || newEndTime.isEmpty())) {
 			database.addGenericTask(name, workload);
+			logger.log(Level.INFO, "Floating task is added.");
 			feedback =  MESSAGE_TASK_ADDED;
 		} else {
 			if(newStartTime.equals(newEndTime)) {
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
+				logger.log(Level.INFO, "Deadline task is added.");
 				feedback = MESSAGE_TASK_ADDED;
 			} else {
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
+				logger.log(Level.INFO, "Timed task is added.");
 				feedback = MESSAGE_TASK_ADDED;
 			}
 		}
