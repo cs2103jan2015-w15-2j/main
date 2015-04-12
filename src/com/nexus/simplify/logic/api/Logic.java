@@ -50,8 +50,8 @@ public class Logic implements ILogic {
 		switch (operationType) {
 			case ADD :
 				Add addOp = new Add();
-				if(savedCommandType.equals(OperationType.SEARCH)
-					|| savedCommandType.equals(OperationType.DISPLAY)) {
+				if(savedCommandType != null && (savedCommandType.equals(OperationType.SEARCH)
+					|| savedCommandType.equals(OperationType.DISPLAY))) {
 					database.retrieveActiveTasklists();
 				}
 				logger.log(Level.INFO, "Calling database to add");
@@ -66,8 +66,8 @@ public class Logic implements ILogic {
 				return feedback;
 			case MODIFY :
 				Modify modifyOp = new Modify();
-				if(savedCommandType.equals(OperationType.SEARCH)
-					|| savedCommandType.equals(OperationType.DISPLAY)) {
+				if(savedCommandType != null && (savedCommandType.equals(OperationType.SEARCH)
+						|| savedCommandType.equals(OperationType.DISPLAY))) {
 					database.retrieveActiveTasklists();
 				}
 				logger.log(Level.INFO, "Calling database to modify");
