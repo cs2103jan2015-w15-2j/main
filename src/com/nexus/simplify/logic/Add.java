@@ -6,8 +6,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -32,7 +31,7 @@ public class Add {
 		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
 		String feedback;
 		int workload;
-		Database database = MainApp.getDatabase();
+		DatabaseConnector database = new DatabaseConnector();
 		
 		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
 		// this if-else statement caters to workload

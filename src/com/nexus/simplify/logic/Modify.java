@@ -3,8 +3,7 @@ package com.nexus.simplify.logic;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -30,7 +29,7 @@ public class Modify {
 			throw new Exception(NO_INDEX);
 		}
 		
-		Database database = MainApp.getDatabase();
+		DatabaseConnector database = new DatabaseConnector();
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];

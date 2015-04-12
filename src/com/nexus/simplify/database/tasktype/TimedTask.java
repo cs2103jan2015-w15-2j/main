@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.*;
 
 /**
- * Represents an instance of task tagged with start and end times.
+ * Represents an instance of task tagged with start and end time.
  * @author Tan Qian Yi
  */
 public class TimedTask extends GenericTask {
@@ -36,12 +36,12 @@ public class TimedTask extends GenericTask {
 	//--------------//
 	
 	/**
-	 * constructor for timed tasks with workload
+	 * Constructor for timed tasks with workload.
 	 * 
 	 * @param name name of task
 	 * @param startTime start time of task
 	 * @param endTime end time of task
-	 * @param workload amount of effort requird to do the task ranging from 1 to 5
+	 * @param workload amount of effort required to do the task ranging from 1 to 5
 	 * */
 	public TimedTask(String name, Date startTime, Date endTime, int workload) {
 		super(name, workload);
@@ -51,7 +51,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor for timed tasks without workload
+	 * Constructor for timed tasks without workload.
 	 * 
 	 * @param name name of task
 	 * @param startTime start time of task
@@ -65,7 +65,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor for timed tasks without workload
+	 * Constructor for timed tasks without workload.
 	 * 
 	 * @param name name of task
 	 * @param startTime start time of task in DateTime
@@ -79,7 +79,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor for timed tasks with workload, id and endTime in DateTime format
+	 * Constructor for timed tasks with workload, id and endTime in DateTime format.
 	 * 
 	 * @param name name of task in StringProperty format
 	 * @param startTime start time of task as Date 
@@ -95,7 +95,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor for timed tasks with workload, id and startTime in DateTime format
+	 * Constructor for timed tasks with workload, id and startTime in DateTime format.
 	 * 
 	 * @param name name of task in StringProperty format
 	 * @param startTime start time of task in DateTime format 
@@ -115,7 +115,7 @@ public class TimedTask extends GenericTask {
 	//--------------------//
 	
 	/**
-	 * default setter for class attribute startTime
+	 * Default setter for class attribute startTime.
 	 * 
 	 * @param startTime the new start time for the task
 	 * */
@@ -124,7 +124,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * default setter for class attribute endTime
+	 * Default setter for class attribute endTime.
 	 * 
 	 * @param endTime the new end time for the task
 	 * */
@@ -137,7 +137,7 @@ public class TimedTask extends GenericTask {
 	//---------------------//
 	
 	/**
-	 * returns the start time of the task formatted as a DateTimeProperty Object
+	 * Returns the start time of the task formatted as a DateTimeProperty Object.
 	 * 
 	 * @return start time of task as a DateTimeProperty Object
 	 * */
@@ -146,7 +146,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * returns the end time of the task formatted as a DateTimeProperty Object
+	 * Returns the end time of the task formatted as a DateTimeProperty Object.
 	 * 
 	 * @return end time of task as a DateTimeProperty Object
 	 * */
@@ -155,7 +155,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * default getter method for attribute startTime
+	 * Default getter method for attribute startTime.
 	 * 
 	 * @return start time of task
 	 * */
@@ -164,7 +164,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * default getter method for attribute endTime
+	 * Default getter method for attribute endTime.
 	 * 
 	 * @return end time of task
 	 * */
@@ -172,26 +172,26 @@ public class TimedTask extends GenericTask {
 		return endTime.get();
 	}
 	
-	/*
-	 * returns the start time of the task fomatted as a StringProperty Object
+	/**
+	 * Returns the start time of the task formatted as a StringProperty Object.
 	 * 
 	 * @return start time of the task as StringProperty Object
-	 */
+	 * */
 	public StringProperty getStartTimeAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableStartTime());
 	}
 	
-	/*
-	 * returns the end time of the task formatted as a StringProperty Object
+	/**
+	 * Returns the end time of the task formatted as a StringProperty Object.
 	 * 
 	 * @return end time of task as StringProperty Object
-	 */
+	 * */
 	public StringProperty getEndTimeAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableEndTime());
 	}
 	
 	/**
-	 * returns the start time of the task fomatted into a readable String Object
+	 * Returns the start time of the task formatted into a readable String Object.
 	 * 
 	 * @return start time of task as String Object
 	 * */
@@ -200,7 +200,7 @@ public class TimedTask extends GenericTask {
 	}
 	
 	/**
-	 * returns the end time of the task formatted into a readable String Object
+	 * Returns the end time of the task formatted into a readable String Object.
 	 * 
 	 * @return end time of task as String Object
 	 * */
@@ -208,6 +208,9 @@ public class TimedTask extends GenericTask {
 		return format.print(endTime.get());
 	}
 	
+	/**
+	 * Returns an exact copy of the task.
+	 * */
 	public TimedTask getCopy() {
 		StringProperty cName = new SimpleStringProperty(getName());
 		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());

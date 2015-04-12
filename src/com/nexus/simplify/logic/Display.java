@@ -1,8 +1,7 @@
 //@author generated
 package com.nexus.simplify.logic;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -26,7 +25,7 @@ public class Display {
 		final String FILE_LOCATION = "file";
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
-		Database database = MainApp.getDatabase();
+		DatabaseConnector database = new DatabaseConnector();
 		
 		if(isNumeric(option)) {
 			database.toggleDisplay(option);
