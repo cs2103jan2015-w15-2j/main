@@ -13,19 +13,21 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  * and calls APIs provided by database to modify storage.
  */
 public class Modify {
+	private final String FORMAT_PATTERN = "E MMM dd hh:mm:ss zzz yyy";
+	private final String NO_INDEX = "Please enter a task index to modify.";
+	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
+	private final String NOTHING_TO_MODIFY = "Please specify something to modify.";
 	public Modify() {}
 	
-	public String execute(String[] parameter) {
+	public String execute(String[] parameter) throws Exception {
 		// pattern follows Java.util.Date toString() method
-		String pattern = "E MMM dd hh:mm:ss zzz yyy";
-		SimpleDateFormat df = new SimpleDateFormat(pattern);
+		SimpleDateFormat df = new SimpleDateFormat(FORMAT_PATTERN);
 		int indexToModify;
 		
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		} catch (NumberFormatException e) {
-			String feedback = "Please enter a task index to modify.";
-			return feedback;
+			throw new Exception(NO_INDEX);
 		}
 		
 		Database database = MainApp.getDatabase();
@@ -48,7 +50,7 @@ public class Modify {
 				endTime = df.parse(newEndTime);
 				database.modifyStartEnd(indexToModify, startTime, endTime);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw e;
 			}
 			feedback += "time, ";
 		}
@@ -59,14 +61,14 @@ public class Modify {
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
 			} catch (NumberFormatException e) {
-				return "Please enter a valid workload.";
+				throw new Exception(INVALID_WORKLOAD);
 			}
 			
 			newWorkload = Integer.parseInt(newWorkloadStr);
 			try {
 				database.modifyWorkload(indexToModify, newWorkload);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw e;
 			}
 			feedback += "workload, ";
 		}
@@ -76,7 +78,7 @@ public class Modify {
 			try {
 				database.modifyFileLocation(newFileLocation);
 			} catch (Exception e) {
-				e.printStackTrace();
+				throw e;
 			}
 			feedback += "file location, ";
 		}
@@ -84,7 +86,7 @@ public class Modify {
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
 			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
 			&& (newFileLocation==null || newFileLocation.isEmpty())) { // if everything if null
-			feedback = "Please specify something to modify.";
+			feedback = NOTHING_TO_MODIFY;
 			return feedback;
 		}
 		feedback += "modified.";
@@ -99,7 +101,7 @@ public class Modify {
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		} catch (NumberFormatException e) {
-			String feedback = "Please enter a task index to modify.";
+			String feedback = NO_INDEX;
 			return feedback;
 		}
 		
@@ -124,7 +126,7 @@ public class Modify {
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);
 			}catch(NumberFormatException e){
-				feedback = "Please enter a valid workload.";
+				feedback = INVALID_WORKLOAD;
 				return feedback;
 			}
 			newWorkload = Integer.parseInt(newWorkloadStr);
@@ -134,7 +136,7 @@ public class Modify {
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
 				(newEndTime==null || newEndTime.isEmpty()) && 
 				(newWorkloadStr==null || newWorkloadStr.isEmpty())) {
-				feedback = "Please specify something to modify.";
+				feedback = NOTHING_TO_MODIFY;
 				return feedback;
 		}
 		feedback += "modified.";

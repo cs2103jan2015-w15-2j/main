@@ -13,10 +13,16 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  * done, file location.
  * */
 public class Display {
-	
+	private final String BY_DEFAULT_SETTING = "Displayed tasks by default setting.";
+	private final String ALL_TASKS = "Displayed all tasks.";
+	private final String WITHIN_WEEK = "Displayed tasks due within a week.";
+	private final String BY_DEADLINE = "Displayed tasks by deadline.";
+	private final String BY_WORKLOAD = "Displayed tasks by workload.";
+	private final String DISPLAY_DONE = "Displayed tasks that are done.";
+	private final String INVALID_OPTION = "Invalid option for display, please try again.";
 	public Display() {}
 		
-	public String execute(String[] parameter) {
+	public String execute(String[] parameter) throws Exception {
 		final String FILE_LOCATION = "file";
 		String option = parameter[ParameterType.INDEX_POS];
 		String feedback;
@@ -33,29 +39,29 @@ public class Display {
 		} else {
 			if (option == null || option.isEmpty()) {
 				database.toggleDisplay("default");
-				feedback = "Displayed tasks by default setting.";
+				feedback = BY_DEFAULT_SETTING;
 				return feedback;
 			}
 			
 			switch (option) {
 				case "all" :
 					database.toggleDisplay(option);
-					feedback = "Displayed all tasks.";
+					feedback = ALL_TASKS;
 					return feedback;
 					
 				case "week" :
 					database.toggleDisplay(option);
-					feedback = "Displayed tasks due within a week.";
+					feedback = WITHIN_WEEK;
 					return feedback;
 				
 				case "deadline" :
 					database.toggleDisplay(option);
-					feedback = "Displayed tasks by deadline.";
+					feedback = BY_DEADLINE;
 					return feedback;
 					
 				case "workload" :
 					database.toggleDisplay(option);
-					feedback = "Displayed tasks by workload.";
+					feedback = BY_WORKLOAD;
 					return feedback;
 					
 				case FILE_LOCATION :
@@ -65,12 +71,11 @@ public class Display {
 					
 				case "done" :
 					database.toggleDisplay(option);
-					feedback = "Displayed tasks that are done.";
+					feedback = DISPLAY_DONE;
 					return feedback;
 					
 				default :
-					feedback = "Invalid option for display, please try again.";
-					return feedback;
+					throw new Exception(INVALID_OPTION);
 			}
 		}
 	}
@@ -86,37 +91,41 @@ public class Display {
 		String feedback;
 		
 		if(isNumeric(option)) {
-			feedback = "Displayed " + option + " tasks.";
+			if(Integer.parseInt(option) == 1) {
+				feedback = "Displayed 1 task.";
+			} else {
+				feedback = "Displayed " + option + " tasks.";
+			}
 			return feedback;
 		} else {
 			if (option == null || option.isEmpty()) {
-				feedback = "Displayed tasks by default setting.";
+				feedback = BY_DEFAULT_SETTING;
 				return feedback;
 			}
 			
 			switch (option) {
 				case "all" :
-					feedback = "Displayed all tasks.";
+					feedback = ALL_TASKS;
 					return feedback;
 					
 				case "week" :
-					feedback = "Displayed tasks due within a week.";
+					feedback = WITHIN_WEEK;
 					return feedback;
 				
 				case "deadline" :
-					feedback = "Displayed tasks by deadline.";
+					feedback = BY_DEADLINE;
 					return feedback;
 				
 				case "workload" :
-					feedback = "Displayed tasks by workload.";
+					feedback = BY_WORKLOAD;
 					return feedback;
 					
 				case "done" :
-					feedback = "Displayed tasks that are done.";
+					feedback = DISPLAY_DONE;
 					return feedback;
 
 				default :
-					feedback = "Invalid option for display, please try again.";
+					feedback = INVALID_OPTION;
 					return feedback;
 			}
 		}

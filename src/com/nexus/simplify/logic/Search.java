@@ -9,13 +9,13 @@ public class Search {
 	
 	public Search() {}
 	
-	public String execute(String[] parameter, boolean[] searchField) {
+	public String execute(String[] parameter, boolean[] searchField) throws ParseException {
 		Database database = MainApp.getDatabase();
 		String feedback;
 		try {
 			database.searchDatabase(parameter, searchField);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			throw e;
 		}
 		feedback = "Search result displayed.";
 		return feedback;

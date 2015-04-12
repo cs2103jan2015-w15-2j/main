@@ -11,17 +11,16 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  * a task as done and calls database to modify the storage.
  */
 public class Done {
-	
+	private final String NO_INDEX = "Please enter a task index to mark as done.";
 	public Done() {}
 	
-	public String execute(String[] parameter) {
+	public String execute(String[] parameter) throws Exception {
 		int indexToMarkDone;
 		
 		try {
 			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		} catch (NumberFormatException e) {
-			String feedback = "Please enter a task index to mark as done.";
-			return feedback;
+			throw new Exception(NO_INDEX);
 		}
 		
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
@@ -41,7 +40,7 @@ public class Done {
 		try {
 			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		} catch (NumberFormatException e) {
-			String feedback = "Please enter a task index to mark as done.";
+			String feedback = NO_INDEX;
 			return feedback;
 		}
 		

@@ -1,7 +1,6 @@
 //@author generated
 package com.nexus.simplify.logic;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -24,7 +23,7 @@ public class Add {
 	
 	public Add() {}
 	
-	public String execute(String[] parameter) throws ParseException { 
+	public String execute(String[] parameter) throws Exception { 
 		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_PATTERN);
 		
 		String name = parameter[ParameterType.NEW_NAME_POS];
@@ -43,14 +42,12 @@ public class Add {
 			try {
 				workload = Integer.parseInt(workloadStr);
 			} catch (NumberFormatException e) {
-				feedback = INVALID_WORKLOAD;
-				return feedback;
+				throw new Exception(INVALID_WORKLOAD);
 			}
 		}
 		
 		if(name == null || name.isEmpty()) {
-			feedback = NO_NAME;
-			return feedback;
+			throw new Exception(NO_NAME);
 		}
 		
 		if((newStartTime == null || newStartTime.isEmpty()) &&

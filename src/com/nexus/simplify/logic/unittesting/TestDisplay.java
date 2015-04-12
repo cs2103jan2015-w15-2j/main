@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.unittesting;
 import static org.junit.Assert.*;
 
@@ -5,6 +6,7 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.Display;
 
+//@author A0094457U
 public class TestDisplay {
 	// This method tests boundary cases for unit testing
 	@Test
@@ -16,36 +18,36 @@ public class TestDisplay {
 		// for displaying a specific number of tasks
 		testParameter = new String[]{"9","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed 9 tasks.");
+		assertEquals(feedback,"Displayed 9 tasks.");
 		
 		// for display by default setting
 		testParameter = new String[]{"","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed tasks by default setting.");
+		assertEquals(feedback,"Displayed tasks by default setting.");
 		
 		// for display all
 		testParameter = new String[]{"all","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed all tasks.");
+		assertEquals(feedback,"Displayed all tasks.");
 		
 		// for display week
 		testParameter = new String[]{"week","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed tasks due within a week.");
+		assertEquals(feedback,"Displayed tasks due within a week.");
 		
 		// for display deadline
 		testParameter = new String[]{"deadline","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed tasks by deadline.");
+		assertEquals(feedback,"Displayed tasks by deadline.");
 		
 		// for display workload
 		testParameter = new String[]{"workload","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"displayed tasks by workload.");
+		assertEquals(feedback,"Displayed tasks by workload.");
 		
 		// for invalid command
 		testParameter = new String[]{"dummy","","","",""};
 		feedback = stubDisplay.executeForTesting(testParameter);
-		assertEquals(feedback,"invalid option for display, please try again.");
+		assertEquals(feedback,"Invalid option for display, please try again.");
 	}
 }
