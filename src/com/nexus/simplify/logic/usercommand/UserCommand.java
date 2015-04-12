@@ -37,6 +37,10 @@ public class UserCommand {
 	public String[] getParameter() {
 		return parameter;
 	}
+	
+	public boolean[] getSearchField() {
+		return searchField;
+	}
 
 	public String getIndex() {
 		String index = parameter[ParameterType.INDEX_POS];
@@ -67,8 +71,4 @@ public class UserCommand {
 		String fileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
 		return fileLocation;
 	}	
-	
-	public boolean[] getSearchField() {
-		return searchField;
-	}
 }
