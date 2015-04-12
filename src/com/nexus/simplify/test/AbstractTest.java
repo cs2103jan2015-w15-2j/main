@@ -1,3 +1,5 @@
+//@author A0111035A
+
 package com.nexus.simplify.test;
 
 import static org.junit.Assert.*;
@@ -5,13 +7,10 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
-import org.junit.Test;
-
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 import com.nexus.simplify.MainApp;
@@ -19,6 +18,7 @@ import com.nexus.simplify.database.Database;
 import com.nexus.simplify.database.LogicRequest;
 import com.nexus.simplify.logic.Logic;
 import com.nexus.simplify.logic.usercommand.UserCommand;
+import com.nexus.simplify.parser.data.CommandData;
 
 public abstract class AbstractTest {
 	private static MainApp _main;
@@ -113,87 +113,99 @@ public abstract class AbstractTest {
 	}
 
 
-/**
- * Asserts that the given user input parses into the given index, name, start time, end time
- * 
- * @param userInput
- * @param index
- * @param name
- * @param startTime
- * @param endTime
- * @param workload
- * @param fileLocation
- */
-protected UserCommand validateParsedCommand(String userInput, String index, String name, 
-		String startTime, String endTime, Object workload, String fileLocation) {
-	startTime = naturalToJavaString(startTime);
-	endTime = naturalToJavaString(endTime);
-	parsedCommand = parseSingleInput(userInput);
-	assertEquals(index, parsedCommand.getIndex());
-	assertEquals(name, parsedCommand.getName());
-	assertEquals(startTime, parsedCommand.getStartTime());
-	assertEquals(endTime, parsedCommand.getEndTime());
-	assertEquals(workloadToString(workload), parsedCommand.getWorkload());
-	assertEquals(fileLocation, parsedCommand.getFileLocation());
-	return parsedCommand;
-}
-
-
-protected Date javaDateStringToDate(String javaDate) {
-	String pattern = "E MMM dd hh:mm:ss zzz yyy";
-	SimpleDateFormat df = new SimpleDateFormat(pattern);
-	Date date = null;
-	try {
-		date = df.parse(javaDate);
-	} catch (ParseException e) {
-		e.printStackTrace();
+	/**
+	 * Asserts that the given user input parses into the given index, name, start time, end time
+	 * 
+	 * @param userInput
+	 * @param index
+	 * @param name
+	 * @param startTime
+	 * @param endTime
+	 * @param workload
+	 * @param fileLocation
+	 */
+	protected UserCommand validateParsedCommand(String userInput, String operation, String index, String name, 
+			String startTime, String endTime, Object workload, String fileLocation) {
+		startTime = naturalToJavaString(startTime);
+		endTime = naturalToJavaString(endTime);
+		parsedCommand = parseSingleInput(userInput);
+		assertEquals(CommandData.getInstance().getOperationType(operation), parsedCommand.getOperationType());
+		assertEquals(index, parsedCommand.getIndex());
+		assertEquals(name, parsedCommand.getName());
+		assertEquals(removeSeconds(startTime), removeSeconds(parsedCommand.getStartTime()));
+		assertEquals(removeSeconds(endTime), removeSeconds(parsedCommand.getEndTime()));
+		assertEquals(workloadToString(workload), parsedCommand.getWorkload());
+		assertEquals(fileLocation, parsedCommand.getFileLocation());
+		return parsedCommand;
 	}
-	return date;
-}
 
-protected Object indexStringToInt(String string) {
-	if (string == null) {
-		return null;
-	} else {
-		int index = Integer.parseInt(string);
-		return index;
+
+	protected Date javaDateStringToDate(String javaDate) {
+		String pattern = "E MMM dd hh:mm:ss zzz yyy";
+		SimpleDateFormat df = new SimpleDateFormat(pattern);
+		Date date = null;
+		try {
+			date = df.parse(javaDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
 	}
-}
 
-protected String workloadToString(Object workload) {
-	if (workload == null) {
-		return null;
-	} else {
-		return Integer.toString((int)workload);
+	protected Object indexStringToInt(String string) {
+		if (string == null) {
+			return null;
+		} else {
+			int index = Integer.parseInt(string);
+			return index;
+		}
 	}
-}
 
-protected int normaliseWorkload(Object workload) {
-	if (workload == null) {
-		return 0;
-	} else {
-		return Integer.parseInt((String)workload);
+	protected String workloadToString(Object workload) {
+		if (workload == null) {
+			return null;
+		} else {
+			return Integer.toString((int)workload);
+		}
 	}
-}
 
-protected void validateCallOnDatabase(String userInput, UserCommand userCommand) {
-	try {
-		String feedback = _logic.executeCommand(userInput);
-	} catch (Exception e) {
-		e.printStackTrace();
+	protected int normaliseWorkload(Object workload) {
+		if (workload == null) {
+			return 0;
+		} else {
+			return Integer.parseInt((String)workload);
+		}
 	}
-	assertEquals(userCommand.getOperationType(), _logicRequest.getOperationType());
-	assertEquals(indexStringToInt(userCommand.getIndex()), _logicRequest.getIndex());
-	assertEquals(userCommand.getName(), _logicRequest.getName());
-	assertEquals(parseSingleDate(userCommand.getStartTime()), _logicRequest.getStartTime());
-	assertEquals(parseSingleDate(userCommand.getEndTime()), _logicRequest.getEndTime());
-	assertEquals(normaliseWorkload(userCommand.getWorkload()), _logicRequest.getWorkload());
-	assertEquals(userCommand.getFileLocation(), _logicRequest.getFileLocation());
-}
 
-protected void testSingleInput(String userInput, String index, String name, String startTime, 
-		String endTime, Object workload, String fileLocation) {
-	UserCommand userCommand = validateParsedCommand(userInput, index, name, startTime, endTime, workload, fileLocation);
-	validateCallOnDatabase(userInput, userCommand);
-}
+	protected void validateCallOnDatabase(String userInput, UserCommand userCommand) {
+		try {
+			String feedback = _logic.executeCommand(userInput);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertEquals(userCommand.getOperationType(), _logicRequest.getOperationType());
+		assertEquals(indexStringToInt(userCommand.getIndex()), _logicRequest.getIndex());
+		assertEquals(userCommand.getName(), _logicRequest.getName());
+		assertEquals(parseSingleDate(userCommand.getStartTime()), _logicRequest.getStartTime());
+		assertEquals(parseSingleDate(userCommand.getEndTime()), _logicRequest.getEndTime());
+		assertEquals(normaliseWorkload(userCommand.getWorkload()), _logicRequest.getWorkload());
+		assertEquals(userCommand.getFileLocation(), _logicRequest.getFileLocation());
+	}
+
+	protected void testSingleInput(String userInput, String operation, String index, String name, String startTime, 
+			String endTime, Object workload, String fileLocation) {
+		UserCommand userCommand = validateParsedCommand(userInput, operation, index, name, startTime, endTime, workload, fileLocation);
+		validateCallOnDatabase(userInput, userCommand);
+	}
+	
+	// Mon Apr 11 12:54:27 SGT 2016
+	private String removeSeconds(String DateTime) {
+		if (DateTime == null) {
+			return null;
+		}
+		assert(DateTime.length() == 23);
+		String left = DateTime.substring(0, 17);
+		String right = DateTime.substring(19);
+		return left+right;
+	}
 }

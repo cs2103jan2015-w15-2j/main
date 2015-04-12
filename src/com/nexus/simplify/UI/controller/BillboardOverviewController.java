@@ -27,21 +27,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 /**
- * <p>Controller class of the Object BillBoardOverview.</p>
- * <p>BillboardOverview displays three tables for each type of task:</p>
- * <ol>
- * 	<li>deadline-based tasks</li>
- * 	<li>timed tasks</li>
- *  <li>generic tasks</li>
- * </ol>
+ * Controller class of fxml BillBoardOverview.
+ * BillboardOverview displays three tables for each type of task:
+ * 	- deadline-based tasks
+ * 	- timed tasks
+ *  - generic tasks
  * */
 public class BillboardOverviewController implements Initializable {
-	private static final int INDEX_OFFSET = 1;
-
+	private static final String WARNING_SUPPRESSION_RAWTYPES = "rawtypes";
 	private static final String EMPTY_STRING = "";
-
 	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
 	
+	private static final int LIST_INDEX_OFFSET = 1;
 	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
 	
 	//------------------//
@@ -105,15 +102,13 @@ public class BillboardOverviewController implements Initializable {
 	@FXML
 	private TableColumn<GenericTask, Integer> genericTaskWorkloadColumn;
 	
-	/**
-	 * Allows feedback to be displayed on the billboard.
-	 * */
+	
+	// Allows feedback to be displayed on the billboard.
 	@FXML
 	private Label feedbackDisplay;
 	
-	/**
-	 * Retrieves user input from the keyboard.
-	 * */
+	
+	// Retrieves user input from the keyboard.
 	@FXML
 	private TextField userInputField;
 	
@@ -184,38 +179,23 @@ public class BillboardOverviewController implements Initializable {
 		displayWelcomeMessage();
 	}
 	
+	/**
+	 * Adds listeners to all three tables so that
+	 * any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
 	private void setTablesToListenForChanges() {
-		deadlineTaskTable.getItems().addListener(
-			new ListChangeListener<DeadlineTask>() {
-				@Override
-				public void onChanged(javafx.collections.ListChangeListener.Change<? extends DeadlineTask> change) {
-					change.next(); // transit to the next instance of change
-					
-					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
-						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
-						deadlineTaskTable.scrollTo(locationIndexOfChange);
-						deadlineTaskTable.getSelectionModel().select(locationIndexOfChange);
-					} 
-			    } 				
-			}
-		);
-		
-		timedTaskTable.getItems().addListener(
-			new ListChangeListener<TimedTask>() {
-				@Override
-				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TimedTask> change) {
-					change.next();
-						
-					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
-						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
-						timedTaskTable.scrollTo(locationIndexOfChange);
-						timedTaskTable.getSelectionModel().select(locationIndexOfChange);
-					} 
-					
-			    } 				
-			}
-		);
-		
+		setDeadlineTaskTableToListenForChanges();
+		setTimedTaskTableToListenForChanges();
+		setGenericTaskTableToListenForChanges();
+	}
+
+	/**
+	 * Adds a listener to the table displaying generic tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setGenericTaskTableToListenForChanges() {
 		genericTaskTable.getItems().addListener(
 			new ListChangeListener<GenericTask>() {
 				@Override
@@ -223,11 +203,56 @@ public class BillboardOverviewController implements Initializable {
 					change.next();		
 					
 					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
-						int locationIndexOfChange = change.getTo() - INDEX_OFFSET;
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
 						genericTaskTable.scrollTo(locationIndexOfChange);
 						genericTaskTable.getSelectionModel().select(locationIndexOfChange);
 					} 
 			    } 						
+			}
+		);
+	}
+
+	/**
+	 * Adds a listener to the table displaying timed tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setTimedTaskTableToListenForChanges() {
+		timedTaskTable.getItems().addListener(
+			new ListChangeListener<TimedTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TimedTask> change) {
+					change.next();
+						
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
+						timedTaskTable.scrollTo(locationIndexOfChange);
+						timedTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+					
+			    } 				
+			}
+		);
+	}
+
+	/**
+	 * Adds a listener to the table displaying deadline-based tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setDeadlineTaskTableToListenForChanges() {
+		deadlineTaskTable.getItems().addListener(
+			new ListChangeListener<DeadlineTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends DeadlineTask> change) {
+					change.next(); // transit to the next instance of change
+					
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
+						deadlineTaskTable.scrollTo(locationIndexOfChange);
+						deadlineTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+			    } 				
 			}
 		);
 	}
@@ -261,8 +286,7 @@ public class BillboardOverviewController implements Initializable {
 	
 	/**
 	 * initializes the table columns displaying the indexes of the entries
-	 * such that they are dynamically updated upon any modification to the 
-	 * number of entries in the table.
+	 * such that they are updated based on the list sizes.
 	 * */
 	private void initTableIndexes() {
 		initDeadlineTaskIndexCol();
@@ -270,25 +294,35 @@ public class BillboardOverviewController implements Initializable {
 		initGenericTaskIndexCol();
 	}
 
+	/**
+	 * initializes the index columns of the table displaying generic tasks.
+	 * the start index of the column is 1 after the last index of the table displaying 
+	 * timed tasks.
+	 * */
 	private void initGenericTaskIndexCol() {
 		genericTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<GenericTask, Integer>() {
-				@Override
+				@Override 
 				protected void updateItem(Integer index, boolean empty) {
 					if (index == null || empty) {
 						setText(null);
 						setStyle(EMPTY_STRING);
 					} else {
 						setText(String.valueOf(getIndex() 
-											   + DEADLINE_TASK_COL_INDEX_OFFSET 
-											   + deadlineTaskTable.getItems().size()
-											   + timedTaskTable.getItems().size()));
+								               + DEADLINE_TASK_COL_INDEX_OFFSET 
+								               + deadlineTaskTable.getItems().size()
+								               + timedTaskTable.getItems().size()));
 					}
 				}
 			};
 		});
 	}
 
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1 after the last index of the table 
+	 * displaying deadline-based tasks.
+	 * */
 	private void initTimedTaskIndexCol() {
 		timedTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<TimedTask, Integer>() {
@@ -307,6 +341,10 @@ public class BillboardOverviewController implements Initializable {
 		});
 	}
 
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1.
+	 * */
 	private void initDeadlineTaskIndexCol() {
 		deadlineTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<DeadlineTask, Integer>() {
@@ -328,14 +366,13 @@ public class BillboardOverviewController implements Initializable {
 	//--------------------//
 	
 	/**
-	 * <p>Listens for any keys pressed by the user when
-	 * current focus is on user input field.</p>
-	 * <p>Valid key commands are as follows:</p>
-	 * <ul>
-	 * 	<li><strong>Enter</strong>: sends input to logic component.</li>
-	 * 	<li><strong>up/down</strong> arrow keys: navigate through user command history.</li>
-	 * 	<li><strong>tab</strong>: switches focus to a non-empty table.</li>
-	 * </ul>
+	 * Listens for any keys pressed by the user when
+	 * current focus is on user input field.
+	 * Valid key commands are as follows:
+	 * 
+	 * Enter key: sends input to logic component.
+	 * up/down arrow keys: navigate through user command history.
+	 * tab key: switches focus to a non-empty table.
 	 * 
 	 * @param event the event in which a key is pressed.
 	 * */
@@ -360,6 +397,19 @@ public class BillboardOverviewController implements Initializable {
 		}
 	}
 	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying deadline-based tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * 	Shift + down arrow keys: toggles focus to the table displaying timed tasks.
+	 *  Shift + right arrow keys: toggles focus to the table displaying generic tasks. 
+	 * 	up/down arrow keys: navigate through table rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
 	@FXML
 	private void processKeyCommandsFromDeadlineTaskTable(KeyEvent event) {
 		switch (event.getCode()) {
@@ -388,12 +438,23 @@ public class BillboardOverviewController implements Initializable {
 		event.consume();
 	}
 	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying timed tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * 	Shift + up arrow keys: toggles focus to the table displaying deadline-based tasks.
+	 *  Shift + right arrow keys: toggles focus to the table displaying generic tasks. 
+	 * 	up/down arrow keys: navigate through table rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
 	@FXML
 	private void processKeyCommandsFromTimedTaskTable(KeyEvent event) {
 		switch (event.getCode()) {
 			case SHIFT:
-			case BACK_SPACE:
-			case DELETE:
 				break;
 			case UP:
 				if (event.isShiftDown()) {
@@ -418,6 +479,18 @@ public class BillboardOverviewController implements Initializable {
 		event.consume();
 	}
 	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying deadline-based tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * 	Shift + left arrow keys: toggles focus to the table displaying deadline-based tasks.
+	 * 	up/down arrow keys: navigate through table rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
 	@FXML
 	private void processKeyCommandsFromGenericTaskTable(KeyEvent event) {
 		switch (event.getCode()) {
@@ -442,14 +515,14 @@ public class BillboardOverviewController implements Initializable {
 	}
 	
 	/**
-	 * <p>Switches focus to a table that has at least one entry
-	 * when the tab key is pressed.</p> 
-	 * <br>
-	 * <p> Pre-condition: Current focus is on the user input field. </p>
+	 * Switches focus to a table that has at least one entry
+	 * when the tab key is pressed.
+	 * 
+	 * Pre-condition: Current focus is on the user input field. 
 	 * 
 	 * @param prevTable the previous table that had focus
 	 * */
-	private void jumpToNonEmptyTable(@SuppressWarnings("rawtypes") TableView prevTable) {
+	private void jumpToNonEmptyTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
 		if (!deadlineTaskTable.getItems().isEmpty()) {
 			jumpToDeadlineTaskTable(prevTable);
 		} else {
@@ -461,10 +534,26 @@ public class BillboardOverviewController implements Initializable {
 		}
 	}
 
-	private void jumpToGenericTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
-		if (!genericTaskTable.getItems().isEmpty()) {
+	/**
+	 * Switches focus to the table displaying generic tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * */
+	private void jumpToGenericTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
+		ObservableList<GenericTask> genericTaskList = genericTaskTable.getItems();
+		
+		if (!genericTaskList.isEmpty()) {
 			genericTaskTable.requestFocus();
-			genericTaskTable.scrollTo(genericTaskTable.getItems().size() - 1);
+			
+			int lastIndexOfTable = genericTaskList.size() - LIST_INDEX_OFFSET;
+			genericTaskTable.scrollTo(lastIndexOfTable);
+			
 			genericTaskTable.getSelectionModel().selectLast();
 			
 			if (!(prevTable == null)) {
@@ -473,37 +562,84 @@ public class BillboardOverviewController implements Initializable {
 		}
 	}
 
-	private void jumpToTimedTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
-		timedTaskTable.requestFocus();
-		timedTaskTable.scrollTo(timedTaskTable.getItems().size() - 1);
-		timedTaskTable.getSelectionModel().selectLast();
+	/**
+	 * Switches focus to the table displaying timed tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * */
+	private void jumpToTimedTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
+		ObservableList<TimedTask> timedTaskList = timedTaskTable.getItems();
 		
-		if (!(prevTable == null)) {
-			prevTable.getSelectionModel().clearSelection();
+		if (!timedTaskList.isEmpty()) {
+			timedTaskTable.requestFocus();
+			
+			int lastIndexOfTable = timedTaskList.size() - LIST_INDEX_OFFSET;
+			timedTaskTable.scrollTo(lastIndexOfTable);
+			
+			timedTaskTable.getSelectionModel().selectLast();
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
 		}
 	}
 
-	private void jumpToDeadlineTaskTable(@SuppressWarnings("rawtypes") TableView prevTable) {
-		deadlineTaskTable.requestFocus();
-		deadlineTaskTable.scrollTo(deadlineTaskTable.getItems().size() - 1);
-		deadlineTaskTable.getSelectionModel().selectLast();
+	/**
+	 * Switches focus to the table displaying deadline-based tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * */
+	private void jumpToDeadlineTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
+		ObservableList<DeadlineTask> deadlineTaskList = deadlineTaskTable.getItems();
 		
-		if (!(prevTable == null)) {
-			prevTable.getSelectionModel().clearSelection();
+		if (!deadlineTaskList.isEmpty()) {
+			deadlineTaskTable.requestFocus();
+			
+			int lastIndexOfTable = deadlineTaskList.size() - LIST_INDEX_OFFSET;
+			deadlineTaskTable.scrollTo(lastIndexOfTable);
+			
+			deadlineTaskTable.getSelectionModel().selectLast();
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
 		}
+
 	}
 	
-	private void jumpToNextTableRow(@SuppressWarnings("rawtypes") TableView table) {
+	/**
+	 * Highlights the next table row.
+	 * */
+	private void jumpToNextTableRow(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView table) {
 		table.getSelectionModel().selectBelowCell();
 		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
-	private void jumpToPrevTableRow(@SuppressWarnings("rawtypes") TableView table) {
+	/**
+	 * Highlights the previous table row.
+	 * */
+	private void jumpToPrevTableRow(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView table) {
 		table.getSelectionModel().selectAboveCell();
 		table.scrollTo(table.getSelectionModel().getSelectedIndex());
 	}
 	
-	private void jumpToUserInputField(@SuppressWarnings("rawtypes") TableView prevTable) {
+	/**
+	 * Switches focus to the user input field.
+	 * All highlighted rows in any table will be de-selected.
+	 * */
+	private void jumpToUserInputField(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
 		if (!userInputField.isFocused()) {
 			userInputField.requestFocus();
 			prevTable.getSelectionModel().clearSelection();
@@ -519,11 +655,10 @@ public class BillboardOverviewController implements Initializable {
 	 * when the user presses Enter on the keyboard.
 	 * */
 	private void processInputOnEnterKeyPressed() {
-		String userCommand = userInputField.getText().trim();
-		commandHistory.addCommandToHistory(userCommand);
-		
 		clearSelectionsInAllTables();
 		
+		String userCommand = userInputField.getText().trim();
+		commandHistory.addCommandToHistory(userCommand);
 		
 		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
 		feedbackDisplay.setText(feedback);
@@ -532,6 +667,9 @@ public class BillboardOverviewController implements Initializable {
 		userInputField.clear();
 	}
 
+	/**
+	 * De-selects all highlighted rows for all three tables.
+	 * */
 	private void clearSelectionsInAllTables() {
 		deadlineTaskTable.getSelectionModel().clearSelection();
 		timedTaskTable.getSelectionModel().clearSelection();
@@ -595,10 +733,11 @@ public class BillboardOverviewController implements Initializable {
 	
 
 	/**
-	 * Populates all three tables with from the three Observable task lists
+	 * Populates all three tables with data from the three Observable task lists
 	 * found in the instance of Database.
 	 * 
-	 * This method will only be called once.
+	 * This method will only be called once as the tables will continue to listen to
+	 * any changes to the three task lists.
 	 * */
 	private void fillTablesWithData() {
 		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadlineTL();
@@ -622,6 +761,11 @@ public class BillboardOverviewController implements Initializable {
 		fillGenericTaskTableIndexes();
 	}
 
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1 after the last index
+	 * of the task table displaying timed tasks.
+	 * */
 	private void fillGenericTaskTableIndexes() {
 		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
 																	  genericTaskTable.getItems().indexOf(column.getValue()) 
@@ -632,6 +776,11 @@ public class BillboardOverviewController implements Initializable {
 												  );
 	}
 
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1 after the last index
+	 * of the task table displaying deadline-based tasks.
+	 * */
 	private void fillTimedTaskTableIndexes() {
 		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
 																	  timedTaskTable.getItems().indexOf(column.getValue()) 
@@ -641,6 +790,10 @@ public class BillboardOverviewController implements Initializable {
 												);
 	}
 
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1.
+	 * */
 	private void fillDeadlineTaskTableIndexes() {
 		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
 																      		deadlineTaskTable.getItems().indexOf(column.getValue())
