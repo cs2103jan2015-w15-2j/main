@@ -275,8 +275,7 @@ public class BillboardOverviewController implements Initializable {
 	
 	/**
 	 * initializes the table columns displaying the indexes of the entries
-	 * such that they are dynamically updated upon any modification to the 
-	 * number of entries in the table.
+	 * such that they are updated based on the list sizes.
 	 * */
 	private void initTableIndexes() {
 		initDeadlineTaskIndexCol();
@@ -284,25 +283,35 @@ public class BillboardOverviewController implements Initializable {
 		initGenericTaskIndexCol();
 	}
 
+	/**
+	 * initializes the index columns of the table displaying generic tasks.
+	 * the start index of the column is 1 after the last index of the table displaying 
+	 * timed tasks.
+	 * */
 	private void initGenericTaskIndexCol() {
 		genericTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<GenericTask, Integer>() {
-				@Override
+				@Override 
 				protected void updateItem(Integer index, boolean empty) {
 					if (index == null || empty) {
 						setText(null);
 						setStyle(EMPTY_STRING);
 					} else {
 						setText(String.valueOf(getIndex() 
-											   + DEADLINE_TASK_COL_INDEX_OFFSET 
-											   + deadlineTaskTable.getItems().size()
-											   + timedTaskTable.getItems().size()));
+								               + DEADLINE_TASK_COL_INDEX_OFFSET 
+								               + deadlineTaskTable.getItems().size()
+								               + timedTaskTable.getItems().size()));
 					}
 				}
 			};
 		});
 	}
 
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1 after the last index of the table 
+	 * displaying deadline-based tasks.
+	 * */
 	private void initTimedTaskIndexCol() {
 		timedTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<TimedTask, Integer>() {
@@ -321,6 +330,10 @@ public class BillboardOverviewController implements Initializable {
 		});
 	}
 
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1.
+	 * */
 	private void initDeadlineTaskIndexCol() {
 		deadlineTaskIndexColumn.setCellFactory(column -> {
 			return new TableCell<DeadlineTask, Integer>() {
@@ -342,14 +355,13 @@ public class BillboardOverviewController implements Initializable {
 	//--------------------//
 	
 	/**
-	 * <p>Listens for any keys pressed by the user when
-	 * current focus is on user input field.</p>
-	 * <p>Valid key commands are as follows:</p>
-	 * <ul>
-	 * 	<li><strong>Enter</strong>: sends input to logic component.</li>
-	 * 	<li><strong>up/down</strong> arrow keys: navigate through user command history.</li>
-	 * 	<li><strong>tab</strong>: switches focus to a non-empty table.</li>
-	 * </ul>
+	 * Listens for any keys pressed by the user when
+	 * current focus is on user input field.
+	 * Valid key commands are as follows:
+	 * 
+	 * Enter key: sends input to logic component.
+	 * up/down arrow keys: navigate through user command history.
+	 * tab key: switches focus to a non-empty table.
 	 * 
 	 * @param event the event in which a key is pressed.
 	 * */
@@ -375,12 +387,12 @@ public class BillboardOverviewController implements Initializable {
 	}
 	
 	/**
-	 * <p>Listens for any keys pressed by the user when
-	 * current focus is on user input field.</p>
-	 * <p>Valid key commands are as follows:</p>
-	 * <ul>
-	 * 	<li><strong>Shift + up/down</strong> arrow keys: 
-	 * 	    .</li>
+	 * Listens for any keys pressed by the user when
+	 * current focus is on user input field.
+	 * 
+	 * Valid key commands are as follows:
+	 * 	Shift + down arrow keys: toggles focus to the table displaying timed tasks.
+	 *  Shift + right arrow keys: toggles focus to the table displaying generic tasks. 
 	 * 	<li><strong>up/down</strong> arrow keys: navigate through user command history.</li>
 	 * 	<li><strong>tab</strong>: switches focus to a non-empty table.</li>
 	 * </ul>
