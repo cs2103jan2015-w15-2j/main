@@ -19,6 +19,7 @@ public class OperationParser extends TokenParser {
 			return tokenList;
 		} else {
 			String opString = tokenList[0].toLowerCase();
+			tokenList[0] = opString;
 			OperationType userOp = commandData.getOperationType(opString);
 			
 			// Implement adding of task without providing keywords for add e.g "add"
