@@ -18,8 +18,14 @@ public class OperationParser extends TokenParser {
 		if (isTokenListEmpty(tokenList)) {
 			return tokenList;
 		} else {
-			String opString = tokenList[0];
+			String opString = tokenList[0].toLowerCase();
 			OperationType userOp = commandData.getOperationType(opString);
+			
+			// Implement adding of task without providing keywords for add e.g "add"
+			if (userOp == OperationType.INVALID) {
+				userOp = OperationType.ADD;
+				opString = "";
+			}
 			String[] remainingTokens = getRemainingTokens(opString, tokenList);
 
 			// Handle commands that have special first parameters
