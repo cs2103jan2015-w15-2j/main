@@ -19,11 +19,6 @@ public class DeadlineTask extends GenericTask {
 	 * */
 	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
 
-	/** 
-	 * reference to http://stackoverflow.com/questions/3307330/using-joda-date-time-api-to-parse-multiple-formats 
-	 * */
-	/*private DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern(JAVA_DATE_FORMAT).toFormatter();*/
-	
 	//-----------------//
 	// Class Attribute //
 	//-----------------//
@@ -35,7 +30,7 @@ public class DeadlineTask extends GenericTask {
 	//--------------//
 	
 	/**
-	 * constructor without workload
+	 * Constructor without workload.
 	 * 
 	 * @param name name of task
 	 * @param deadline due date of task 
@@ -46,7 +41,7 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor without workload
+	 * Constructor without workload.
 	 * 
 	 * @param name name of task
 	 * @param deadline due date of task in DateTime 
@@ -57,7 +52,7 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor with workload
+	 * Constructor with workload.
 	 * 
 	 * @param name name of task
 	 * @param deadline due date of task
@@ -69,7 +64,7 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
-	 * constructor with workload and id
+	 * Constructor with workload and id.
 	 * 
 	 * @param name name of task in StringProperty
 	 * @param deadline due date of task
@@ -81,6 +76,14 @@ public class DeadlineTask extends GenericTask {
 		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
 	}
 	
+	/**
+	 * Constructor with workload and id.
+	 * 
+	 * @param name name of task in StringProperty
+	 * @param deadline due date of task in DateTime format
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
 	public DeadlineTask(StringProperty name, DateTime deadline, IntegerProperty workload, StringProperty id) {
 		super(name, workload, id);
 		this.deadline = new SimpleObjectProperty<DateTime>(deadline);
@@ -90,7 +93,7 @@ public class DeadlineTask extends GenericTask {
 	//-------------------//
 	
 	/**
-	 * default setter for class attribute deadline
+	 * Default setter for class attribute deadline.
 	 * 
 	 * @param deadline the new deadline for the task
 	 * */
@@ -103,7 +106,7 @@ public class DeadlineTask extends GenericTask {
 	//---------------------//
 	
 	/**
-	 * returns the due date of the task formatted into a readable String Object.
+	 * Returns the due date of the task formatted into a readable String Object.
 	 * 
 	 * @return due date of task as String Object
 	 * */
@@ -113,7 +116,7 @@ public class DeadlineTask extends GenericTask {
 	}
 	
 	/**
-	 * default getter method for attribute deadline.
+	 * Default getter method for attribute deadline.
 	 * 
 	 * @return due date of task
 	 * */
@@ -122,7 +125,7 @@ public class DeadlineTask extends GenericTask {
 	}
 
 	/**
-	 * returns the due date of the task formatted as a StringProperty Object.
+	 * Returns the due date of the task formatted as a StringProperty Object.
 	 * 
 	 * @return due date of task as StringProperty Object
 	 * */
@@ -130,6 +133,9 @@ public class DeadlineTask extends GenericTask {
 		return new SimpleStringProperty(this.getReadableDeadline());
 	}
 	
+	/**
+	 * Returns an exact copy of the task.
+	 * */
 	public DeadlineTask getCopy() {
 		StringProperty cName = new SimpleStringProperty(getName());
 		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());

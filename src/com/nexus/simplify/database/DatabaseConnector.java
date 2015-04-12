@@ -17,6 +17,25 @@ import com.nexus.simplify.database.Writer;
 
 public class DatabaseConnector implements IDatabaseConnector {
 
+	private static final String KEYWORD_DEFAULT = "default";
+	private static final String KEYWORD_WORKLOAD = "workload";
+	private static final String KEYWORD_DEADLINE = "deadline";
+	private static final String KEYWORD_DONE = "done";
+	
+	private static final String MSG_START_TIME_AFTER_END_TIME = "Please provide a start time that is earlier than the end time.";
+	
+	private static final int INDEX_OFFSET_BY_ONE = -1;
+	private static final int ZERO = 0;
+	
+	private static final int PARAMETER_WORKLOAD = 4;
+	private static final int PARAMETER_TIME = 2;
+	private static final int PARAMETER_NAME = 1;
+	
+	private static final int TIME_MONTH = 3;
+	private static final int TIME_DAY = 2;
+	private static final int TIME_WEEKDAY = 1;
+	private static final int TIME_HOUR = 0;
+	
 	//-----------------//
 	// Class Variables //
 	//-----------------//
@@ -87,7 +106,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.addGenericTask(name, workload);
 
-		if (workload == 0) {
+		if (workload == ZERO) {
 			observableGenericTL.add(new GenericTask(name));
 		} else {
 			observableGenericTL.add(new GenericTask(name, workload));
@@ -114,13 +133,13 @@ public class DatabaseConnector implements IDatabaseConnector {
 		boolean isStartEqualEnd = startTime.equals(endTime);
 		boolean isStartBeforeEnd = startTime.before(endTime);
 
-		if (workload == 0) {
+		if (workload == ZERO) {
 			if (isStartEqualEnd) {
 				observableDeadlineTL.add(new DeadlineTask(name, startTime));
 			} else if (isStartBeforeEnd) {
 				observableTimedTL.add(new TimedTask(name, startTime, endTime));
 			} else {
-				throw new Exception("Please provide a start time that is earlier than the end time.");
+				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 		} else {
 			if (isStartEqualEnd) {
@@ -128,7 +147,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 			} else if (isStartBeforeEnd) {
 				observableTimedTL.add(new TimedTask(name, startTime, endTime, workload));
 			} else {
-				throw new Exception("Please provide a start time that is earlier than the end time.");
+				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 		}
 
@@ -149,7 +168,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.addDeadlineTask(name, deadline, workload);
 
-		if (workload == 0) {
+		if (workload == ZERO) {
 			observableDeadlineTL.add(new DeadlineTask(name, deadline));
 		} else {
 			observableDeadlineTL.add(new DeadlineTask(name, deadline, workload));
@@ -169,20 +188,20 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.deleteTaskByIndex(index);
 
-		assert index > 0;
+		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
 		int deadlineTLSize = observableDeadlineTL.size();
 		int timedTLSize = observableTimedTL.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.remove(index - 1);
+			observableDeadlineTL.remove(index + INDEX_OFFSET_BY_ONE);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.remove(index - 1);
+			observableTimedTL.remove(index + INDEX_OFFSET_BY_ONE);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.remove(index - 1);
+			observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
 		}
 
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
@@ -245,12 +264,12 @@ public class DatabaseConnector implements IDatabaseConnector {
 		resultantDeadlineTL.clear();
 		resultantTimedTL.clear();
 
-		if (parameter[1] != null) {
-			searchInName(parameter[1]);
-		} else if (parameter[2] != null) {
-			searchForTime(parameter[2], searchForTimeUnit);
+		if (parameter[PARAMETER_NAME] != null) {
+			searchInName(parameter[PARAMETER_NAME]);
+		} else if (parameter[PARAMETER_TIME] != null) {
+			searchForTime(parameter[PARAMETER_TIME], searchForTimeUnit);
 		} else {
-			searchForWorkload(Integer.valueOf(parameter[4]));
+			searchForWorkload(Integer.valueOf(parameter[PARAMETER_WORKLOAD]));
 		}
 
 	}
@@ -262,19 +281,19 @@ public class DatabaseConnector implements IDatabaseConnector {
 	 * */
 	public void toggleDisplay(String keyword) {
 
-		if (keyword.equals("done")) {
+		if (keyword.equals(KEYWORD_DONE)) {
 			setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
 			setObservableTL(archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 		} else {
 			setObservableTL(temporaryGenericTL, temporaryDeadlineTL, temporaryTimedTL);
-			if (keyword.equals("deadline")) {
+			if (keyword.equals(KEYWORD_DEADLINE)) {
 				Collections.sort(observableTimedTL, taskStartTimeComparator);
 				Collections.sort(observableDeadlineTL, taskDeadlineComparator);
-			} else if (keyword.equals("workload")) {
+			} else if (keyword.equals(KEYWORD_WORKLOAD)) {
 				Collections.sort(observableGenericTL, taskWorkloadComparator);
 				Collections.sort(observableTimedTL, taskWorkloadComparator);
 				Collections.sort(observableDeadlineTL, taskWorkloadComparator);
-			} else if (keyword.equals("default")){
+			} else if (keyword.equals(KEYWORD_DEFAULT)){
 				Collections.sort(observableGenericTL, taskIdComparator);
 				Collections.sort(observableTimedTL, taskIdComparator);
 				Collections.sort(observableDeadlineTL, taskIdComparator);
@@ -296,20 +315,20 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.modifyName(index, newName);
 
-		assert index > 0;
+		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
 		int deadlineTLSize = observableDeadlineTL.size();
 		int timedTLSize = observableTimedTL.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.get(index - 1).setName(newName);
+			observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.get(index - 1).setName(newName);
+			observableTimedTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.get(index - 1).setName(newName);
+			observableGenericTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		}
 
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
@@ -329,20 +348,20 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.modifyWorkload(index, newWorkloadValue);
 
-		assert index > 0;
+		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
 		int deadlineTLSize = observableDeadlineTL.size();
 		int timedTLSize = observableTimedTL.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.get(index - 1).setWorkload(newWorkloadValue);
+			observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.get(index - 1).setWorkload(newWorkloadValue);
+			observableTimedTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.get(index - 1).setWorkload(newWorkloadValue);
+			observableGenericTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		}
 
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
@@ -365,7 +384,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		// logicRequest.modifyStartTime(index, newStartTime);
 
-		assert index > 1;
+		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
 		DateTime startTime = new DateTime(newStartTime);
@@ -378,45 +397,45 @@ public class DatabaseConnector implements IDatabaseConnector {
 		if (index <= deadlineTLSize) {
 
 			if (isStartEqualEnd) {
-				observableDeadlineTL.get(index - 1).setDeadline(newStartTime);
+				observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setDeadline(newStartTime);
 			} else if (isStartBeforeEnd){
-				DeadlineTask task = observableDeadlineTL.get(index - 1);
+				DeadlineTask task = observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE);
 				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableDeadlineTL.remove(index - 1);
+				observableDeadlineTL.remove(index + INDEX_OFFSET_BY_ONE);
 			} else {
-				throw new Exception("Please provide a start time that is earlier than the end time.");
+				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 
 		} else if (index - deadlineTLSize <= timedTLSize) {
 
 			index = index - deadlineTLSize;
-			TimedTask task = observableTimedTL.get(index - 1);
+			TimedTask task = observableTimedTL.get(index + INDEX_OFFSET_BY_ONE);
 			if (isStartEqualEnd) {
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), startTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableTimedTL.remove(index - 1);
+				observableTimedTL.remove(index + INDEX_OFFSET_BY_ONE);
 			} else if (isStartBeforeEnd) {
 				task.setStartTime(newStartTime);
 				task.setEndTime(newEndTime);
 			} else {
-				throw new Exception("Please provide a start time that is earlier than the end time.");
+				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 
 		} else {
 
 			index = index - deadlineTLSize - timedTLSize;
-			GenericTask task = observableGenericTL.get(index - 1);
+			GenericTask task = observableGenericTL.get(index + INDEX_OFFSET_BY_ONE);
 			if (isStartEqualEnd) {
 				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGenericTL.remove(index - 1);
+				observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
 			} else if (isStartBeforeEnd) {
 				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGenericTL.remove(index - 1);
+				observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
 			} else {
-				throw new Exception("Please provide a start time that is earlier than the end time.");
+				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 
 		}
@@ -437,23 +456,23 @@ public class DatabaseConnector implements IDatabaseConnector {
 		saveState();
 		logicRequest.markTaskDone(indexToMarkDone);
 
-		assert indexToMarkDone > 0;
+		assert indexToMarkDone > ZERO;
 		assert indexToMarkDone < this.totalSizeOfAllLists();
 
 		int deadlineTLSize = observableDeadlineTL.size();
 		int timedTLSize = observableTimedTL.size();
 
 		if (indexToMarkDone <= deadlineTLSize) {
-			archivedDeadlineTL.add(observableDeadlineTL.get(indexToMarkDone - 1));
-			observableDeadlineTL.remove(indexToMarkDone - 1);
+			archivedDeadlineTL.add(observableDeadlineTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableDeadlineTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		} else if (indexToMarkDone - deadlineTLSize <= timedTLSize) {
 			indexToMarkDone = indexToMarkDone - deadlineTLSize;
-			archivedTimedTL.add(observableTimedTL.get(indexToMarkDone - 1));
-			observableTimedTL.remove(indexToMarkDone - 1);
+			archivedTimedTL.add(observableTimedTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableTimedTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		} else {
 			indexToMarkDone = indexToMarkDone - deadlineTLSize - timedTLSize;
-			archivedGenericTL.add(observableGenericTL.get(indexToMarkDone - 1));
-			observableGenericTL.remove(indexToMarkDone - 1);
+			archivedGenericTL.add(observableGenericTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableGenericTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		}
 
 		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
@@ -483,36 +502,36 @@ public class DatabaseConnector implements IDatabaseConnector {
 		String pattern = "E MMM dd HH:mm:ss zzz yyy";
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
 		DateTime date = new DateTime(format.parse(dateInString));
-		int count = 0;
+		int searchFor = ZERO;
 
 		for(boolean boo: searchForTimeUnit) {
 
 			if (boo == true) {
 
-				if (count == 0) {
-					search.searchDeadlineByHour(date.getHourOfDay(), observableDeadlineTL,
+				if (searchFor == TIME_HOUR) {
+					search.searchDeadlineTlByHour(date.getHourOfDay(), observableDeadlineTL,
 							resultantDeadlineTL);
-					search.searchTimedByHour(date.getHourOfDay(), observableTimedTL, resultantTimedTL);
-				} else if (count == 1) {
-					search.searchDeadlineByWeekday(date.getDayOfWeek(), observableDeadlineTL,
+					search.searchTimedTlByHour(date.getHourOfDay(), observableTimedTL, resultantTimedTL);
+				} else if (searchFor == TIME_WEEKDAY) {
+					search.searchDeadlineTlByWeekday(date.getDayOfWeek(), observableDeadlineTL,
 							resultantDeadlineTL);
-					search.searchTimedByWeekday(date.getDayOfWeek(), observableTimedTL, resultantTimedTL);
-				} else if (count == 2) {
-					search.searchDeadlineByDay(date.getDayOfMonth(), observableDeadlineTL,
+					search.searchTimedTlByWeekday(date.getDayOfWeek(), observableTimedTL, resultantTimedTL);
+				} else if (searchFor == TIME_DAY) {
+					search.searchDeadlineTlByDay(date.getDayOfMonth(), observableDeadlineTL,
 							resultantDeadlineTL);
-					search.searchTimedByDay(date.getDayOfMonth(), observableTimedTL, resultantTimedTL);
-				} else if (count == 3) {
-					search.searchDeadlineByMonth(date.getMonthOfYear(), observableDeadlineTL,
+					search.searchTimedTlByDay(date.getDayOfMonth(), observableTimedTL, resultantTimedTL);
+				} else if (searchFor == TIME_MONTH) {
+					search.searchDeadlineTlByMonth(date.getMonthOfYear(), observableDeadlineTL,
 							resultantDeadlineTL);
-					search.searchTimedByMonth(date.getMonthOfYear(), observableTimedTL, resultantTimedTL);
+					search.searchTimedTlByMonth(date.getMonthOfYear(), observableTimedTL, resultantTimedTL);
 				} else {
-					search.searchDeadlineByYear(date.getYear(), observableDeadlineTL, resultantDeadlineTL);
-					search.searchTimedByYear(date.getYear(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByYear(date.getYear(), observableDeadlineTL, resultantDeadlineTL);
+					search.searchTimedTlByYear(date.getYear(), observableTimedTL, resultantTimedTL);
 				}
 
 			}
 
-			count++;
+			searchFor++;
 
 		}
 
@@ -530,9 +549,9 @@ public class DatabaseConnector implements IDatabaseConnector {
 	 * */
 	private void searchInName(String term){
 
-		search.searchDeadlineByName(term, observableDeadlineTL, resultantDeadlineTL);
-		search.searchGenericByName(term, observableGenericTL, resultantGenericTL);
-		search.searchTimedByName(term, observableTimedTL, resultantTimedTL);
+		search.searchDeadlineTlByName(term, observableDeadlineTL, resultantDeadlineTL);
+		search.searchGenericTlByName(term, observableGenericTL, resultantGenericTL);
+		search.searchTimedTlByName(term, observableTimedTL, resultantTimedTL);
 
 		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
 		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
@@ -548,9 +567,9 @@ public class DatabaseConnector implements IDatabaseConnector {
 	 * */
 	private void searchForWorkload(int workload){
 
-		search.searchDeadlineByWorkload(workload, observableDeadlineTL, resultantDeadlineTL);
-		search.searchGenericByWorkload(workload, observableGenericTL, resultantGenericTL);
-		search.searchTimedByWorkload(workload, observableTimedTL, resultantTimedTL);
+		search.searchDeadlineTlByWorkload(workload, observableDeadlineTL, resultantDeadlineTL);
+		search.searchGenericTlByWorkload(workload, observableGenericTL, resultantGenericTL);
+		search.searchTimedTlByWorkload(workload, observableTimedTL, resultantTimedTL);
 
 		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
 		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);

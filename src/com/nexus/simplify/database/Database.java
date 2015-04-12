@@ -21,10 +21,11 @@ import com.nexus.simplify.database.Reader;
 
 public class Database {
 
-	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "data file directory";
+	private static final String DATA_FILE_LOCATION = "Data file location";
+	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "Data file directory";
 	private static final String DEFAULT_FILE_NAME = "input.json";
 	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
-	private static final String CONFIG_FILE_LOCATION = "config/";
+	private static final String CONFIG_FILE_LOCATION = "Config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
 
 	private LogicRequest logicRequest = new LogicRequest();
@@ -107,7 +108,6 @@ public class Database {
 
 	/**
 	 * @return the relative file path.
-	 * 
 	 * */
 	public String getDataFilePath() {
 		return this.dataFileLocation + DEFAULT_FILE_NAME;
@@ -115,7 +115,6 @@ public class Database {
 
 	/**
 	 * @return the location (directory) of the file.
-	 * 
 	 * */
 	public String getDataFileLocation() {
 		return this.dataFileLocation;
@@ -237,7 +236,7 @@ public class Database {
 	@SuppressWarnings("unchecked") 
 	private void storeSettingsIntoConfigFile(String fileLocation) {
 		JSONObject configJson = new JSONObject();
-		configJson.put("data file location", fileLocation);
+		configJson.put(DATA_FILE_LOCATION, fileLocation);
 		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		// File outputConfigFile = new File(outputConfigFilePath);
 		try {

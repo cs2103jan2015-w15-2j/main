@@ -6,13 +6,13 @@ import org.joda.time.DateTime;
 import org.joda.time.format.*;
 
 /**
- * Represents an instance of a task without due date or start and end time
+ * Represents an instance of a task without due date or start and end time.
  * @author Tan Qian Yi
  * */
 public class GenericTask {
 	
 	/**
-	 * Default value of workload when user does not specify is 1
+	 * Default value of workload when user does not specify is 1.
 	 * */
 	private static final int DEFAULT_WORKLOAD_VALUE = 1;
 	private static final String ID_FORMAT = "ddMMyyHHmmss";
@@ -30,7 +30,7 @@ public class GenericTask {
 	//--------------//
 	
 	/**
-	 * constructor without workload
+	 * Constructor without workload.
 	 * 
 	 * @param name name of task
 	 * @param  
@@ -42,7 +42,7 @@ public class GenericTask {
 	}
 
 	/**
-	 * constructor with workload
+	 * Constructor with workload.
 	 * 
 	 * @param name name of task
 	 * @param workload amount of effort required to do the task ranging from 1 to 5
@@ -54,7 +54,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * constructor with workload and id
+	 * Constructor with workload and id.
 	 * 
 	 * @param name name of task in StringProperty
 	 * @param workload amount of effort required to do the task ranging from 1 to 5 in IntegerProperty
@@ -80,7 +80,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * default setter for class attribute id
+	 * Default setter for class attribute id.
 	 * 
 	 * @param id the new id for the task
 	 * */
@@ -89,7 +89,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * default setter for class attribute name
+	 * Default setter for class attribute name.
 	 * 
 	 * @param name the new name for the task
 	 * */
@@ -98,7 +98,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * default setter for class attribute workload
+	 * Default setter for class attribute workload.
 	 * 
 	 * @param workload the new workload for the task
 	 * */
@@ -111,7 +111,7 @@ public class GenericTask {
 	//---------------------//
 	
 	/**
-	 * default getter method for attribute id
+	 * Default getter method for attribute id.
 	 * 
 	 * @return id of task
 	 * */
@@ -120,7 +120,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * default getter method for attribute name
+	 * Default getter method for attribute name.
 	 * 
 	 * @return name of task
 	 * */
@@ -129,7 +129,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * default getter method for attribute workload
+	 * Default getter method for attribute workload.
 	 * 
 	 * @return workload of task
 	 * */
@@ -138,7 +138,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * returns the id of the task formatted as a StringProperty Object
+	 * Returns the id of the task formatted as a StringProperty Object.
 	 * 
 	 * @return id of task as StringProperty Object
 	 * @author tohjianfeng
@@ -147,6 +147,11 @@ public class GenericTask {
 		return id;
 	}
 	
+	/**
+	 * Returns the ID of the task in DateTime.
+	 * 
+	 * @return ID of task as DateTime
+	 * */
 	public DateTime getIDAsDT() {
 		DateTimeFormatter format = DateTimeFormat.forPattern(ID_FORMAT);
 		DateTime ID = format.parseDateTime(id.get());
@@ -154,7 +159,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * returns the name of the task formatted as a StringProperty Object
+	 * Returns the name of the task formatted as a StringProperty Object.
 	 * 
 	 * @return name of task as StringProperty Object
 	 * */
@@ -163,7 +168,7 @@ public class GenericTask {
 	}
 	
 	/**
-	 * returns the workload of the task formatted as a IntegerProperty Object
+	 * Returns the workload of the task formatted as a IntegerProperty Object.
 	 * 
 	 * @return workload of task as IntegerProperty Object
 	 * */
@@ -171,6 +176,9 @@ public class GenericTask {
 		return workload;
 	}
 	
+	/**
+	 * Returns an exact copy of the task.
+	 * */
 	public GenericTask getCopy() {
 		StringProperty cName = new SimpleStringProperty(getName());
 		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
