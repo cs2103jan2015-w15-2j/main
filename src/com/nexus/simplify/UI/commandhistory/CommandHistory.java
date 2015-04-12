@@ -70,6 +70,14 @@ public class CommandHistory {
 		}
 	}
 	
+	/**
+	 * Removes all stored user commands.
+	 * */
+	public void clearAllHistory() {
+		upStack.clear();
+		downStack.clear();
+	}
+	
 	//----------------------------//
 	// Command History Navigation //
 	//----------------------------//
