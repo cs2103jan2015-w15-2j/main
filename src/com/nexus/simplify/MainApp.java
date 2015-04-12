@@ -1,9 +1,10 @@
 package com.nexus.simplify;
 
+//@author A0108361M
 import java.io.IOException;
 
 import com.nexus.simplify.UI.controller.BillboardOverviewController;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.api.Logic;
 
 import javafx.application.Application;
@@ -14,7 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-// @author A0108361M
 /**
  * Main class for Simplify. 
  * */
@@ -77,7 +77,7 @@ public class MainApp extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainApp.class.getResource(FILE_LOCATION_BILLBOARD_OVERVIEW_FXML));
 			AnchorPane billboardOverview = (AnchorPane) loader.load();
-			
+
 			// sets main interface onto the center of root layout.
 			rootLayout.setCenter(billboardOverview);
 			

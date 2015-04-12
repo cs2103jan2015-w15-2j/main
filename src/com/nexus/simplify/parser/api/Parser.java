@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.logic.usercommand.UserCommand;
+import com.nexus.simplify.parser.core.CoreParser;
 import com.nexus.simplify.parser.data.CommandData;
-import com.nexus.simplify.parser.parser.MainParser;
 import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 /**
@@ -24,10 +24,10 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  */
 
 public class Parser implements IParser {
-	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
+	Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
 	String givenInput;
 	Tokeniser tokeniser = new Tokeniser();
-	MainParser parser = new MainParser();
+	CoreParser parser = new CoreParser();
 	CommandData commandData = CommandData.getInstance();
 	String[] userTokens;
 
