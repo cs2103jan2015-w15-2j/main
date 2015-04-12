@@ -30,7 +30,6 @@ public class Logic implements ILogic {
 	private OperationType savedCommandType;
 	private Parser parser = new Parser();
 
-	
 	private Logic() {}
 	
 	public static Logic getInstance() {
@@ -56,12 +55,14 @@ public class Logic implements ILogic {
 				}
 				logger.log(Level.INFO, "Calling database to add");
 				feedback = addOp.execute(command.getParameter());
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case DISPLAY :
 				Display displayOp = new Display();
 				logger.log(Level.INFO, "Calling database to display");
 				feedback = displayOp.execute(command.getParameter());
+				assert !feedback.isEmpty();
 				savedCommandType = OperationType.DISPLAY;
 				return feedback;
 			case MODIFY :
@@ -72,36 +73,42 @@ public class Logic implements ILogic {
 				}
 				logger.log(Level.INFO, "Calling database to modify");
 				feedback = modifyOp.execute(command.getParameter());
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case DELETE :
 				Delete deleteOp = new Delete();
 				logger.log(Level.INFO, "Calling database to delete");
 				feedback = deleteOp.execute(command.getParameter());
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case DONE :
 				Done doneOp = new Done();
 				logger.log(Level.INFO, "Calling database to mark done");
 				feedback = doneOp.execute(command.getParameter());
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case SEARCH :
 				Search searchOp = new Search();
 				logger.log(Level.INFO, "Calling database to search");
 				feedback = searchOp.execute(command.getParameter(), command.getSearchField());
+				assert !feedback.isEmpty();
 				savedCommandType = OperationType.SEARCH;
 				return feedback;
 			case UNDO :
 				Undo undoOp = new Undo();
 				logger.log(Level.INFO, "Calling database to undo");
 				feedback = undoOp.execute();
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case CLEAR :
 				Clear clearOp = new Clear();
 				logger.log(Level.INFO, "Calling database to clear");
 				feedback = clearOp.execute();
+				assert !feedback.isEmpty();
 				savedCommandType = null;
 				return feedback;
 			case EXIT :

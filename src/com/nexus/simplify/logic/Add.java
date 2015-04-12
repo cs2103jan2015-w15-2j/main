@@ -87,13 +87,13 @@ public class Add {
 			try {
 				workload = Integer.parseInt(workloadStringForm);
 			} catch (NumberFormatException e) {
-				feedback = "Please enter a valid workload.";
+				feedback = INVALID_WORKLOAD;
 				return feedback;
 			}
 		}
 		
 		if(name == null || name.isEmpty()) {
-			feedback = "Please enter a name for this task.";
+			feedback = NO_NAME;
 			return feedback;
 		}
 		
