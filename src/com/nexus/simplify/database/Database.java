@@ -5,6 +5,7 @@
 package com.nexus.simplify.database;
 
 import java.io.*;
+import java.util.prefs.Preferences;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,6 +14,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
@@ -27,14 +30,13 @@ public class Database {
 	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
 	private static final String CONFIG_FILE_LOCATION = "Config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
-
-	private LogicRequest logicRequest = new LogicRequest();
+	private static final String KEY_FILE_LOCATION = "File location";
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
 
-	private File file;
+	private Preferences preference;
 	private State state;
 	private String dataFileLocation;
 	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
@@ -44,6 +46,8 @@ public class Database {
 	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
 
+	private Logger LOGGER = LoggerFactory.getLogger(Database.class.getName());
+	
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -54,11 +58,13 @@ public class Database {
 	 * 
 	 * */
 	public Database() throws IOException {
+		
 		initDatabase();
 		Reader reader = new Reader(this);
 		JSONArray jsonTaskArray = reader.retrieveDataFromDataFile(getDataFilePath());
 		reader.populateTaskLists(jsonTaskArray);
 		state = new State();
+		
 	}
 
 	//----------------//
@@ -66,13 +72,29 @@ public class Database {
 	//----------------//
 
 	public void initDatabase() throws IOException {
-		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
+		preference = Preferences.userRoot().node(this.getClass().getName());
+		final String NO_SAVED_FILEPATH_FOUND = "";
+		String fileLocationPath = preference.get(KEY_FILE_LOCATION, NO_SAVED_FILEPATH_FOUND);
+		
+		if (fileLocationPath.equals(NO_SAVED_FILEPATH_FOUND)) {
+			preference.put(KEY_FILE_LOCATION, DEFAULT_DATA_FILE_LOCATION);
+			dataFileLocation = DEFAULT_DATA_FILE_LOCATION;
+			LOGGER.info("Default settings for file location will be loaded.");
+		} else {
+			dataFileLocation = fileLocationPath;
+			LOGGER.info("Saved settings for file location will be loaded.");
+		}
+		
+		/*String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		if (!configFileExists(configFilePath)) {
 			createNewFile(configFilePath);
 			revertToDefaultSettings();
+			
 		} else {
 			retrieveSettingsFromConfigFile();
-		}
+			
+		}*/
+		
 	}
 
 	//---------------------//
@@ -120,13 +142,6 @@ public class Database {
 		return this.dataFileLocation;
 	}
 
-	/**
-	 * @return the LogicRequest object of this Database
-	 */
-	public LogicRequest getLogicRequest() {
-		return logicRequest;
-	}
-
 	//--------------------//
 	// Attribute Mutators //
 	//--------------------//
@@ -157,15 +172,16 @@ public class Database {
 
 	public void setDataFileLocation(String newFileLocation) throws IOException {
 				
-		file = new File(newFileLocation + DEFAULT_FILE_NAME);
+		File file = new File(newFileLocation);
 		file.mkdirs();
 		file.createNewFile();
 		dataFileLocation = newFileLocation;
+		preference.put(KEY_FILE_LOCATION, newFileLocation);
 		
 	}
 
 	/**
-	 * creates a new file for the program.
+	 * Creates a new file for the program.
 	 * 
 	 * @param fileName name of the file
 	 * */
@@ -189,7 +205,7 @@ public class Database {
 	//-----------------//
 
 	/**
-	 * retrieves the data file location from the 
+	 * Retrieves the data file location from the 
 	 * configuration file.
 	 * */
 	public void retrieveSettingsFromConfigFile() {
@@ -211,8 +227,9 @@ public class Database {
 	}
 
 	/**
-	 * sets the location of the data file to its default location
+	 * Sets the location of the data file to its default location
 	 * and stores the default settings into the configuration file.
+	 * 
 	 * @throws IOException 
 	 * */
 	private void revertToDefaultSettings() throws IOException {

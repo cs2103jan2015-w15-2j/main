@@ -10,7 +10,7 @@ public interface IDatabaseConnector {
 	void addTimedTask(String name, Date startTime, Date endTime, int workload) throws Exception;
 	void deleteTaskByIndex(int index);
 	void clearContent();
-	void undoTask();
+	void undoTask() throws Exception;
 	void retrieveActiveTasklists();
 	void searchDatabase(String[] parameter, boolean[] searchForTimeUnit) throws java.text.ParseException;
 	void toggleDisplay(String keyword);
