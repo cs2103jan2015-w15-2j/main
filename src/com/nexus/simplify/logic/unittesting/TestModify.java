@@ -19,36 +19,31 @@ public class TestModify {
 			// for invalid index
 			testParameter = new String[]{"","dummy","dummy","dummy","5"};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"please enter a task index to modify.");
+			assertEquals(feedback,"Please enter a task index to modify.");
 			
 			// for invalid workload
 			testParameter = new String[]{"5","dummy","dummy","dummy","invalid"};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"please enter a valid workload.");
+			assertEquals(feedback,"Please enter a valid workload.");
 			
 			// for nothing to modify
 			testParameter = new String[]{"4","",null,"",null};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"please specify something to modify.");
+			assertEquals(feedback,"Please specify something to modify.");
 			
 			// for no name
 			testParameter = new String[]{"5",null,"dummy","dummy","5"};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"task start time, end time, workload, modified.");
+			assertEquals(feedback,"Task time, workload, modified.");
 			
-			// for no start time
-			testParameter = new String[]{"1","dummy","","dummy","5"};
+			// for no time
+			testParameter = new String[]{"1","dummy","",null,"5"};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"task name, end time, workload, modified.");
-			
-			// for no end time
-			testParameter = new String[]{"1","dummy","dummy",null,"5"};
-			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"task name, start time, workload, modified.");
+			assertEquals(feedback,"Task name, workload, modified.");
 			
 			// for no workload
 			testParameter = new String[]{"1","dummy","dummy","dummy",""};
 			feedback = stubModify.executeForTesting(testParameter);
-			assertEquals(feedback,"task name, start time, end time, modified.");
+			assertEquals(feedback,"Task name, time, modified.");
 		}
 }

@@ -94,6 +94,7 @@ public class Modify {
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
 	public String executeForTesting(String[] parameter) {
+		@SuppressWarnings("unused")
 		int indexToModify;
 		try{
 			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
@@ -103,7 +104,7 @@ public class Modify {
 		}
 		
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		String feedback = "task ";
+		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
 		if(newName != null && !newName.isEmpty()) {
 			feedback += "name, ";
@@ -113,19 +114,12 @@ public class Modify {
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		if(newStartTime != null && !newStartTime.isEmpty() && 
 			newEndTime != null && !newEndTime.isEmpty()) {
-			Date startTime;
-			Date endTime;
-			try {
-				
-				database.modifyStartEnd(indexToModify, startTime, endTime);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 			feedback += "time, ";
 		}
 		
 		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
 		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
+			@SuppressWarnings("unused")
 			int newWorkload;
 			try{
 				newWorkload = Integer.parseInt(newWorkloadStr);

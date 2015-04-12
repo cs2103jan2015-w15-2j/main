@@ -35,6 +35,7 @@ public class Done {
 	// this method is for unit testing, which assumes that parser and
 	// database function correctly
 	public String executeForTesting(String[] parameter) {
+		@SuppressWarnings("unused")
 		int indexToMarkDone;
 		
 		try {

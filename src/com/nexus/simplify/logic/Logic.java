@@ -65,10 +65,6 @@ public class Logic implements ILogic {
 				return feedback;
 			case DELETE :
 				Delete deleteOp = new Delete();
-				if(savedCommandType.equals(OperationType.SEARCH)
-					|| savedCommandType.equals(OperationType.DISPLAY)) {
-					MainApp.getDatabase().retrieveActiveTasklists();
-				}
 				logger.log(Level.INFO, "Calling database to delete");
 				feedback = deleteOp.execute(command.getParameter());
 				savedCommandType = null;
