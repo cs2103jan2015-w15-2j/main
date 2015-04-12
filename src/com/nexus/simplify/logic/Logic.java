@@ -39,9 +39,9 @@ public class Logic implements ILogic {
 		switch (operationType) {
 			case ADD :
 				Add addOp = new Add();
-				if(operationType.equals(OperationType.SEARCH)
-					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+				if(savedCommandType.equals(OperationType.SEARCH)
+					|| savedCommandType.equals(OperationType.DISPLAY)) {
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				logger.log(Level.INFO, "Calling database to add");
 				feedback = addOp.execute(command.getParameter());
@@ -51,13 +51,13 @@ public class Logic implements ILogic {
 				Display displayOp = new Display();
 				logger.log(Level.INFO, "Calling database to display");
 				feedback = displayOp.execute(command.getParameter());
-				savedCommandType = null;
+				savedCommandType = OperationType.DISPLAY;
 				return feedback;
 			case MODIFY :
 				Modify modifyOp = new Modify();
-				if(operationType.equals(OperationType.SEARCH)
-					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+				if(savedCommandType.equals(OperationType.SEARCH)
+					|| savedCommandType.equals(OperationType.DISPLAY)) {
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				logger.log(Level.INFO, "Calling database to modify");
 				feedback = modifyOp.execute(command.getParameter());
@@ -65,9 +65,9 @@ public class Logic implements ILogic {
 				return feedback;
 			case DELETE :
 				Delete deleteOp = new Delete();
-				if(operationType.equals(OperationType.SEARCH)
-					|| operationType.equals(OperationType.DONE)) {
-					MainApp.getDatabase().retrieveActiveTasklist();
+				if(savedCommandType.equals(OperationType.SEARCH)
+					|| savedCommandType.equals(OperationType.DISPLAY)) {
+					MainApp.getDatabase().retrieveActiveTasklists();
 				}
 				logger.log(Level.INFO, "Calling database to delete");
 				feedback = deleteOp.execute(command.getParameter());
@@ -77,7 +77,7 @@ public class Logic implements ILogic {
 				Done doneOp = new Done();
 				logger.log(Level.INFO, "Calling database to mark done");
 				feedback = doneOp.execute(command.getParameter());
-				savedCommandType = OperationType.DONE;
+				savedCommandType = null;
 				return feedback;
 			case SEARCH :
 				Search searchOp = new Search();

@@ -110,13 +110,18 @@ public class Modify {
 		}
 		
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
-		if(newStartTime != null && !newStartTime.isEmpty()) {
-			feedback += "start time, ";
-		}
-		
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
-		if(newEndTime != null && !newEndTime.isEmpty()) {
-			feedback += "end time, ";
+		if(newStartTime != null && !newStartTime.isEmpty() && 
+			newEndTime != null && !newEndTime.isEmpty()) {
+			Date startTime;
+			Date endTime;
+			try {
+				
+				database.modifyStartEnd(indexToModify, startTime, endTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			feedback += "time, ";
 		}
 		
 		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];

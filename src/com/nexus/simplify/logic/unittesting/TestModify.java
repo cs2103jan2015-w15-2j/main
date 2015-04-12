@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.unittesting;
 import static org.junit.Assert.*;
 
@@ -5,6 +6,7 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.Modify;
 
+//@author A0094457U
 public class TestModify {
 	
 	// This method tests boundary cases for unit testing
