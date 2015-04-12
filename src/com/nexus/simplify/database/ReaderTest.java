@@ -1,74 +1,97 @@
 package com.nexus.simplify.database;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
 
-import javafx.beans.property.*;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.joda.time.DateTime;
-import org.json.simple.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.nexus.simplify.database.tasktype.*;
 
 public class ReaderTest {
 
-	private static final String DEFAULT_DATA_FILE_PATH = "SavedData/input.json";
+	private String DATA_FILE_PATH;
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
 	
-	Database database;
-	Reader reader;
+	private Database database;
+	private Reader reader;
+	private DatabaseConnector databaseConnector;
 	
 	@Before
 	public void initialise() {
+		
 		try {
 			database = new Database();
-			database.clearContent();
+			databaseConnector = new DatabaseConnector(database);
 			reader = new Reader(database);
+			DATA_FILE_PATH = database.getDataFilePath();
+			System.out.println(DATA_FILE_PATH);
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
 		}
+		
 	}
 	
 	@After
 	public void tearDown() {
-		database.clearContent();
+		databaseConnector.clearContent();
 	}
 	
 	@Test
 	public void testRetrieveEmptyFile() {
+		
 		JSONArray expectedJsonArray = new JSONArray();
-		JSONArray jsonArray = reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH);
+		JSONArray jsonArray = reader.retrieveDataFromDataFile(DATA_FILE_PATH);
 		assertEquals(expectedJsonArray, jsonArray);
+		
 	}
 	
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Test
 	public void testRetrieveDataFromDataFile() {
+		
 		JSONArray expectedJsonArray = new JSONArray();
 		
-		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
-		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
-		database.addGenericTask("generic", 1);
+		databaseConnector.addGenericTask("generic", 1);
 		String genericId = database.getObservableGenericTL().get(0).getId();
-		database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
+		try {
+			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String timedId = database.getObservableTimedTL().get(0).getId();
 		
 		JSONObject itemOne = new JSONObject();
-		itemOne.put("Name", "deadline");
-		itemOne.put("DueDate", "01 Jul 2015 00:00");
+		itemOne.put("Name", "generic");
 		itemOne.put("Workload", 1);
-		itemOne.put("ID", deadlineId);
-		itemOne.put("Type", "Deadline");
+		itemOne.put("ID", genericId);
+		itemOne.put("Type", "Generic");
 		expectedJsonArray.add(itemOne);
+		
+		JSONObject itemTwo = new JSONObject();
+		itemTwo.put("Name", "deadline");
+		itemTwo.put("DueDate", "01 Jul 2015 00:00");
+		itemTwo.put("Workload", 1);
+		itemTwo.put("ID", deadlineId);
+		itemTwo.put("Type", "Deadline");
+		expectedJsonArray.add(itemTwo);
 		
 		JSONObject itemThree = new JSONObject();
 		itemThree.put("Name", "timed");
@@ -79,28 +102,28 @@ public class ReaderTest {
 		itemThree.put("Type", "Timed");
 		expectedJsonArray.add(itemThree);
 		
-		JSONObject itemTwo = new JSONObject();
-		itemTwo.put("Name", "generic");
-		itemTwo.put("Workload", 1);
-		itemTwo.put("ID", genericId);
-		itemTwo.put("Type", "Generic");
-		expectedJsonArray.add(itemTwo);
-		
-		JSONArray jsonArray = reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH);
+		JSONArray jsonArray = reader.retrieveDataFromDataFile(DATA_FILE_PATH);
 		assertEquals(expectedJsonArray.toString(), jsonArray.toString());
+		
 	}
 	
 	@SuppressWarnings("deprecation")
 	@Test
 	public void testPopulateTaskLists() {
+		
 		ObservableList<GenericTask> expectedGenericTL = FXCollections.observableArrayList(); 
 		ObservableList<DeadlineTask> expectedDeadlineTL = FXCollections.observableArrayList();
 		ObservableList<TimedTask> expectedTimedTL = FXCollections.observableArrayList();
 		
-		database.addGenericTask("generic", 1);
-		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
-		database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
-		reader.populateTaskLists(reader.retrieveDataFromDataFile(DEFAULT_DATA_FILE_PATH));
+		databaseConnector.addGenericTask("generic", 1);
+		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		try {
+			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		reader.populateTaskLists(reader.retrieveDataFromDataFile(DATA_FILE_PATH));
 		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(database.getObservableGenericTL());
 		ObservableList<DeadlineTask> deadlineTL = FXCollections.observableArrayList(database.getObservableDeadlineTL());
 		ObservableList<TimedTask> timedTL = FXCollections.observableArrayList();
@@ -132,5 +155,7 @@ public class ReaderTest {
 			assertEquals(timed.getWorkload(), expectedTimedTL.get(index).getWorkload());
 			assertEquals(timed.getId(), expectedTimedTL.get(index).getId());
 		}
+		
 	}
+	
 }

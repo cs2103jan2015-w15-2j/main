@@ -4,79 +4,46 @@
 
 package com.nexus.simplify.database;
 
-import java.util.*;
-import java.text.*;
 import java.io.*;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
-import com.nexus.simplify.database.Writer;
 import com.nexus.simplify.database.Reader;
-import com.nexus.simplify.parser.parser.DateTimeParser;
-
-@SuppressWarnings("unused")
 
 public class Database {
-	
-	private static final String TASK_TYPE_TIMED = "Timed";
-	private static final String TASK_TYPE_DEADLINE = "Deadline";
-	private static final String TASK_TYPE_GENERIC = "Generic";
-	
-	private static final String JSON_KEY_DUEDATE = "DueDate";
-	private static final String JSON_KEY_ID = "ID";
-	private static final String JSON_KEY_WORKLOAD = "Workload";
-	private static final String JSON_KEY_END_TIME = "End Time";
-	private static final String JSON_KEY_START_TIME = "Start Time";
-	private static final String JSON_KEY_NAME = "Name";
-	private static final String JSON_KEY_TYPE = "Type";
-	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "data file directory";
-	
-	/**
-	 * All dates will be shaped according to this format. 
-	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
-	 * */
-	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
-	
-	private static final String MSG_INDEX_OOR = "Index is out of range.";
-	private static final String MSG_INVALID_WORKLOAD = "Invalid workload value entered. Supported workload values range from 1 to 5.";
-	
+
+	private static final String DATA_FILE_LOCATION = "Data file location";
+	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "Data file directory";
 	private static final String DEFAULT_FILE_NAME = "input.json";
 	private static final String DEFAULT_DATA_FILE_LOCATION = "SavedData/";
-	private static final String CONFIG_FILE_LOCATION = "config/";
+	private static final String CONFIG_FILE_LOCATION = "Config/";
 	private static final String CONFIG_FILE_NAME = "simplify-config.json";
-	
-	Writer writer = new Writer(this);
-	State state;
-	LogicRequest logicRequest = new LogicRequest();
+
+	private LogicRequest logicRequest = new LogicRequest();
 	
 	//------------------//
 	// Class Attributes //
 	//------------------//
-	
+
+	private File file;
+	private State state;
 	private String dataFileLocation;
-	private ObservableList<GenericTask> activeGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> activeDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> activeTimedTL = FXCollections.observableArrayList();
 	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
 	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+<<<<<<< HEAD
 	
 	private ObservableList<GenericTask> resultantGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> resultantDeadlineTL = FXCollections.observableArrayList();
@@ -542,11 +509,13 @@ public class Database {
 			}
 		}
 	};
+=======
+>>>>>>> Qian-database
 
 	//-------------//
 	// Constructor //
 	//-------------//
-	
+
 	/**
 	 * @param fileName name of input file to be opened
 	 * @throws IOException for an interrupted IO operation.
@@ -557,15 +526,14 @@ public class Database {
 		Reader reader = new Reader(this);
 		JSONArray jsonTaskArray = reader.retrieveDataFromDataFile(getDataFilePath());
 		reader.populateTaskLists(jsonTaskArray);
-		setActiveTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
 		state = new State();
 	}
-	
+
 	//----------------//
 	// Initialization //
 	//----------------//
 
-	public void initDatabase() {
+	public void initDatabase() throws IOException {
 		String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		if (!configFileExists(configFilePath)) {
 			createNewFile(configFilePath);
@@ -574,90 +542,96 @@ public class Database {
 			retrieveSettingsFromConfigFile();
 		}
 	}
-	
+
 	//---------------------//
 	// Attribute Accessors //
 	//---------------------//
-	
+
 	public ObservableList<GenericTask> getObservableGenericTL() {
 		return this.observableGenericTL;
 	}
-	
+
 	public ObservableList<TimedTask> getObservableTimedTL() {
 		return this.observableTimedTL;
 	}
-	
+
 	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
 		return this.observableDeadlineTL;
 	}
-	
+
 	public ObservableList<GenericTask> getArchivedGenericTL() {
 		return this.archivedGenericTL;
 	}
-	
+
 	public ObservableList<TimedTask> getArchivedTimedTL() {
 		return this.archivedTimedTL;
 	}
-	
+
 	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
 		return this.archivedDeadlineTL;
 	}
-	
+	public State getState() {
+		return this.state;
+	}
+
 	/**
 	 * @return the relative file path.
-	 * 
 	 * */
 	public String getDataFilePath() {
 		return this.dataFileLocation + DEFAULT_FILE_NAME;
 	}
-	
+
 	/**
 	 * @return the location (directory) of the file.
-	 * 
 	 * */
 	public String getDataFileLocation() {
 		return this.dataFileLocation;
 	}
-	
+
 	/**
 	 * @return the LogicRequest object of this Database
 	 */
 	public LogicRequest getLogicRequest() {
 		return logicRequest;
 	}
-	
+
 	//--------------------//
 	// Attribute Mutators //
 	//--------------------//
-	
+
 	public void setObservableGenericTL(ObservableList<GenericTask> generic) {
 		this.observableGenericTL = generic;
 	}
-	
+
 	public void setObservableTimedTL(ObservableList<TimedTask> timed) {
 		this.observableTimedTL = timed;
 	}
-	
+
 	public void setObservableDeadlineTL(ObservableList<DeadlineTask> deadline) {
 		this.observableDeadlineTL = deadline;
 	}
-	
+
 	public void setArchivedGenericTL(ObservableList<GenericTask> generic) {
 		this.archivedGenericTL = generic;
 	}
-	
+
 	public void setArchivedTimedTL(ObservableList<TimedTask> timed) {
 		this.archivedTimedTL = timed;
 	}
-	
+
 	public void setArchivedDeadlineTL(ObservableList<DeadlineTask> deadline) {
 		this.archivedDeadlineTL = deadline;
 	}
-	
-	public void setDataFileLocation(String newFileLocation) {
-		this.dataFileLocation = newFileLocation;
+
+	public void setDataFileLocation(String newFileLocation) throws IOException {
+				
+		file = new File(newFileLocation + DEFAULT_FILE_NAME);
+		file.mkdirs();
+		file.createNewFile();
+		dataFileLocation = newFileLocation;
+		
 	}
-	
+
 	/**
 	 * creates a new file for the program.
 	 * 
@@ -666,22 +640,22 @@ public class Database {
 	public void createNewFile(String fileName) {
 		try {
 			File newConfigFile = new File(fileName);
-			
+
 			// we make a new instance of directory for the file.
 			if (newConfigFile.getParentFile() != null) {
 				newConfigFile.getParentFile().mkdirs();
 			}
-			
+
 			newConfigFile.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	//-----------------//
 	// File Processing //
 	//-----------------//
-	
+
 	/**
 	 * retrieves the data file location from the 
 	 * configuration file.
@@ -693,7 +667,7 @@ public class Database {
 			String configFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 			Object object = jsonParser.parse(new FileReader(configFilePath));
 			configJson = (JSONObject) object;
-			
+
 			if (!configJson.containsKey(JSON_KEY_DATA_FILE_DIRECTORY)) {
 				revertToDefaultSettings();
 			} else {
@@ -703,16 +677,17 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * sets the location of the data file to its default location
 	 * and stores the default settings into the configuration file.
+	 * @throws IOException 
 	 * */
-	private void revertToDefaultSettings() {
+	private void revertToDefaultSettings() throws IOException {
 		this.setDataFileLocation(DEFAULT_DATA_FILE_LOCATION);
 		storeSettingsIntoConfigFile(DEFAULT_DATA_FILE_LOCATION);
 	}
-	
+
 	/**
 	 * @param configFileName name of program configuration file
 	 * @return true if config file exists, false otherwise.
@@ -729,7 +704,7 @@ public class Database {
 	@SuppressWarnings("unchecked") 
 	private void storeSettingsIntoConfigFile(String fileLocation) {
 		JSONObject configJson = new JSONObject();
-		configJson.put("data file location", fileLocation);
+		configJson.put(DATA_FILE_LOCATION, fileLocation);
 		String outputConfigFilePath = CONFIG_FILE_LOCATION + CONFIG_FILE_NAME;
 		// File outputConfigFile = new File(outputConfigFilePath);
 		try {
@@ -739,13 +714,6 @@ public class Database {
 			fileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		try {
-			Database database = new Database();
-		} catch(IOException e) {
 		}
 	}
 }

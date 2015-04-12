@@ -1,3 +1,4 @@
+//@author A0114887U
 package com.nexus.simplify.database;
 
 import javafx.collections.ObservableList;
@@ -6,7 +7,9 @@ import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 
-
+/**
+ * Represents an instance of a search used to search for user-defined terms.
+ * */
 public class Search {
 	
 	//-------------//
@@ -19,175 +22,248 @@ public class Search {
 	// Methods //
 	//---------//
 	
-	public ObservableList<TimedTask> searchTimedByYear(int year, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getStartTimeAsDT().getYear() == year && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
-			} else if (timedTask.getEndTimeAsDT().getYear() == year && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<GenericTask> searchGenericTlByName(String term, ObservableList<GenericTask> genericTl,
+			ObservableList<GenericTask> resultantTl) {
+		
+		assert !genericTl.isEmpty();
+	
+		for(GenericTask genericTask: genericTl) {
+			if (genericTask.getName().contains(term) && !resultantTl.contains(genericTask)) {
+				resultantTl.add(genericTask);
 			}
 		}
-		return resultantTL;
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<TimedTask> searchTimedByMonth(int month, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getStartTimeAsDT().getMonthOfYear() == month && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
-			} else if (timedTask.getEndTimeAsDT().getMonthOfYear() == month && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<GenericTask> searchGenericTlByWorkload(int workload, ObservableList<GenericTask> genericTl,
+			ObservableList<GenericTask> resultantTl) {
+		
+		assert !genericTl.isEmpty();
+		
+		for(GenericTask genericTask: genericTl) {
+			if (genericTask.getWorkload() == workload && !resultantTl.contains(genericTask)) {
+				resultantTl.add(genericTask);
 			}
 		}
-		return resultantTL;
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<TimedTask> searchTimedByDay(int day, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getStartTimeAsDT().getDayOfMonth() == day && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
-			} else if (timedTask.getEndTimeAsDT().getDayOfMonth() == day && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByName(String term, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getName().contains(term) && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		return resultantTl;
+	
 	}
 	
-	// weekday needs to be in integer of 1 to 7 instead of String
-	public ObservableList<TimedTask> searchTimedByWeekday(int weekday, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getStartTimeAsDT().getDayOfWeek() == weekday && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
-			} else if (timedTask.getEndTimeAsDT().getDayOfWeek() == weekday && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByWorkload(int workload, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getWorkload() == workload && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<TimedTask> searchTimedByHour(int hour, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getStartTimeAsDT().getHourOfDay() == hour && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
-			} else if (timedTask.getEndTimeAsDT().getHourOfDay() == hour && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByYear(int year, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getDeadline().getYear() == year && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByYear(int year, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getDeadline().getYear() == year && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByMonth(int month, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getDeadline().getMonthOfYear() == month && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
+	}
+
+	public ObservableList<DeadlineTask> searchDeadlineTlByDay(int day, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getDeadline().getDayOfMonth() == day && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
+			}
+		}
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByMonth(int month, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getDeadline().getMonthOfYear() == month && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByWeekday(int weekday, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getDeadline().getDayOfWeek() == weekday && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByDay(int day, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getDeadline().getDayOfMonth() == day && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<DeadlineTask> searchDeadlineTlByHour(int hour, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<DeadlineTask> resultantTl) {
+		
+		assert !deadlineTl.isEmpty();
+		
+		for(DeadlineTask deadlineTask: deadlineTl) {
+			if (deadlineTask.getDeadline().getHourOfDay() == hour && !resultantTl.contains(deadlineTask)) {
+				resultantTl.add(deadlineTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	// weekday needs to be in integer 1 to 7 instead of String
-	public ObservableList<DeadlineTask> searchDeadlineByWeekday(int weekday, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getDeadline().getDayOfWeek() == weekday && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<TimedTask> searchTimedTlByName(String term, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+		
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getName().contains(term) && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByHour(int hour, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getDeadline().getHourOfDay() == hour && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<TimedTask> searchTimedTlByWorkload(int workload, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+	
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getWorkload() == workload && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<TimedTask> searchTimedByWorkload(int workload, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getWorkload() == workload && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<TimedTask> searchTimedTlByYear(int year, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+	
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getStartTimeAsDT().getYear() == year && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getYear() == year && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByWorkload(int workload, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getWorkload() == workload && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<TimedTask> searchTimedTlByMonth(int month, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+		
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getStartTimeAsDT().getMonthOfYear() == month && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getMonthOfYear() == month && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<GenericTask> searchGenericByWorkload(int workload, ObservableList<GenericTask> genericTL, ObservableList<GenericTask> resultantTL) {
-		assert !genericTL.isEmpty();
-		for(GenericTask genericTask: genericTL) {
-			if (genericTask.getWorkload() == workload && !resultantTL.contains(genericTask)) {
-				resultantTL.add(genericTask);
+	public ObservableList<TimedTask> searchTimedTlByDay(int day, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+		
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getStartTimeAsDT().getDayOfMonth() == day && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getDayOfMonth() == day && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<TimedTask> searchTimedByName(String term, ObservableList<TimedTask> timedTL, ObservableList<TimedTask> resultantTL) {
-		assert !timedTL.isEmpty();
-		for(TimedTask timedTask: timedTL) {
-			if (timedTask.getName().contains(term) && !resultantTL.contains(timedTask)) {
-				resultantTL.add(timedTask);
+	public ObservableList<TimedTask> searchTimedTlByWeekday(int weekday, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+		
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getStartTimeAsDT().getDayOfWeek() == weekday && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getDayOfWeek() == weekday && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
+		
+		return resultantTl;
+	
 	}
 	
-	public ObservableList<DeadlineTask> searchDeadlineByName(String term, ObservableList<DeadlineTask> deadlineTL, ObservableList<DeadlineTask> resultantTL) {
-		assert !deadlineTL.isEmpty();
-		for(DeadlineTask deadlineTask: deadlineTL) {
-			if (deadlineTask.getName().contains(term) && !resultantTL.contains(deadlineTask)) {
-				resultantTL.add(deadlineTask);
+	public ObservableList<TimedTask> searchTimedTlByHour(int hour, ObservableList<TimedTask> timedTl,
+			ObservableList<TimedTask> resultantTl) {
+		
+		assert !timedTl.isEmpty();
+		
+		for(TimedTask timedTask: timedTl) {
+			if (timedTask.getStartTimeAsDT().getHourOfDay() == hour && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getHourOfDay() == hour && !resultantTl.contains(timedTask)) {
+				resultantTl.add(timedTask);
 			}
 		}
-		return resultantTL;
-	}
+		
+		return resultantTl;
 	
-	public ObservableList<GenericTask> searchGenericByName(String term, ObservableList<GenericTask> genericTL, ObservableList<GenericTask> resultantTL) {
-		assert !genericTL.isEmpty();
-		for(GenericTask genericTask: genericTL) {
-			if (genericTask.getName().contains(term) && !resultantTL.contains(genericTask)) {
-				resultantTL.add(genericTask);
-			}
-		}
-		return resultantTL;
 	}
 }
