@@ -266,11 +266,18 @@ public class DateTimeParser extends TokenParser {
 		}
 	}
 
+	/**
+	 * A helper function for search operation. Searches for a "year" (ignore case) token and 
+	 * change that token to lower case.
+	 * @param tokenList
+	 * @return
+	 */
 	private boolean containsYear(String[] tokenList) {
 		final String year = "year";
 		for (int i = 0; i < tokenList.length; i++) {
 			String string = tokenList[i];
 			if (string.equalsIgnoreCase(year)) {
+				tokenList[i] = year;
 				return true;
 			}			
 		}
