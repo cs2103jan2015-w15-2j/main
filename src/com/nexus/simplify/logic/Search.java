@@ -2,15 +2,14 @@ package com.nexus.simplify.logic;
 
 import java.text.ParseException;
 
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.DatabaseConnector;
 
 public class Search {
 	
 	public Search() {}
 	
 	String execute(String[] parameter, boolean[] searchField) {
-		Database database = MainApp.getDatabase();
+		DatabaseConnector database = new DatabaseConnector();
 		String feedback;
 		try {
 			database.searchDatabase(parameter, searchField);
