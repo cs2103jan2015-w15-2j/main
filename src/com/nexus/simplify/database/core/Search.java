@@ -1,5 +1,5 @@
 //@author A0114887U
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.core;
 
 import javafx.collections.ObservableList;
 

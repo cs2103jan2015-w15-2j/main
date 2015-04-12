@@ -15,13 +15,13 @@ import org.junit.Assert;
 import com.joestelmach.natty.DateGroup;
 import com.joestelmach.natty.Parser;
 import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.Database;
-import com.nexus.simplify.database.LogicRequest;
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.database.core.LogicRequest;
 import com.nexus.simplify.logic.api.Logic;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.data.CommandData;
 
-public abstract class AbstractTest {
+public abstract class AbstractIntegrationTest {
 	private static MainApp _main;
 	protected static Logic _logic;
 	protected static Database _db;
@@ -180,7 +180,7 @@ public abstract class AbstractTest {
 
 	protected void validateCallOnDatabase(String userInput, UserCommand userCommand) {
 		try {
-			String feedback = _logic.executeCommand(userInput);
+			_logic.executeCommand(userInput);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

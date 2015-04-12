@@ -1,6 +1,7 @@
 //@author generated
-package com.nexus.simplify.logic;
-import com.nexus.simplify.database.DatabaseConnector;
+package com.nexus.simplify.logic.core;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -22,7 +23,7 @@ public class Delete {
 		}
 		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		
-		DatabaseConnector database = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 		database.deleteTaskByIndex(indexToDelete);
 
 		String feedback = "Successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";

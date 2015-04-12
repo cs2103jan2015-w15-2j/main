@@ -1,10 +1,10 @@
-package com.nexus.simplify.parser.parser;
+package com.nexus.simplify.parser.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MainParser extends TokenParser {
-	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
+public class CoreParser extends TokenParser {
+	Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
 	OperationParser opParser = new OperationParser();
 	ParamParser paramParser = new ParamParser();
 

@@ -1,7 +1,8 @@
 //@author generated
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.core;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
 //@author A0094457U
@@ -23,7 +24,7 @@ public class Done {
 		}
 		
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		DatabaseConnector database = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 
 		database.markTaskDone(indexToMarkDone);
 		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";

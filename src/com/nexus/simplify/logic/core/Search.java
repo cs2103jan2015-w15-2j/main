@@ -1,15 +1,16 @@
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.core;
 
 import java.text.ParseException;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
 
 public class Search {
 	
 	public Search() {}
 	
 	public String execute(String[] parameter, boolean[] searchField) throws ParseException {
-		DatabaseConnector database = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 		String feedback;
 		try {
 			database.searchDatabase(parameter, searchField);

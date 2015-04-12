@@ -1,9 +1,8 @@
-package com.nexus.simplify.parser.parser;
+package com.nexus.simplify.parser.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.parser.data.CommandData;
 
 
@@ -13,7 +12,7 @@ public class ParamParser extends TokenParser {
 	WorkloadParser wlParser = new WorkloadParser();
 	NameParser nameParser = new NameParser();
 	CommandData commandData = CommandData.getInstance();
-	Logger LOGGER = LoggerFactory.getLogger(MainParser.class.getName());
+	Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {

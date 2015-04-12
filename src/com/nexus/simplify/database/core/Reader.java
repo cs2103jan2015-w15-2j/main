@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.core;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,7 +15,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.core.CoreDatabase;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -47,7 +47,7 @@ public class Reader {
 	private static final String JSON_KEY_NAME = "Name";
 	private static final String JSON_KEY_TYPE = "Type";
 	
-	private Database database;
+	private CoreDatabase coreDatabase;
 	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
 	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
@@ -59,8 +59,8 @@ public class Reader {
 	// Constructor //
 	//-------------//
 	
-	public Reader(Database database) {
-		this.database = database;
+	public Reader(CoreDatabase coreDatabase) {
+		this.coreDatabase = coreDatabase;
 	}
 	
 	//--------------//
@@ -79,7 +79,7 @@ public class Reader {
 		try {
 			File dataFile = new File(dataFileName);
 			if (!dataFile.exists()) {
-				database.createNewFile(dataFileName);
+				coreDatabase.createNewFile(dataFileName);
 			} else {
 				JSONParser jsonParser = new JSONParser();
 				Object object = jsonParser.parse(new FileReader(dataFileName));
@@ -128,12 +128,12 @@ public class Reader {
 				break;
 			}
 			
-			database.setObservableGenericTL(observableGenericTL);
-			database.setObservableDeadlineTL(observableDeadlineTL);
-			database.setObservableTimedTL(observableTimedTL);
-			database.setArchivedGenericTL(archivedGenericTL);
-			database.setArchivedDeadlineTL(archivedDeadlineTL);
-			database.setArchivedTimedTL(archivedTimedTL);
+			coreDatabase.setObservableGenericTL(observableGenericTL);
+			coreDatabase.setObservableDeadlineTL(observableDeadlineTL);
+			coreDatabase.setObservableTimedTL(observableTimedTL);
+			coreDatabase.setArchivedGenericTL(archivedGenericTL);
+			coreDatabase.setArchivedDeadlineTL(archivedDeadlineTL);
+			coreDatabase.setArchivedTimedTL(archivedTimedTL);
 		}
 		
 	}

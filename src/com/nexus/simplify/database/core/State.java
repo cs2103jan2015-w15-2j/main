@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.core;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

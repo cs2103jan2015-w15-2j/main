@@ -1,5 +1,5 @@
 //@author generated
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.core;
 
 //@author A0094457U
 /*

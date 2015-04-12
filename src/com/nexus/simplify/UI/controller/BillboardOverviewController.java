@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.UI.commandhistory.CommandHistory;
-import com.nexus.simplify.database.Database;
+import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -161,10 +161,10 @@ public class BillboardOverviewController implements Initializable {
 	/**
 	 * Called by the main application to reference its instance of database.
 	 * 
-	 * @param database the database instance from the main application
+	 * @param database2 the database instance from the main application
 	 * */
-	public void setDatabase(Database database) {
-		this.database = database;
+	public void setDatabase(Database database2) {
+		this.database = database2;
 	}
 	
 	//----------------//

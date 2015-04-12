@@ -1,4 +1,4 @@
-package com.nexus.simplify.parser.parser;
+package com.nexus.simplify.parser.core;
 
 public abstract class TokenParser {
 

@@ -1,10 +1,10 @@
 //@author generated
-package com.nexus.simplify.logic.unittesting;
+package com.nexus.simplify.test.logic;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.nexus.simplify.logic.Modify;
+import com.nexus.simplify.logic.core.Modify;
 
 //@author A0094457U
 public class TestModify {

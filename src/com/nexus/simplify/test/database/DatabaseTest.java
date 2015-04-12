@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.test.database;
 
 import static org.junit.Assert.*;
 
@@ -11,23 +11,24 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.database.core.CoreDatabase;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
-import com.nexus.simplify.database.tasktype.TimedTask;
 
 /**
  * Provides a series of tests for the various methods found in the DatabaseConnector Class.
  * @author tohjianfeng
  * */
-public class DatabaseAdt {
+public class DatabaseTest {
 
 
 	//------------------//
 	// Class Attributes //
 	//------------------//
 	
+	private static CoreDatabase coreDatabase;
 	private static Database database;
-	private static DatabaseConnector databaseConnector;
 		
 	//----------------//
 	// Initialization //
@@ -35,15 +36,15 @@ public class DatabaseAdt {
 	
 	@BeforeClass
 	public static void initTestingEnvironment() throws Exception {
-		database = new Database();
-		databaseConnector = new DatabaseConnector(database);
-		databaseConnector.modifyFileLocation("TestSavedData/");
-		database.initDatabase();
+		coreDatabase = new CoreDatabase();
+		database = new Database(coreDatabase);
+		database.modifyFileLocation("TestSavedData/");
+		coreDatabase.initDatabase();
 	}
 	
 	@Before
 	public void resetEnvironmentForTest() {
-		databaseConnector.clearContent();
+		database.clearContent();
 	}
 	
 	//----------//
@@ -53,7 +54,7 @@ public class DatabaseAdt {
 	@AfterClass
 	public static void resetDefaultDataPath() {
 		try {
-			databaseConnector.modifyFileLocation("SavedData/");
+			database.modifyFileLocation("SavedData/");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,24 +66,24 @@ public class DatabaseAdt {
 	
 	@Test
 	public void testGetDataFileLocation() {
-		assertEquals("TestSavedData/", database.getDataFileLocation());
+		assertEquals("TestSavedData/", coreDatabase.getDataFileLocation());
 	}
 	
 	@Test
 	public void testGetDataFilePath() {
-		assertEquals("TestSavedData/input.json", database.getDataFilePath());
+		assertEquals("TestSavedData/input.json", coreDatabase.getDataFilePath());
 	}
 	
 	@Test
 	public void testModifyDataFilePath() {
 		
 		try {
-			databaseConnector.modifyFileLocation("TestSavedData/");
+			database.modifyFileLocation("TestSavedData/");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		assertEquals("TestSavedData/input.json", database.getDataFilePath());
+		assertEquals("TestSavedData/input.json", coreDatabase.getDataFilePath());
 		
 	}
 	
@@ -94,18 +95,18 @@ public class DatabaseAdt {
 	public void testAddGenericTaskToList() {
 		// Test case 1a: adding a Generic task with workload
 		GenericTask expectedGenericTaskCase1 = new GenericTask("Generic Task Test 1a", 5);
-		databaseConnector.addGenericTask("Generic Task Test 1a", 5);
-		GenericTask resultantGenericTaskCase1 = database.getObservableGenericTL().get(0);
+		database.addGenericTask("Generic Task Test 1a", 5);
+		GenericTask resultantGenericTaskCase1 = coreDatabase.getObservableGenericTL().get(0);
 		assertEquals(expectedGenericTaskCase1.getName(), resultantGenericTaskCase1.getName());
 		assertEquals(expectedGenericTaskCase1.getWorkload(), resultantGenericTaskCase1.getWorkload());
 		
-		databaseConnector.clearContent();
+		database.clearContent();
 		
 		// Test case 1b: adding a Generic task with no workload
 		// adding a task with 0 workload will trigger the setting of default workload value 1
 		GenericTask expectedGenericTaskCase2 = new GenericTask("Generic Task Test 1b", 1);
-		databaseConnector.addGenericTask("Generic Task Test 1b", 0);
-		GenericTask resultantGenericTaskCase2 = database.getObservableGenericTL().get(0);
+		database.addGenericTask("Generic Task Test 1b", 0);
+		GenericTask resultantGenericTaskCase2 = coreDatabase.getObservableGenericTL().get(0);
 		assertEquals(expectedGenericTaskCase2.getName(), resultantGenericTaskCase2.getName());
 		assertEquals(expectedGenericTaskCase2.getWorkload(), resultantGenericTaskCase2.getWorkload());	
 	}
@@ -115,18 +116,18 @@ public class DatabaseAdt {
 	public void testAddDeadlineTaskToList() {
 		// Test case 1a: adding a Deadline task with workload
 		DeadlineTask expectedDeadlineTaskCase1 = new DeadlineTask("Deadline Task Test 1a", new Date(115, 6, 1), 5);
-		databaseConnector.addDeadlineTask("Deadline Task Test 1a", new Date(115, 6, 1), 5);
-		DeadlineTask resultantDeadlineTaskCase1 = database.getObservableDeadlineTL().get(0);
+		database.addDeadlineTask("Deadline Task Test 1a", new Date(115, 6, 1), 5);
+		DeadlineTask resultantDeadlineTaskCase1 = coreDatabase.getObservableDeadlineTL().get(0);
 		assertEquals(expectedDeadlineTaskCase1.getName(), resultantDeadlineTaskCase1.getName());
 		assertEquals(expectedDeadlineTaskCase1.getDeadline(), resultantDeadlineTaskCase1.getDeadline());
 		assertEquals(expectedDeadlineTaskCase1.getWorkload(), resultantDeadlineTaskCase1.getWorkload());
 		
-		databaseConnector.clearContent();
+		database.clearContent();
 		
 		// Test case 1b: adding a Deadline task with no workload
 		DeadlineTask expectedDeadlineTaskCase2 = new DeadlineTask("Deadline Task Test 1b", new Date("29 Mar 2015 16:00"), 1);
-		databaseConnector.addDeadlineTask("Deadline Task Test 1b", new Date("29 Mar 2015 16:00"), 0);
-		DeadlineTask resultantDeadlineTaskCase2 = database.getObservableDeadlineTL().get(0);
+		database.addDeadlineTask("Deadline Task Test 1b", new Date("29 Mar 2015 16:00"), 0);
+		DeadlineTask resultantDeadlineTaskCase2 = coreDatabase.getObservableDeadlineTL().get(0);
 		assertEquals(expectedDeadlineTaskCase2.getName(), resultantDeadlineTaskCase2.getName());
 		assertEquals(expectedDeadlineTaskCase2.getDeadline(), resultantDeadlineTaskCase2.getDeadline());
 		assertEquals(expectedDeadlineTaskCase2.getWorkload(), resultantDeadlineTaskCase2.getWorkload());
@@ -141,17 +142,17 @@ public class DatabaseAdt {
 	@Test
 	public void testDeleteTaskFromList() {
 		// add dummy data
-		databaseConnector.addGenericTask("Watch movie", 2);
-		databaseConnector.addGenericTask("Walk the Dog", 5);
-		databaseConnector.addGenericTask("Read book", 3);
-		databaseConnector.addGenericTask("Do laundry", 4);
-		databaseConnector.addGenericTask("Sleep", 1);
+		database.addGenericTask("Watch movie", 2);
+		database.addGenericTask("Walk the Dog", 5);
+		database.addGenericTask("Read book", 3);
+		database.addGenericTask("Do laundry", 4);
+		database.addGenericTask("Sleep", 1);
 		
-		databaseConnector.deleteTaskByIndex(3);
+		database.deleteTaskByIndex(3);
 		
 		// test for current position task
 		GenericTask expectedGenericTaskAtIndexThree = new GenericTask("Do laundry", 4);
-		GenericTask currentGenericTaskAtIndexThree = database.getObservableGenericTL().get(2);
+		GenericTask currentGenericTaskAtIndexThree = coreDatabase.getObservableGenericTL().get(2);
 		assertEquals(expectedGenericTaskAtIndexThree.getName(), currentGenericTaskAtIndexThree.getName());
 		assertEquals(expectedGenericTaskAtIndexThree.getWorkload(), currentGenericTaskAtIndexThree.getWorkload());
 	}

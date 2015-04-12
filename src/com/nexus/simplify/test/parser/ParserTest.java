@@ -1,12 +1,13 @@
 //@author A0111035A
 
-package com.nexus.simplify.parser.api;
+package com.nexus.simplify.test.parser;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.nexus.simplify.test.AbstractTest;
+import com.nexus.simplify.test.AbstractIntegrationTest;
+
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
@@ -24,7 +25,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  * 
  *
  */
-public class ParserTest extends AbstractTest {
+public class ParserTest extends AbstractIntegrationTest {
 	final String DISPLAY = "display";
 	final String ADD = "add";
 	final String MODIFY = "modify";

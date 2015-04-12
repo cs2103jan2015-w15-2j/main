@@ -1,4 +1,4 @@
-package com.nexus.simplify.parser.parser;
+package com.nexus.simplify.parser.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

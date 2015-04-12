@@ -2,7 +2,7 @@
  * @author Tan Qian Yi
  */
 
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.core;
 
 import java.io.*;
 import java.util.prefs.Preferences;
@@ -17,12 +17,12 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nexus.simplify.database.core.Reader;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
-import com.nexus.simplify.database.Reader;
 
-public class Database {
+public class CoreDatabase {
 
 	private static final String DATA_FILE_LOCATION = "Data file location";
 	private static final String JSON_KEY_DATA_FILE_DIRECTORY = "Data file directory";
@@ -46,7 +46,7 @@ public class Database {
 	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
 	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
 
-	private Logger LOGGER = LoggerFactory.getLogger(Database.class.getName());
+	private Logger LOGGER = LoggerFactory.getLogger(CoreDatabase.class.getName());
 	
 	//-------------//
 	// Constructor //
@@ -57,7 +57,7 @@ public class Database {
 	 * @throws IOException for an interrupted IO operation.
 	 * 
 	 * */
-	public Database() throws IOException {
+	public CoreDatabase() throws IOException {
 		
 		initDatabase();
 		Reader reader = new Reader(this);

@@ -8,7 +8,7 @@ import org.junit.Test;
 /**
  * System Testing for Add command
  */
-public class AddTest extends AbstractTest {
+public class MultipleIntegrationsTest extends AbstractIntegrationTest {
 
 	@BeforeClass
 	public static void oneTime() {

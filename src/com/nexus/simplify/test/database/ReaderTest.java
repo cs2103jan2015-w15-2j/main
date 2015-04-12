@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.test.database;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,6 +17,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.database.core.CoreDatabase;
+import com.nexus.simplify.database.core.Reader;
 import com.nexus.simplify.database.tasktype.*;
 
 public class ReaderTest {
@@ -27,18 +30,18 @@ public class ReaderTest {
 	// Class Attributes //
 	//------------------//
 	
-	private Database database;
+	private CoreDatabase coreDatabase;
 	private Reader reader;
-	private DatabaseConnector databaseConnector;
+	private Database database;
 	
 	@Before
 	public void initialise() {
 		
 		try {
-			database = new Database();
-			databaseConnector = new DatabaseConnector(database);
-			reader = new Reader(database);
-			DATA_FILE_PATH = database.getDataFilePath();
+			coreDatabase = new CoreDatabase();
+			database = new Database(coreDatabase);
+			reader = new Reader(coreDatabase);
+			DATA_FILE_PATH = coreDatabase.getDataFilePath();
 			System.out.println(DATA_FILE_PATH);
 		} catch(IOException ioe) {
 			ioe.printStackTrace();
@@ -48,7 +51,7 @@ public class ReaderTest {
 	
 	@After
 	public void tearDown() {
-		databaseConnector.clearContent();
+		database.clearContent();
 	}
 	
 	@Test
@@ -66,17 +69,17 @@ public class ReaderTest {
 		
 		JSONArray expectedJsonArray = new JSONArray();
 		
-		databaseConnector.addGenericTask("generic", 1);
-		String genericId = database.getObservableGenericTL().get(0).getId();
-		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
-		String deadlineId = database.getObservableDeadlineTL().get(0).getId();
+		database.addGenericTask("generic", 1);
+		String genericId = coreDatabase.getObservableGenericTL().get(0).getId();
+		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		String deadlineId = coreDatabase.getObservableDeadlineTL().get(0).getId();
 		try {
-			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+			database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String timedId = database.getObservableTimedTL().get(0).getId();
+		String timedId = coreDatabase.getObservableTimedTL().get(0).getId();
 		
 		JSONObject itemOne = new JSONObject();
 		itemOne.put("Name", "generic");
@@ -115,17 +118,17 @@ public class ReaderTest {
 		ObservableList<DeadlineTask> expectedDeadlineTL = FXCollections.observableArrayList();
 		ObservableList<TimedTask> expectedTimedTL = FXCollections.observableArrayList();
 		
-		databaseConnector.addGenericTask("generic", 1);
-		databaseConnector.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
+		database.addGenericTask("generic", 1);
+		database.addDeadlineTask("deadline", new Date(115, 6, 1), 1);
 		try {
-			databaseConnector.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
+			database.addTimedTask("timed", new Date(115, 6, 1), new Date(115, 7, 1), 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		reader.populateTaskLists(reader.retrieveDataFromDataFile(DATA_FILE_PATH));
-		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(database.getObservableGenericTL());
-		ObservableList<DeadlineTask> deadlineTL = FXCollections.observableArrayList(database.getObservableDeadlineTL());
+		ObservableList<GenericTask> genericTL = FXCollections.observableArrayList(coreDatabase.getObservableGenericTL());
+		ObservableList<DeadlineTask> deadlineTL = FXCollections.observableArrayList(coreDatabase.getObservableDeadlineTL());
 		ObservableList<TimedTask> timedTL = FXCollections.observableArrayList();
 		
 		expectedGenericTL.add(new GenericTask(new SimpleStringProperty("generic"), new SimpleIntegerProperty(1), genericTL.get(0).getIDAsStringProperty()));

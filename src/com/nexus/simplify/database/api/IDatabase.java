@@ -1,9 +1,9 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.api;
 
 import java.io.IOException;
 import java.util.Date;
 
-public interface IDatabaseConnector {
+public interface IDatabase {
 	
 	void addGenericTask(String name, int workload);
 	void addDeadlineTask(String name, Date deadline, int workload);

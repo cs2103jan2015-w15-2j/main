@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.api;
 
 import java.util.*;
 import java.io.IOException;
@@ -9,13 +9,16 @@ import javafx.collections.ObservableList;
 
 import org.joda.time.DateTime;
 
-import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.core.CoreDatabase;
+import com.nexus.simplify.database.core.LogicRequest;
+import com.nexus.simplify.database.core.Search;
+import com.nexus.simplify.database.core.State;
+import com.nexus.simplify.database.core.Writer;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
-import com.nexus.simplify.database.Writer;
 
-public class DatabaseConnector implements IDatabaseConnector {
+public class Database implements IDatabase {
 
 	private static final String KEYWORD_DEFAULT = "default";
 	private static final String KEYWORD_WORKLOAD = "workload";
@@ -41,7 +44,7 @@ public class DatabaseConnector implements IDatabaseConnector {
 	// Class Variables //
 	//-----------------//
 	
-	private Database database;
+	private CoreDatabase coreDatabase;
 	private Search search = new Search();
 	private State state;
 	private Writer writer;	
@@ -64,31 +67,31 @@ public class DatabaseConnector implements IDatabaseConnector {
 	// Constructor //
 	//-------------//
 	
-	public DatabaseConnector() {
+	public Database() throws IOException {
 		
-		this.database = MainApp.getDatabase();
-		state = database.getState();
-		writer = new Writer(database);
-		archivedGenericTL = database.getArchivedGenericTL();
-		archivedDeadlineTL = database.getArchivedDeadlineTL();
-		archivedTimedTL = database.getArchivedTimedTL();
-		observableGenericTL = database.getObservableGenericTL();
-		observableDeadlineTL = database.getObservableDeadlineTL();
-		observableTimedTL = database.getObservableTimedTL();
+		this.coreDatabase = new CoreDatabase();
+		state = coreDatabase.getState();
+		writer = new Writer(coreDatabase);
+		archivedGenericTL = coreDatabase.getArchivedGenericTL();
+		archivedDeadlineTL = coreDatabase.getArchivedDeadlineTL();
+		archivedTimedTL = coreDatabase.getArchivedTimedTL();
+		observableGenericTL = coreDatabase.getObservableGenericTL();
+		observableDeadlineTL = coreDatabase.getObservableDeadlineTL();
+		observableTimedTL = coreDatabase.getObservableTimedTL();
 		
 	}
 	
-	public DatabaseConnector(Database database) {
+	public Database(CoreDatabase coreDatabase) {
 		
-		this.database = database;
-		state = database.getState();
-		writer = new Writer(database);
-		archivedGenericTL = database.getArchivedGenericTL();
-		archivedDeadlineTL = database.getArchivedDeadlineTL();
-		archivedTimedTL = database.getArchivedTimedTL();
-		observableGenericTL = database.getObservableGenericTL();
-		observableDeadlineTL = database.getObservableDeadlineTL();
-		observableTimedTL = database.getObservableTimedTL();
+		this.coreDatabase = coreDatabase;
+		state = coreDatabase.getState();
+		writer = new Writer(coreDatabase);
+		archivedGenericTL = coreDatabase.getArchivedGenericTL();
+		archivedDeadlineTL = coreDatabase.getArchivedDeadlineTL();
+		archivedTimedTL = coreDatabase.getArchivedTimedTL();
+		observableGenericTL = coreDatabase.getObservableGenericTL();
+		observableDeadlineTL = coreDatabase.getObservableDeadlineTL();
+		observableTimedTL = coreDatabase.getObservableTimedTL();
 	
 	}
 
@@ -522,14 +525,14 @@ public class DatabaseConnector implements IDatabaseConnector {
 	 * Modifies the file location to that defined by the user. 
 	 * */
 	public void modifyFileLocation(String newFileLocation) throws IOException {
-		database.setDataFileLocation(newFileLocation);
+		coreDatabase.setDataFileLocation(newFileLocation);
 	}
 	
 	/**
 	 * Returns the file location of the external storage.
 	 * */
 	public String getDataFileLocation() {
-		return database.getDataFileLocation();
+		return coreDatabase.getDataFileLocation();
 	}
 
 	/**

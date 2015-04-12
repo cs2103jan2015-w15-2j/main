@@ -1,4 +1,4 @@
-package com.nexus.simplify.database;
+package com.nexus.simplify.database.core;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,14 +34,14 @@ public class Writer {
 	private static final String JSON_KEY_NAME = "Name";
 	private static final String JSON_KEY_TYPE = "Type";
 
-	private Database database;
+	private CoreDatabase coreDatabase;
 
 	//-------------//
 	// Constructor //
 	//-------------//
 	
-	public Writer(Database database) {
-		this.database = database;
+	public Writer(CoreDatabase coreDatabase) {
+		this.coreDatabase = coreDatabase;
 	}
 	
 	//--------------//
@@ -54,7 +54,7 @@ public class Writer {
 			ObservableList<TimedTask> inputArchivedTimed) {
 		
 		try {
-			String fileName = database.getDataFilePath();
+			String fileName = coreDatabase.getDataFilePath();
 			File outputFile = new File(fileName);
 			FileWriter fileWriter = new FileWriter(outputFile);
 			JSONArray jsonArrayForStorage = new JSONArray();

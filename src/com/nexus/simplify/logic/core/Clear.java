@@ -1,7 +1,8 @@
 //@author generated
-package com.nexus.simplify.logic;
+package com.nexus.simplify.logic.core;
 
-import com.nexus.simplify.database.DatabaseConnector;
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
 
 //@author A0094457U
 /*
@@ -11,7 +12,7 @@ public class Clear {
 	public Clear() {}
 	
 	public String execute() {
-		DatabaseConnector database = new DatabaseConnector();
+		Database database = MainApp.getDatabase();
 		database.clearContent();
 		String feedback = "All tasks cleared successfully.";
 		return feedback;
