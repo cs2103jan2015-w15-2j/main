@@ -21,7 +21,8 @@ public class DatabaseConnector implements IDatabaseConnector {
 	private static final String KEYWORD_WORKLOAD = "workload";
 	private static final String KEYWORD_DEADLINE = "deadline";
 	private static final String KEYWORD_DONE = "done";
-	
+
+	private static final String MSG_NTH_TO_UNDO = "There is nothing to be undone. :)";
 	private static final String MSG_START_TIME_AFTER_END_TIME = "Please provide a start time that is earlier than the end time.";
 	
 	private static final int INDEX_OFFSET_BY_ONE = -1;
@@ -89,6 +90,37 @@ public class DatabaseConnector implements IDatabaseConnector {
 		observableDeadlineTL = database.getObservableDeadlineTL();
 		observableTimedTL = database.getObservableTimedTL();
 	
+	}
+
+	/**
+	 * @return the LogicRequest object of this Database
+	 */
+	public LogicRequest getLogicRequest() {
+		return logicRequest;
+	}
+	
+	public ObservableList<GenericTask> getObservableGenericTL() {
+		return observableGenericTL;
+	}
+
+	public ObservableList<TimedTask> getObservableTimedTL() {
+		return observableTimedTL;
+	}
+
+	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
+		return observableDeadlineTL;
+	}
+
+	public ObservableList<GenericTask> getArchivedGenericTL() {
+		return archivedGenericTL;
+	}
+
+	public ObservableList<TimedTask> getArchivedTimedTL() {
+		return archivedTimedTL;
+	}
+
+	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
+		return archivedDeadlineTL;
 	}
 	
 	//---------------//
@@ -231,15 +263,21 @@ public class DatabaseConnector implements IDatabaseConnector {
 
 	/**
 	 * Undo the previous command that the user has called.
+	 * 
+	 * @throws exception if there is no saved state
 	 * */
-	public void undoTask() {
+	public void undoTask() throws Exception {
+		
+		if (!state.isEmpty()) {
+			setArchivedTL(state.getArchivedGenericState(), state.getArchivedDeadlineState(),
+					state.getArchivedTimedState());
+			setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
 
-		setArchivedTL(state.getArchivedGenericState(), state.getArchivedDeadlineState(),
-				state.getArchivedTimedState());
-		setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
-
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+			writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
+					archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		} else {
+			throw new Exception(MSG_NTH_TO_UNDO);
+		}
 
 	}
 
@@ -256,7 +294,8 @@ public class DatabaseConnector implements IDatabaseConnector {
 	 * Searchs using user-defined terms for relevant tasks in task lists.
 	 * 
 	 * @param parameter string array that contain terms to search for
-	 * @param searchForTimeUnit boolean array that indicates time unit to search for 
+	 * @param searchForTimeUnit boolean array that indicates time unit to search for
+	 * @throws parse exception if error occurs when parsing date
 	 * */
 	public void searchDatabase(String[] parameter, boolean[] searchForTimeUnit) throws java.text.ParseException {
 
@@ -479,11 +518,16 @@ public class DatabaseConnector implements IDatabaseConnector {
 				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 	}
 
-	// check if there is missing backslash
+	/**
+	 * Modifies the file location to that defined by the user. 
+	 * */
 	public void modifyFileLocation(String newFileLocation) throws IOException {
 		database.setDataFileLocation(newFileLocation);
 	}
 	
+	/**
+	 * Returns the file location of the external storage.
+	 * */
 	public String getDataFileLocation() {
 		return database.getDataFileLocation();
 	}

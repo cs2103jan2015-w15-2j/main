@@ -16,20 +16,17 @@ import org.slf4j.LoggerFactory;
  * */
 public class State {
 
-	Database database;
-	Deque<ObservableList<GenericTask>> genericTLState = new LinkedList<ObservableList<GenericTask>>();
-	Deque<ObservableList<DeadlineTask>> deadlineTLState = new LinkedList<ObservableList<DeadlineTask>>();
-	Deque<ObservableList<TimedTask>> timedTLState = new LinkedList<ObservableList<TimedTask>>();
-	ObservableList<GenericTask> fixedGenericTL;
-	ObservableList<DeadlineTask> fixedDeadlineTL;
-	ObservableList<TimedTask> fixedTimedTL;
-	ObservableList<GenericTask> fixedArchivedGenericTL;
-	ObservableList<DeadlineTask> fixedArchivedDeadlineTL;
-	ObservableList<TimedTask> fixedArchivedTimedTL;
+	private Deque<ObservableList<GenericTask>> genericTlState = new LinkedList<ObservableList<GenericTask>>();
+	private Deque<ObservableList<DeadlineTask>> deadlineTlState = new LinkedList<ObservableList<DeadlineTask>>();
+	private Deque<ObservableList<TimedTask>> timedTlState = new LinkedList<ObservableList<TimedTask>>();
+	private ObservableList<GenericTask> fixedGenericTl;
+	private ObservableList<DeadlineTask> fixedDeadlineTl;
+	private ObservableList<TimedTask> fixedTimedTl;
+	private ObservableList<GenericTask> fixedArchivedGenericTl;
+	private ObservableList<DeadlineTask> fixedArchivedDeadlineTl;
+	private ObservableList<TimedTask> fixedArchivedTimedTl;
 	
-	int deadlineLimit;
-	
-	Logger LOGGER = LoggerFactory.getLogger(State.class.getName());
+	private Logger LOGGER = LoggerFactory.getLogger(State.class.getName());
 	
 	//-------------//
 	// Constructor //
@@ -42,78 +39,86 @@ public class State {
 	// Methods //
 	//---------//
 	
-	public void saveState(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL,
-			ObservableList<TimedTask> timedTL, ObservableList<GenericTask> archivedGenericTL,
-			ObservableList<DeadlineTask> archivedDeadlineTL, ObservableList<TimedTask> archivedTimedTL) {
+	public void saveState(ObservableList<GenericTask> genericTl, ObservableList<DeadlineTask> deadlineTl,
+			ObservableList<TimedTask> timedTl, ObservableList<GenericTask> archivedGenericTl,
+			ObservableList<DeadlineTask> archivedDeadlineTl, ObservableList<TimedTask> archivedTimedTl) {
 		
-		fixedGenericTL = copyGenericTL(genericTL);
-		fixedDeadlineTL= copyDeadlineTL(deadlineTL);
-		fixedTimedTL = copyTimedTL(timedTL);
-		fixedArchivedGenericTL  = copyGenericTL(archivedGenericTL);
-		fixedArchivedDeadlineTL = copyDeadlineTL(archivedDeadlineTL);
-		fixedArchivedTimedTL = copyTimedTL(archivedTimedTL);
+		fixedGenericTl = copyGenericTL(genericTl);
+		fixedDeadlineTl= copyDeadlineTL(deadlineTl);
+		fixedTimedTl = copyTimedTL(timedTl);
+		fixedArchivedGenericTl  = copyGenericTL(archivedGenericTl);
+		fixedArchivedDeadlineTl = copyDeadlineTL(archivedDeadlineTl);
+		fixedArchivedTimedTl = copyTimedTL(archivedTimedTl);
 		
-		genericTLState.push(fixedGenericTL);
-		deadlineTLState.push(fixedDeadlineTL);
-		timedTLState.push(fixedTimedTL);
-		genericTLState.push(fixedArchivedGenericTL);
-		deadlineTLState.push(fixedArchivedDeadlineTL);
-		timedTLState.push(fixedArchivedTimedTL);
+		genericTlState.push(fixedGenericTl);
+		deadlineTlState.push(fixedDeadlineTl);
+		timedTlState.push(fixedTimedTl);
+		genericTlState.push(fixedArchivedGenericTl);
+		deadlineTlState.push(fixedArchivedDeadlineTl);
+		timedTlState.push(fixedArchivedTimedTl);
 		
-		LOGGER.info("State saved");
+		LOGGER.info("State saved.");
 	}
 	
 	public ObservableList<GenericTask> getGenericState() {
 		
-		LOGGER.info("Generic state retrieved");
-		return genericTLState.pop();
+		LOGGER.info("Generic state retrieved.");
+		return genericTlState.pop();
 		
 	}
 	
 	public ObservableList<DeadlineTask> getDeadlineState() {
 
-		LOGGER.info("Deadline state retrieved");
-		return deadlineTLState.pop();
+		LOGGER.info("Deadline state retrieved.");
+		return deadlineTlState.pop();
 
 	}
 	
 	public ObservableList<TimedTask> getTimedState() {
 
-		LOGGER.info("Timed state retrieved");
-		return timedTLState.pop();
+		LOGGER.info("Timed state retrieved.");
+		return timedTlState.pop();
 	
 	}
 	
 	public ObservableList<GenericTask> getArchivedGenericState() {
 	
-		LOGGER.info("Archived generic state retrieved");
-		return genericTLState.pop();
+		LOGGER.info("Archived generic state retrieved.");
+		return genericTlState.pop();
 	
 	}
 	
 	public ObservableList<DeadlineTask> getArchivedDeadlineState() {
 	
-		LOGGER.info("Archived deadline state retrieved");
-		return deadlineTLState.pop();
+		LOGGER.info("Archived deadline state retrieved.");
+		return deadlineTlState.pop();
 	
 	}
 	
 	public ObservableList<TimedTask> getArchivedTimedState() {
 	
-		LOGGER.info("Archived timed state retrieved");
-		return timedTLState.pop();
+		LOGGER.info("Archived timed state retrieved.");
+		return timedTlState.pop();
 	
+	}
+	
+	public boolean isEmpty() {
+		if (genericTlState.isEmpty() && deadlineTlState.isEmpty() && timedTlState.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/**
 	* Creating copies to store in double ended queue.
 	* */
 	
-	private ObservableList<GenericTask> copyGenericTL(ObservableList<GenericTask> genericTL) {
+	private ObservableList<GenericTask> copyGenericTL(ObservableList<GenericTask> genericTl) {
 	
 		ObservableList<GenericTask> copy = FXCollections.observableArrayList();
 		
-		for (GenericTask genericTask : genericTL) {
+		for (GenericTask genericTask : genericTl) {
 			GenericTask taskCopy = genericTask.getCopy();
 			copy.add(taskCopy);
 		}
@@ -121,11 +126,11 @@ public class State {
 		
 	}
 	
-	private ObservableList<DeadlineTask> copyDeadlineTL(ObservableList<DeadlineTask> deadlineTL) {
+	private ObservableList<DeadlineTask> copyDeadlineTL(ObservableList<DeadlineTask> deadlineTl) {
 		
 		ObservableList<DeadlineTask> copy = FXCollections.observableArrayList();
 		
-		for (DeadlineTask deadlineTask : deadlineTL) {
+		for (DeadlineTask deadlineTask : deadlineTl) {
 			DeadlineTask taskCopy = deadlineTask.getCopy();
 			copy.add(taskCopy);
 		}
@@ -133,11 +138,11 @@ public class State {
 		
 	}
 	
-	private ObservableList<TimedTask> copyTimedTL(ObservableList<TimedTask> timedTL) {
+	private ObservableList<TimedTask> copyTimedTL(ObservableList<TimedTask> timedTl) {
 		
 		ObservableList<TimedTask> copy = FXCollections.observableArrayList();
 		
-		for (TimedTask timedTask : timedTL) {
+		for (TimedTask timedTask : timedTl) {
 			TimedTask taskCopy = timedTask.getCopy();
 			copy.add(taskCopy);
 		}

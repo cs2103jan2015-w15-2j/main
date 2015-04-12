@@ -11,7 +11,8 @@ import com.nexus.simplify.database.tasktype.TimedTask;
  * Represents an instance of a search used to search for user-defined terms.
  * */
 public class Search {
-	
+
+	private int HEAD = 0;
 	//-------------//
 	// Constructor //
 	//-------------//
@@ -87,6 +88,9 @@ public class Search {
 		for(DeadlineTask deadlineTask: deadlineTl) {
 			if (deadlineTask.getDeadline().getYear() == year && !resultantTl.contains(deadlineTask)) {
 				resultantTl.add(deadlineTask);
+			} else if (deadlineTask.getDeadline().getYear() == year && resultantTl.contains(deadlineTask)) {
+				resultantTl.remove(deadlineTask);
+				resultantTl.add(HEAD, deadlineTask);
 			}
 		}
 		
@@ -102,6 +106,9 @@ public class Search {
 		for(DeadlineTask deadlineTask: deadlineTl) {
 			if (deadlineTask.getDeadline().getMonthOfYear() == month && !resultantTl.contains(deadlineTask)) {
 				resultantTl.add(deadlineTask);
+			} else if (deadlineTask.getDeadline().getMonthOfYear() == month && resultantTl.contains(deadlineTask)) {
+				resultantTl.remove(deadlineTask);
+				resultantTl.add(HEAD, deadlineTask);
 			}
 		}
 		
@@ -117,6 +124,9 @@ public class Search {
 		for(DeadlineTask deadlineTask: deadlineTl) {
 			if (deadlineTask.getDeadline().getDayOfMonth() == day && !resultantTl.contains(deadlineTask)) {
 				resultantTl.add(deadlineTask);
+			} else if (deadlineTask.getDeadline().getDayOfMonth() == day && resultantTl.contains(deadlineTask)) {
+				resultantTl.remove(deadlineTask);
+				resultantTl.add(HEAD, deadlineTask);
 			}
 		}
 		
@@ -132,6 +142,9 @@ public class Search {
 		for(DeadlineTask deadlineTask: deadlineTl) {
 			if (deadlineTask.getDeadline().getDayOfWeek() == weekday && !resultantTl.contains(deadlineTask)) {
 				resultantTl.add(deadlineTask);
+			} else if (deadlineTask.getDeadline().getDayOfWeek() == weekday && resultantTl.contains(deadlineTask)) {
+				resultantTl.remove(deadlineTask);
+				resultantTl.add(HEAD, deadlineTask);
 			}
 		}
 		
@@ -147,6 +160,9 @@ public class Search {
 		for(DeadlineTask deadlineTask: deadlineTl) {
 			if (deadlineTask.getDeadline().getHourOfDay() == hour && !resultantTl.contains(deadlineTask)) {
 				resultantTl.add(deadlineTask);
+			} else if (deadlineTask.getDeadline().getHourOfDay() == hour && resultantTl.contains(deadlineTask)) {
+				resultantTl.remove(deadlineTask);
+				resultantTl.add(HEAD, deadlineTask);
 			}
 		}
 		
@@ -191,8 +207,14 @@ public class Search {
 		for(TimedTask timedTask: timedTl) {
 			if (timedTask.getStartTimeAsDT().getYear() == year && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getStartTimeAsDT().getYear() == year && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			} else if (timedTask.getEndTimeAsDT().getYear() == year && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getYear() == year && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			}
 		}
 		
@@ -207,8 +229,14 @@ public class Search {
 		for(TimedTask timedTask: timedTl) {
 			if (timedTask.getStartTimeAsDT().getMonthOfYear() == month && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getStartTimeAsDT().getMonthOfYear() == month && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			} else if (timedTask.getEndTimeAsDT().getMonthOfYear() == month && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getMonthOfYear() == month && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			}
 		}
 		
@@ -224,8 +252,14 @@ public class Search {
 		for(TimedTask timedTask: timedTl) {
 			if (timedTask.getStartTimeAsDT().getDayOfMonth() == day && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			}  else if (timedTask.getStartTimeAsDT().getDayOfMonth() == day && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			} else if (timedTask.getEndTimeAsDT().getDayOfMonth() == day && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			}  else if (timedTask.getEndTimeAsDT().getDayOfMonth() == day && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			}
 		}
 		
@@ -241,9 +275,15 @@ public class Search {
 		for(TimedTask timedTask: timedTl) {
 			if (timedTask.getStartTimeAsDT().getDayOfWeek() == weekday && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getStartTimeAsDT().getDayOfWeek() == weekday && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			} else if (timedTask.getEndTimeAsDT().getDayOfWeek() == weekday && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
-			}
+			} else if (timedTask.getEndTimeAsDT().getDayOfWeek() == weekday && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
+			} 
 		}
 		
 		return resultantTl;
@@ -258,8 +298,14 @@ public class Search {
 		for(TimedTask timedTask: timedTl) {
 			if (timedTask.getStartTimeAsDT().getHourOfDay() == hour && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getStartTimeAsDT().getHourOfDay() == hour && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			} else if (timedTask.getEndTimeAsDT().getHourOfDay() == hour && !resultantTl.contains(timedTask)) {
 				resultantTl.add(timedTask);
+			} else if (timedTask.getEndTimeAsDT().getHourOfDay() == hour && resultantTl.contains(timedTask)) {
+				resultantTl.remove(timedTask);
+				resultantTl.add(HEAD, timedTask);
 			}
 		}
 		
