@@ -18,11 +18,8 @@ public class Delete {
 	public String execute(String[] parameter) throws Exception {
 		int indexToDelete;
 		
-		try {
-			indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		} catch (NumberFormatException e) {
-			throw new Exception(NO_INDEX);
-		}
+		exceptionHandling(parameter);
+		
 		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		
 		Database database = MainApp.getDatabase();
@@ -30,6 +27,16 @@ public class Delete {
 
 		String feedback = SUCCESS + parameter[ParameterType.INDEX_POS] + ".";
 		return feedback; 
+	}
+
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		try {
+			@SuppressWarnings("unused")
+			int indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
 	}
 	
 	// this method is for unit testing, which assumes that parser and

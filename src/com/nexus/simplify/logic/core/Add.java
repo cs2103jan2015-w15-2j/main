@@ -33,20 +33,15 @@ public class Add {
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
 		String feedback;
 		int workload;
 		Database database = MainApp.getDatabase();
 		
-		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
-		// this if-else statement caters to workload
 		if (workloadStr == null || workloadStr.isEmpty()) {
 			workload = 0;
 		} else {
-			try {
-				workload = Integer.parseInt(workloadStr);
-			} catch (NumberFormatException e) {
-				throw new Exception(INVALID_WORKLOAD);
-			}
+			workload = exceptionHandling(workloadStr);
 		}
 		
 		if(name == null || name.isEmpty()) {
@@ -73,6 +68,17 @@ public class Add {
 			}
 		}
 		return feedback;
+	}
+
+	// exception handling for wrong workload format
+	private int exceptionHandling(String workloadStr) throws Exception {
+		int workload;
+		try {
+			workload = Integer.parseInt(workloadStr);
+		} catch (NumberFormatException e) {
+			throw new Exception(INVALID_WORKLOAD);
+		}
+		return workload;
 	}
 	
 	// this method is for unit testing, which assumes that parser and

@@ -18,11 +18,7 @@ public class Done {
 	public String execute(String[] parameter) throws Exception {
 		int indexToMarkDone;
 		
-		try {
-			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		} catch (NumberFormatException e) {
-			throw new Exception(NO_INDEX);
-		}
+		exceptionHandling(parameter);
 		
 		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		Database database = MainApp.getDatabase();
@@ -30,6 +26,16 @@ public class Done {
 		database.markTaskDone(indexToMarkDone);
 		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
 		return feedback; 
+	}
+
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		try {
+			@SuppressWarnings("unused")
+			int indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
 	}
 	
 	// this method is for unit testing, which assumes that parser and

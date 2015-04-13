@@ -168,7 +168,7 @@ public class Modify {
 		}
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
-				(newEndTime==null || newEndTime.isEmpty()) && 
+			(newEndTime==null || newEndTime.isEmpty()) && 
 				(newWorkloadStr==null || newWorkloadStr.isEmpty())) {
 				feedback = NOTHING_TO_MODIFY;
 				return feedback;
