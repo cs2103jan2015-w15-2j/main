@@ -4,6 +4,7 @@ package com.nexus.simplify.logic.core;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.OperationType;
 
@@ -20,7 +21,7 @@ public class CoreLogic {
 	
 	public String execute(OperationType operationType, OperationType savedCommandType,
 			String[] parameter, boolean[] searchField) throws Exception {
-		Database database = new Database();
+		Database database = MainApp.getDatabase();
 		String feedback;
 		
 		switch (operationType) {

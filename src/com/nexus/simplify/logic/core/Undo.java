@@ -1,6 +1,7 @@
 //@author generated
 package com.nexus.simplify.logic.core;
 
+import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
 //@author A0094457U
@@ -11,7 +12,7 @@ public class Undo {
 	public Undo(){}
 	
 	public String execute() throws Exception{
-		Database database = new Database();
+		Database database = MainApp.getDatabase();
 		database.undoTask();
 		String feedback = "Undo operation is successful.";
 		return feedback;
