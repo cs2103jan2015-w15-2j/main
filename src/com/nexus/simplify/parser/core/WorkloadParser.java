@@ -1,3 +1,5 @@
+//@author A0111035A
+
 package com.nexus.simplify.parser.core;
 
 import org.slf4j.Logger;

@@ -1,3 +1,5 @@
+//@author A0111035A
+
 package com.nexus.simplify.parser.core;
 
 import com.nexus.simplify.parser.data.CommandData;
@@ -21,5 +23,4 @@ public class IndexParser extends TokenParser {
 			return tokenList;
 		}
 	}
-
 }
