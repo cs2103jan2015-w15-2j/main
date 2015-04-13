@@ -20,8 +20,8 @@ import javafx.stage.StageStyle;
  * */
 public class MainApp extends Application {
 	
-	private static final String FILE_LOCATION_BILLBOARD_OVERVIEW_FXML = "UI/view/BillboardOverview.fxml";
-	private static final String FILE_LOCATION_ROOT_LAYOUT_FXML = "UI/view/RootLayout.fxml";
+	private static final String FILE_LOCATION_BILLBOARD_OVERVIEW_FXML = "ui/view/BillboardOverview.fxml";
+	private static final String FILE_LOCATION_ROOT_LAYOUT_FXML = "ui/view/RootLayout.fxml";
 	private static final String APP_TITLE = "Simplify";
 	
 	//-----------------//
