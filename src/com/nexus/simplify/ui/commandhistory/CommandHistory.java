@@ -1,4 +1,4 @@
-package com.nexus.simplify.UI.commandhistory;
+package com.nexus.simplify.ui.commandhistory;
 
 //@author A0108361M
 import java.util.Deque;

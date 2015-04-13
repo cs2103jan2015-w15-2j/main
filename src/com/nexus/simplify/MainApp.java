@@ -3,9 +3,9 @@ package com.nexus.simplify;
 //@author A0108361M
 import java.io.IOException;
 
-import com.nexus.simplify.UI.controller.BillboardOverviewController;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.api.Logic;
+import com.nexus.simplify.ui.controller.BillboardOverviewController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

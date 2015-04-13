@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.nexus.simplify.UI.commandhistory.CommandHistory;
+import com.nexus.simplify.ui.commandhistory.CommandHistory;
 
 /**
  * Provides a series of tests for the methods found in the CommandHistory class.

@@ -1,4 +1,4 @@
-package com.nexus.simplify.UI.controller;
+package com.nexus.simplify.ui.controller;
 
 //@author A0108361M
 
@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.MainApp;
-import com.nexus.simplify.UI.commandhistory.CommandHistory;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.api.Logic;
+import com.nexus.simplify.ui.commandhistory.CommandHistory;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
