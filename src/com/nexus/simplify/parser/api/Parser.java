@@ -14,45 +14,68 @@ import com.nexus.simplify.parser.data.CommandData;
 import com.nexus.simplify.parser.tokeniser.Tokeniser;
 
 /**
- * 	
+ * A facade to facilitate interaction between Parser component with other
+ * components.
  * 
- * Coding Style: 
- * https://docs.google.com/a/nuscomputing.com/document/pub?id=1iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp
+ * The coding style was used as a guide for all code in Parser component. It can
+ * be found in the link below. Coding Style: {@link https
+ * ://docs.google.com/a/nuscomputing.com/document/pub?id=1
+ * iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp}
  * 
  * @author davis
  * 
  */
 
 public class Parser implements IParser {
-	Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
-	String givenInput;
-	Tokeniser tokeniser = new Tokeniser();
-	CoreParser parser = new CoreParser();
-	CommandData commandData = CommandData.getInstance();
-	String[] userTokens;
+	private static final String ERROR_PARSING__COMMAND = "Error parsing command: %1$s. "
+			+ "/n" + "Please specify parameters as clear as possible";
 
+	private static final String LOG_USER_INPUT = "Parsing user input: {}";
+
+	private static Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
+	private static String _input;
+	private static Tokeniser _tokeniser = new Tokeniser();
+	private static CoreParser _parser = new CoreParser();
+	private static CommandData _commandData = CommandData.getInstance();
+	private static String[] _userTokens;
+
+	/**
+	 * Takes in user string input and returns corresponding requested operation
+	 * and given parameters stored in UserCommand
+	 */
 	@Override
 	public UserCommand parseInput(String userInput) throws Exception {
 		try {
-			givenInput = userInput;
-			LOGGER.info("Parsing user input: {}", userInput);
-			userTokens = tokeniser.tokenise(userInput);
-			parser.parseTokens(userTokens);	
-			UserCommand userCommand = commandData.createCommand();
+			_input = userInput;
+			LOGGER.info(LOG_USER_INPUT, _input);
+			_userTokens = _tokeniser.tokenise(_input);
+			_parser.parseTokens(_userTokens);
+
+			// The individual parser classes update the commandData singleton
+			// with the operation and parameters
+			UserCommand userCommand = _commandData.createCommand();
+
 			return userCommand;
-		} catch(Exception e) {
-			throw new Exception("Error parsing command: " + userInput
-					+ System.lineSeparator() + "Please specify parameters as clear as possible");
+		} catch (Exception e) {
+			throw new Exception(String.format(ERROR_PARSING__COMMAND, _input));
 		}
 	}
-	
+
+	/**
+	 * Returns user input string that was given to Parser object through
+	 * {@link parseInput}
+	 * 
+	 * 
+	 * @return User Input String
+	 * 
+	 */
 	public String getGivenInput() {
-		return givenInput;
+		return _input;
 	}
 
 	// main function to run white-box texting with console input
 	public static void main(String[] args) {
-		InputStreamReader inStream = new InputStreamReader(System.in); 
+		InputStreamReader inStream = new InputStreamReader(System.in);
 		BufferedReader br = new java.io.BufferedReader(inStream);
 		Parser test = new Parser();
 		while (true) {
