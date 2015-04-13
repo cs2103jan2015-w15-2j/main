@@ -15,6 +15,8 @@ import org.junit.Test;
  * */
 public class CommandHistoryTest {
 
+	private static final int EXPECTED_EMPTY_STACK_SIZE = 0;
+
 	private static final String EMPTY_STRING = "";
 	
 	private static final String TEST_STRING_FOUR = "test string 4";
@@ -56,12 +58,7 @@ public class CommandHistoryTest {
 
 	@Test
 	public void testAddCommandToHistory() {
-		Deque<String> upStackFromCommandHistory = commandHistory.getUpStack();
 
-		assertEquals(TEST_STRING_FOUR, upStackFromCommandHistory.pop());
-		assertEquals(TEST_STRING_THREE, upStackFromCommandHistory.pop());
-		assertEquals(TEST_STRING_TWO, upStackFromCommandHistory.pop());
-		assertEquals(TEST_STRING_ONE, upStackFromCommandHistory.pop());
 	}
 	
 	@Test
@@ -71,8 +68,7 @@ public class CommandHistoryTest {
 		assertEquals(TEST_STRING_FOUR, expectedValueTestA);
 		
 		// test (b): test if command is successfully pushed into downStack from upStack
-		Deque<String> downStackFromCommandHistory = commandHistory.getDownStack();
-		String expectedValueTestB = downStackFromCommandHistory.peek();
+		String expectedValueTestB = commandHistory.getCommandOnTopOfDownStack();
 		assertEquals(TEST_STRING_FOUR, expectedValueTestB);
 		
 		// test (c): test if browsePreviousCommand handles situations when upStack is empty.
@@ -81,6 +77,7 @@ public class CommandHistoryTest {
 		commandHistory.browsePreviousCommand();
 		commandHistory.browsePreviousCommand();
 		commandHistory.browsePreviousCommand();
+		
 		String expectedValueTestC = commandHistory.browsePreviousCommand();
 		assertEquals(EMPTY_STRING, expectedValueTestC);
 	}
@@ -92,14 +89,13 @@ public class CommandHistoryTest {
 		commandHistory.browsePreviousCommand();
 		commandHistory.browsePreviousCommand();
 		commandHistory.browsePreviousCommand();
-		String expectedValueTestB = commandHistory.browseNextCommand();		
-		assertEquals(TEST_STRING_TWO, expectedValueTestB);
+		String expectedValueTestA = commandHistory.browseNextCommand();		
+		assertEquals(TEST_STRING_TWO, expectedValueTestA);
 		
 		// test (b): test if command is successfully pushed into upStack from downStack.
-		// commandHistory.browseNextCommand();
-		Deque<String> upStackFromCommandHistory = commandHistory.getUpStack();
-		String expectedValueTestC = upStackFromCommandHistory.peek();
-		assertEquals(TEST_STRING_ONE, expectedValueTestC);
+		commandHistory.browseNextCommand();
+		String expectedValueTestB = commandHistory.getCommandOnTopOfUpStack();
+		assertEquals(TEST_STRING_TWO, expectedValueTestB);
 		
 		// test (c): test if browseNextCommand handles situations when downStack is empty.
 		
@@ -108,8 +104,8 @@ public class CommandHistoryTest {
 		commandHistory.browseNextCommand();	
 		commandHistory.browseNextCommand();	
 		
-		String expectedValueTestA = commandHistory.browseNextCommand();
-		assertEquals(EMPTY_STRING, expectedValueTestA);
+		String expectedValueTestC = commandHistory.browseNextCommand();
+		assertEquals(EMPTY_STRING, expectedValueTestC);
 	}
 
 	@Test
@@ -119,11 +115,9 @@ public class CommandHistoryTest {
 		commandHistory.browsePreviousCommand();
 	
 		commandHistory.clearAllHistory();
-		
-		Deque<String> upStackFromCommandHistory = commandHistory.getUpStack();
-		Deque<String> downStackFromCommandHistory = commandHistory.getDownStack();
-		
-		assertEquals(0, upStackFromCommandHistory.size());
-		assertEquals(0, downStackFromCommandHistory.size());
+				
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getUpStackSize());
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getDownStackSize());
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getCacheStackSize());
 	}
 }

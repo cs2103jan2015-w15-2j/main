@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  * */
 public class CommandHistory {
 	
+	private static final String LOGGER_INFO_ADD_COMMAND_TO_EMPTY_UPSTACK = "Adding command to empty upStack";
 	private static final String LOGGER_INFO_USER_COMMAND_ADDED = "User command added to command history: {}";
 	private static final String LOGGER_INFO_NEXT_COMMAND_ACCESSED = "Next command in command history accessed: {}";
 	private static final String LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED = "Previous command in command history accessed: {}";
@@ -62,15 +63,30 @@ public class CommandHistory {
 	// Attribute Access //
 	//------------------//
 	
+	public String getCommandOnTopOfUpStack() {
+		return upStack.peek();
+	}
+	
+	public String getCommandOnTopOfDownStack() {
+		return downStack.peek();
+	}
+		
+	public int getUpStackSize() {
+		return upStack.size();
+	}
+	
+	public int getDownStackSize() {
+		return downStack.size();
+	}
+	
+	public int getCacheStackSize() {
+		return cacheStack.size();
+	}
+	
 	public Deque<String> getUpStack() {
 		return upStack;
 	}
-	
-	public Deque<String> getDownStack() {
-		return downStack;
-	}
-	
-	
+		
 	//-----------------------//
 	// Storing User Commands //
 	//-----------------------//
@@ -88,6 +104,7 @@ public class CommandHistory {
 		} else if (upStack.isEmpty()) {
 			upStack.push(userCommand);
 			storeUpStackStateInCache();
+			logger.info(LOGGER_INFO_ADD_COMMAND_TO_EMPTY_UPSTACK);
 			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
 		}
 	}
@@ -126,6 +143,7 @@ public class CommandHistory {
 	public void clearAllHistory() {
 		upStack.clear();
 		downStack.clear();
+		cacheStack.clear();
 	}
 	
 	//----------------------------//
