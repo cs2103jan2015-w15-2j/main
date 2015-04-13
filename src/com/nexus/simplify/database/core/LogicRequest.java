@@ -1,3 +1,4 @@
+//@author A0111035A
 package com.nexus.simplify.database.core;
 
 import java.util.Date;

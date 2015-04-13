@@ -1,3 +1,4 @@
+//@author A0108361M
 package com.nexus.simplify.database.core;
 
 import java.io.File;
@@ -73,13 +74,12 @@ public class Reader {
 	 * @param dataFileName specified file to retrieve data from.
 	 * */
 	public JSONArray retrieveDataFromDataFile(String dataFileName) {
-		
 		JSONArray jsonTaskArray = new JSONArray();
 
 		try {
 			File dataFile = new File(dataFileName);
 			if (!dataFile.exists()) {
-				coreDatabase.createNewFile(dataFileName);
+				dataFile.createNewFile();
 			} else {
 				JSONParser jsonParser = new JSONParser();
 				Object object = jsonParser.parse(new FileReader(dataFileName));
@@ -128,12 +128,12 @@ public class Reader {
 				break;
 			}
 			
-			coreDatabase.setObservableGenericTL(observableGenericTL);
-			coreDatabase.setObservableDeadlineTL(observableDeadlineTL);
-			coreDatabase.setObservableTimedTL(observableTimedTL);
-			coreDatabase.setArchivedGenericTL(archivedGenericTL);
-			coreDatabase.setArchivedDeadlineTL(archivedDeadlineTL);
-			coreDatabase.setArchivedTimedTL(archivedTimedTL);
+			coreDatabase.setObservableGenericTl(observableGenericTL);
+			coreDatabase.setObservableDeadlineTl(observableDeadlineTL);
+			coreDatabase.setObservableTimedTl(observableTimedTL);
+			coreDatabase.setArchivedGenericTl(archivedGenericTL);
+			coreDatabase.setArchivedDeadlineTl(archivedDeadlineTL);
+			coreDatabase.setArchivedTimedTl(archivedTimedTL);
 		}
 		
 	}

@@ -1,3 +1,4 @@
+//A0114887U
 package com.nexus.simplify.database.tasktype;
 
 import java.util.Date;
@@ -9,7 +10,6 @@ import org.joda.time.format.*;
 
 /**
  * Represents an instance of a task tagged with a due date.
- * @author Tan Qian Yi 
  */
 public class DeadlineTask extends GenericTask {
 	
@@ -29,6 +29,7 @@ public class DeadlineTask extends GenericTask {
 	// Constructors //
 	//--------------//
 	
+	//@author A0108361M
 	/**
 	 * Constructor without workload.
 	 * 
@@ -63,6 +64,7 @@ public class DeadlineTask extends GenericTask {
 		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
 	}
 	
+	//A0114887U
 	/**
 	 * Constructor with workload and id.
 	 * 
@@ -92,6 +94,7 @@ public class DeadlineTask extends GenericTask {
 	// Attribute Mutator //
 	//-------------------//
 	
+	//@author A0108361M
 	/**
 	 * Default setter for class attribute deadline.
 	 * 
@@ -129,10 +132,11 @@ public class DeadlineTask extends GenericTask {
 	 * 
 	 * @return due date of task as StringProperty Object
 	 * */
-	public StringProperty getDTAsStringProperty() {
+	public StringProperty getDateTimeAsStringProperty() {
 		return new SimpleStringProperty(this.getReadableDeadline());
 	}
 	
+	//@author A0111035A
 	/**
 	 * Returns an exact copy of the task.
 	 * */
