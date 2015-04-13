@@ -1,6 +1,6 @@
-package com.nexus.simplify.UI.commandhistory;
+package com.nexus.simplify.test.ui;
 
-// @author A0108361M
+//@author A0108361M
 import static org.junit.Assert.*;
 
 import java.util.Deque;
@@ -9,6 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.nexus.simplify.UI.commandhistory.CommandHistory;
 
 /**
  * Provides a series of tests for the methods found in the CommandHistory class.
@@ -58,7 +60,17 @@ public class CommandHistoryTest {
 
 	@Test
 	public void testAddCommandToHistory() {
-
+		// test (a): trying to add duplicate command to history
+		commandHistory.addCommandToHistory(TEST_STRING_FOUR);
+		assertEquals(4, commandHistory.getUpStackSize());
+		
+		// test (b): test if commands added in setUp() method
+		// were in proper chronological order
+		Deque<String> upStackFromCommandHistory = commandHistory.getUpStack();
+		assertEquals(TEST_STRING_FOUR, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_THREE, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_TWO, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_ONE, upStackFromCommandHistory.pop());	
 	}
 	
 	@Test

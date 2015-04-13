@@ -1,6 +1,6 @@
 package com.nexus.simplify.UI.controller;
 
-// @author A0108361M
+//@author A0108361M
 
 import java.net.URL;
 import java.util.ResourceBundle;
