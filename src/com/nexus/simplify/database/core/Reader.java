@@ -1,3 +1,4 @@
+//@author A0108361M
 package com.nexus.simplify.database.core;
 
 import java.io.File;
@@ -79,7 +80,7 @@ public class Reader {
 		try {
 			File dataFile = new File(dataFileName);
 			if (!dataFile.exists()) {
-				coreDatabase.createNewFile(dataFileName);
+				dataFile.createNewFile();
 			} else {
 				JSONParser jsonParser = new JSONParser();
 				Object object = jsonParser.parse(new FileReader(dataFileName));

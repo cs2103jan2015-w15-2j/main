@@ -8,6 +8,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.database.core.CoreDatabase;
 import com.nexus.simplify.database.core.LogicRequest;
@@ -24,8 +26,7 @@ public class Database implements IDatabase {
 	private static final String KEYWORD_WORKLOAD = "workload";
 	private static final String KEYWORD_DEADLINE = "deadline";
 	private static final String KEYWORD_DONE = "done";
-
-	private static final String MSG_NTH_TO_UNDO = "There is nothing to be undone. :)";
+	private static final String MSG_FOR_UNDO_ERROR = "Undo is not possible. Please try to add, modify or delete the task instead :)";
 	private static final String MSG_START_TIME_AFTER_END_TIME = "Please provide a start time that is earlier than the end time.";
 	
 	private static final int INDEX_OFFSET_BY_ONE = -1;
@@ -270,18 +271,16 @@ public class Database implements IDatabase {
 	 * @throws exception if there is no saved state
 	 * */
 	public void undoTask() throws Exception {
-		
 		if (!state.isEmpty()) {
+			setObservableTL(state.getFixedGenericState(), state.getFixedDeadlineState(), state.getFixedTimedState());
 			setArchivedTL(state.getFixedArchivedGenericState(), state.getFixedArchivedDeadlineState(),
 					state.getFixedArchivedTimedState());
-			setObservableTL(state.getFixedGenericState(), state.getFixedDeadlineState(), state.getFixedTimedState());
 
 			writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
 					archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
 		} else {
-			throw new Exception(MSG_NTH_TO_UNDO);
+			throw new Exception(MSG_FOR_UNDO_ERROR);
 		}
-
 	}
 
 	/**
@@ -302,6 +301,7 @@ public class Database implements IDatabase {
 	 * */
 	public void searchDatabase(String[] parameter, boolean[] searchForTimeUnit) throws java.text.ParseException {
 
+		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
 		resultantGenericTL.clear();
 		resultantDeadlineTL.clear();
 		resultantTimedTL.clear();
@@ -644,24 +644,27 @@ public class Database implements IDatabase {
 	// Variable Setters //
 	//------------------//
 
-	private void setObservableTL(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL,
-			ObservableList<TimedTask> timedTL) {
+	private void setObservableTL(ObservableList<GenericTask> genericTL,
+									ObservableList<DeadlineTask> deadlineTL,
+									ObservableList<TimedTask> timedTL) {
 		
 		observableDeadlineTL.setAll(deadlineTL);
 		observableTimedTL.setAll(timedTL);
 		observableGenericTL.setAll(genericTL);
 	}
 
-	private void setTemporaryTL(ObservableList<GenericTask> genericTL, ObservableList<DeadlineTask> deadlineTL,
-			ObservableList<TimedTask> timedTL) {
+	private void setTemporaryTL(ObservableList<GenericTask> genericTL,
+								ObservableList<DeadlineTask> deadlineTL,
+								ObservableList<TimedTask> timedTL) {
 		
 		temporaryDeadlineTL.setAll(deadlineTL);
 		temporaryTimedTL.setAll(timedTL);
 		temporaryGenericTL.setAll(genericTL);
 	}
 
-	private void setArchivedTL(ObservableList<GenericTask>genericTL, ObservableList<DeadlineTask> deadlineTL,
-			ObservableList<TimedTask> timedTL) {
+	private void setArchivedTL(ObservableList<GenericTask>genericTL,
+								ObservableList<DeadlineTask> deadlineTL,
+								ObservableList<TimedTask> timedTL) {
 		
 		archivedDeadlineTL.setAll(deadlineTL);
 		archivedTimedTL.setAll(timedTL);
