@@ -11,7 +11,7 @@ import com.nexus.simplify.database.api.Database;
  * This class calls database to search for something.
  */
 public class Search {
-	
+	private final String SUCCESS = "Search result displayed.";
 	public Search() {}
 	
 	public String execute(String[] parameter, boolean[] searchField) throws ParseException {
@@ -22,7 +22,7 @@ public class Search {
 		} catch (ParseException e) {
 			throw e;
 		}
-		feedback = "Search result displayed.";
+		feedback = SUCCESS;
 		return feedback;
 	}
 }

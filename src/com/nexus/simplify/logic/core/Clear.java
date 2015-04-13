@@ -9,12 +9,13 @@ import com.nexus.simplify.database.api.Database;
  * this class calls database to clear stored contents
  */
 public class Clear {
+	private final String SUCCESS = "All tasks cleared successfully.";
 	public Clear() {}
 	
 	public String execute() {
 		Database database = MainApp.getDatabase();
 		database.clearContent();
-		String feedback = "All tasks cleared successfully.";
+		String feedback = SUCCESS;
 		return feedback;
 	}
 }

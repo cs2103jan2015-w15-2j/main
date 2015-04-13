@@ -2,7 +2,7 @@
 # Ignore #
 ##########
 
-*.ucls
+NEXUS.ucls
 *.jpg
 *.class
 

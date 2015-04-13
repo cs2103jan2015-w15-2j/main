@@ -9,12 +9,13 @@ import com.nexus.simplify.database.api.Database;
  * This class calls database to undo task.
  */
 public class Undo {
+	private final String SUCCESS = "Undo operation is successful.";
 	public Undo(){}
 	
 	public String execute() throws Exception{
 		Database database = MainApp.getDatabase();
 		database.undoTask();
-		String feedback = "Undo operation is successful.";
+		String feedback = SUCCESS;
 		return feedback;
 	}
 }

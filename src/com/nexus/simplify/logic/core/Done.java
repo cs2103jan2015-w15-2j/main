@@ -12,6 +12,7 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  */
 public class Done {
 	private final String NO_INDEX = "Please enter a task index to mark as done.";
+	
 	public Done() {}
 	
 	public String execute(String[] parameter) throws Exception {

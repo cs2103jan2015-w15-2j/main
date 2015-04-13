@@ -19,6 +19,9 @@ public class Add {
 	private final String DATE_FORMAT_PATTERN = "E MMM dd HH:mm:ss zzz yyy";
 	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
 	private final String NO_NAME = "Please enter a name for this task.";
+	private final String LOGGER_FLOATING = "Floating task is added.";
+	private final String LOGGER_DEADLINE = "Deadline task is added.";
+	private final String LOGGER_TIMED = "Timed task is added.";
 	private static Logger logger = Logger.getLogger("AddOp"); 
 	
 	public Add() {}
@@ -53,19 +56,19 @@ public class Add {
 		if((newStartTime == null || newStartTime.isEmpty()) &&
 		   (newEndTime == null || newEndTime.isEmpty())) {
 			database.addGenericTask(name, workload);
-			logger.log(Level.INFO, "Floating task is added.");
+			logger.log(Level.INFO, LOGGER_FLOATING);
 			feedback =  MESSAGE_TASK_ADDED;
 		} else {
 			if(newStartTime.equals(newEndTime)) {
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-				logger.log(Level.INFO, "Deadline task is added.");
+				logger.log(Level.INFO, LOGGER_DEADLINE);
 				feedback = MESSAGE_TASK_ADDED;
 			} else {
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
-				logger.log(Level.INFO, "Timed task is added.");
+				logger.log(Level.INFO, LOGGER_TIMED);
 				feedback = MESSAGE_TASK_ADDED;
 			}
 		}

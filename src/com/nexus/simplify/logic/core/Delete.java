@@ -11,6 +11,8 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  */
 public class Delete {
 	private final String NO_INDEX = "Please enter a task index to delete.";
+	private final String SUCCESS = "Successfully deleted entry #";
+
 	public Delete() {}
 	
 	public String execute(String[] parameter) throws Exception {
@@ -26,7 +28,7 @@ public class Delete {
 		Database database = MainApp.getDatabase();
 		database.deleteTaskByIndex(indexToDelete);
 
-		String feedback = "Successfully deleted entry #" + parameter[ParameterType.INDEX_POS] + ".";
+		String feedback = SUCCESS + parameter[ParameterType.INDEX_POS] + ".";
 		return feedback; 
 	}
 	
@@ -43,7 +45,7 @@ public class Delete {
 		}
 		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
 		
-		String feedback = "Successfully deleted entry #" + String.valueOf(indexToDelete) + ".";
+		String feedback = SUCCESS + String.valueOf(indexToDelete) + ".";
 		return feedback;
 	}
 }
