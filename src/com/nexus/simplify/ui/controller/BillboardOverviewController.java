@@ -1,6 +1,6 @@
-package com.nexus.simplify.UI.controller;
+package com.nexus.simplify.ui.controller;
 
-// @author A0108361M
+//@author A0108361M
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -9,12 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.MainApp;
-import com.nexus.simplify.UI.commandhistory.CommandHistory;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
 import com.nexus.simplify.logic.api.Logic;
+import com.nexus.simplify.ui.commandhistory.CommandHistory;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -38,7 +38,6 @@ import javafx.scene.input.KeyEvent;
  * */
 public class BillboardOverviewController implements Initializable {
 	private static final String LOGGER_ERROR_PROCESSING_FAILED = "Feedback from logic (input processing failed): {}";
-
 	private static final String LOGGER_INFO_PROCESSING_SUCCESSFUL = "Feedback from logic (input processing successful): {}";
 
 	private static final int INDEX_OF_FIRST_ROW_IN_TABLE = 0;
@@ -177,16 +176,11 @@ public class BillboardOverviewController implements Initializable {
      * */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		previousDeadlineTaskTableRowIndex = 0;
-		previousTimedTaskTableRowIndex = 0;
-		previousGenericTaskTableRowIndex = 0;
-		
 		logger = LoggerFactory.getLogger(BillboardOverviewController.class.getName());
 		
+		setAllPreviousTaskTableIndexesToZero();
 		commandHistory = new CommandHistory();
-		initDeadlineTaskTable();
-		initTimedTaskTable();
-		initGenericTaskTable();
+		initAllTables();
 		
 		// forces the user input field to gain focus 
 		// immediately after application starts.
@@ -196,6 +190,18 @@ public class BillboardOverviewController implements Initializable {
 	            userInputField.requestFocus();
 	        }
 	    });	
+	}
+
+	private void setAllPreviousTaskTableIndexesToZero() {
+		previousDeadlineTaskTableRowIndex = 0;
+		previousTimedTaskTableRowIndex = 0;
+		previousGenericTaskTableRowIndex = 0;
+	}
+
+	private void initAllTables() {
+		initDeadlineTaskTable();
+		initTimedTaskTable();
+		initGenericTaskTable();
 	}
 
 	/**
@@ -319,7 +325,7 @@ public class BillboardOverviewController implements Initializable {
 	 * initializes the table columns displaying the indexes of the entries
 	 * such that they are updated based on the list sizes.
 	 * */
-	private void initTableIndexes() {
+	private void initAllTableIndexColumns() {
 		initDeadlineTaskIndexCol();
 		initTimedTaskIndexCol();
 		initGenericTaskIndexCol();
@@ -844,7 +850,7 @@ public class BillboardOverviewController implements Initializable {
 	 * Populates the Index columns of each table, based on the updated entries.
 	 * */
 	private void fillTableIndexes() {		
-		initTableIndexes();
+		initAllTableIndexColumns();
 		fillDeadlineTaskTableIndexes();
 		fillTimedTaskTableIndexes(); 
 		fillGenericTaskTableIndexes();

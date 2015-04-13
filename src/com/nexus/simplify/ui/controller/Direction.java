@@ -1,4 +1,4 @@
-package com.nexus.simplify.UI.controller;
+package com.nexus.simplify.ui.controller;
 
 // @author A0108361M
 public enum Direction {
