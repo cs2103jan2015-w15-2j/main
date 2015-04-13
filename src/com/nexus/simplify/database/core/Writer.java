@@ -40,6 +40,9 @@ public class Writer {
 	// Constructor //
 	//-------------//
 	
+	public Writer() {
+	}
+	
 	public Writer(CoreDatabase coreDatabase) {
 		this.coreDatabase = coreDatabase;
 	}
@@ -56,6 +59,30 @@ public class Writer {
 		try {
 			String fileName = coreDatabase.getDataFilePath();
 			File outputFile = new File(fileName);
+			FileWriter fileWriter = new FileWriter(outputFile);
+			JSONArray jsonArrayForStorage = new JSONArray();
+
+			convertGenericTlToStore(inputObservableGeneric, jsonArrayForStorage);
+			convertDeadlineTlToStore(inputObservableDeadline, jsonArrayForStorage);
+			convertTimedTlToStore(inputObservableTimed, jsonArrayForStorage);
+			convertArchivedGenericTlToStore(inputArchivedGeneric, jsonArrayForStorage);
+			convertArchivedDeadlineTlToStore(inputArchivedDeadline, jsonArrayForStorage);
+			convertArchivedTimedTlToStore(inputArchivedTimed, jsonArrayForStorage);
+
+			fileWriter.write(jsonArrayForStorage.toJSONString());
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric,
+			ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed,
+			ObservableList<GenericTask> inputArchivedGeneric, ObservableList<DeadlineTask> inputArchivedDeadline,
+			ObservableList<TimedTask> inputArchivedTimed, File outputFile) {
+		
+		try {
 			FileWriter fileWriter = new FileWriter(outputFile);
 			JSONArray jsonArrayForStorage = new JSONArray();
 

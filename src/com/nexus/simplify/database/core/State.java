@@ -34,6 +34,9 @@ public class State {
 	private Deque<ObservableList<GenericTask>> genericTlState = new LinkedList<ObservableList<GenericTask>>();
 	private Deque<ObservableList<DeadlineTask>> deadlineTlState = new LinkedList<ObservableList<DeadlineTask>>();
 	private Deque<ObservableList<TimedTask>> timedTlState = new LinkedList<ObservableList<TimedTask>>();
+	private Deque<ObservableList<GenericTask>> genericArchivedTlState = new LinkedList<ObservableList<GenericTask>>();
+	private Deque<ObservableList<DeadlineTask>> deadlineArchivedTlState = new LinkedList<ObservableList<DeadlineTask>>();
+	private Deque<ObservableList<TimedTask>> timedArchivedTlState = new LinkedList<ObservableList<TimedTask>>();
 	
 	//-------------//
 	// Constructor //
@@ -62,6 +65,7 @@ public class State {
 		
 		pushFixedTlsToRespectiveDeques();
 		LOGGER.info("State saved.");
+		
 	}
 	
 	public ObservableList<GenericTask> getFixedGenericState() {
@@ -88,32 +92,31 @@ public class State {
 	public ObservableList<GenericTask> getFixedArchivedGenericState() {
 	
 		LOGGER.info("Archived generic state retrieved.");
-		return genericTlState.pop();
+		return genericArchivedTlState.pop();
 	
 	}
 	
 	public ObservableList<DeadlineTask> getFixedArchivedDeadlineState() {
 	
 		LOGGER.info("Archived deadline state retrieved.");
-		return deadlineTlState.pop();
+		return deadlineArchivedTlState.pop();
 	
 	}
 	
 	public ObservableList<TimedTask> getFixedArchivedTimedState() {
 	
 		LOGGER.info("Archived timed state retrieved.");
-		return timedTlState.pop();
+		return timedArchivedTlState.pop();
 	
 	}
 	
 	public boolean isEmpty() {
-		
-		if (genericTlState.isEmpty() && deadlineTlState.isEmpty() && timedTlState.isEmpty()) {
+		if (genericTlState.isEmpty() && deadlineTlState.isEmpty() && timedTlState.isEmpty() &&
+				genericArchivedTlState.isEmpty() && deadlineArchivedTlState.isEmpty() && timedArchivedTlState.isEmpty()) {
 			return true;
 		} else {
 			return false;
 		}
-		
 	}
 	
 	private void pushFixedTlsToRespectiveDeques() {
@@ -121,11 +124,12 @@ public class State {
 		genericTlState.push(fixedGenericTl);
 		deadlineTlState.push(fixedDeadlineTl);
 		timedTlState.push(fixedTimedTl);
-		genericTlState.push(fixedArchivedGenericTl);
-		deadlineTlState.push(fixedArchivedDeadlineTl);
-		timedTlState.push(fixedArchivedTimedTl);
+		genericArchivedTlState.push(fixedArchivedGenericTl);
+		deadlineArchivedTlState.push(fixedArchivedDeadlineTl);
+		timedArchivedTlState.push(fixedArchivedTimedTl);
 	
 	}
+	
 	
 	//A0111035A
 	/**
