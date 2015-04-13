@@ -8,7 +8,6 @@ import com.nexus.simplify.parser.data.CommandData;
 
 public class ParamParser extends TokenParser {
 	DateTimeParser dtParser = new DateTimeParser();
-	DateTimeParser sdtParser = new SearchDateTimeParser();
 	WorkloadParser wlParser = new WorkloadParser();
 	NameParser nameParser = new NameParser();
 	CommandData commandData = CommandData.getInstance();
@@ -20,11 +19,8 @@ public class ParamParser extends TokenParser {
 			return tokenList;
 		} else {
 			try {
-				//if (commandData.getUserOp() == OperationType.SEARCH) {
-					//tokenList = sdtParser.parseTokens(tokenList);
-				//} else {
+			
 					tokenList = dtParser.parseTokens(tokenList);
-				//}
 
 				/* workload parameter should either be either the first or last token
 				 * as it is the second last parameter type to be parsed.

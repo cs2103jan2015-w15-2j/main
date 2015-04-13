@@ -1,26 +1,25 @@
+//@author A0111035A
+
 package com.nexus.simplify.parser.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class CoreParser extends TokenParser {
-	Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
-	OperationParser opParser = new OperationParser();
-	ParamParser paramParser = new ParamParser();
+	private static OperationParser _opParser = new OperationParser();
+	private static ParamParser _paramParser = new ParamParser();
 
-	final String MESSAGE_UNPARSED_TOKENS = "Unparsed tokens detected:";
+	final String MESSAGE_UNPARSED_TOKENS = "Unparsed tokens detected: %1$s";
 
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
+		tokenList = _opParser.parseTokens(tokenList);
+		tokenList = _paramParser.parseTokens(tokenList);
 
-		tokenList = opParser.parseTokens(tokenList);
-		tokenList = paramParser.parseTokens(tokenList);
-
-		// There should not be remaining unidentified tokens who are not recognised as operation or parameters
+		// There should not be remaining unidentified tokens who are not
+		// recognised as operation or parameters
 		if (!isTokenListEmpty(tokenList)) {
-			throw new Exception(appendStringArr(MESSAGE_UNPARSED_TOKENS, tokenList));
+			throw new Exception(appendStringArr(MESSAGE_UNPARSED_TOKENS,
+					tokenList));
 		}
-		return tokenList;			
+		return tokenList;
 	}
 
 	private String appendStringArr(String string, String[] stringArr) {
