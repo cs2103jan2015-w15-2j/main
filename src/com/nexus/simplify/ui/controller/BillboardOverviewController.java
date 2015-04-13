@@ -317,7 +317,7 @@ public class BillboardOverviewController implements Initializable {
 	 * */
 	private void initDeadlineTaskTable() {
 		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
-		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDTAsStringProperty());
+		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDateTimeAsStringProperty());
 		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
 	}
 	

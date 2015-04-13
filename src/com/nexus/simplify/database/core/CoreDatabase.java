@@ -30,6 +30,7 @@ public class CoreDatabase {
 
 	private Preferences preference;
 	private State state;
+	private Reader reader;
 	private String dataFileLocation;
 	
 	private ObservableList<GenericTask> archivedGenericTl = FXCollections.observableArrayList();
@@ -53,7 +54,7 @@ public class CoreDatabase {
 	public CoreDatabase() throws IOException {
 		
 		initDatabase();
-		Reader reader = new Reader(this);
+		reader = new Reader(this);
 		JSONArray jsonTaskArray = reader.retrieveDataFromDataFile(getDataFilePath());
 		reader.populateTaskLists(jsonTaskArray);
 		state = new State();
@@ -118,6 +119,10 @@ public class CoreDatabase {
 	
 	public State getState() {
 		return this.state;
+	}
+	
+	public Reader getReader() {
+		return this.reader;
 	}
 
 	/**

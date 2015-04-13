@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.nexus.simplify.database.core.Reader;
 import com.nexus.simplify.test.database.DatabaseTest;
 import com.nexus.simplify.test.logic.TestAdd;
 import com.nexus.simplify.test.logic.TestDelete;
@@ -14,6 +13,7 @@ import com.nexus.simplify.test.logic.TestDisplay;
 import com.nexus.simplify.test.logic.TestDone;
 import com.nexus.simplify.test.logic.TestModify;
 import com.nexus.simplify.test.parser.ParserTest;
+import com.nexus.simplify.test.ui.CommandHistoryTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -32,9 +32,9 @@ import com.nexus.simplify.test.parser.ParserTest;
     
 	// Database Unit Tests
 	DatabaseTest.class,
-	Reader.class
 	
-	//TODO Add ui tests
+	// UI Unit Test
+	CommandHistoryTest.class
 })
 
 public class AllTests {}
