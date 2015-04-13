@@ -45,7 +45,7 @@ public class OperationParser extends TokenParser {
 	 * @throws Exception		When parsing of specified token list fails. 
 	 */
 	private String[] switchUserOperation(OperationType userOp,
-			String[] remainingTokens) throws Exception {
+										String[] remainingTokens) throws Exception {
 		// Handle commands that have special first parameters
 		switch (userOp) {
 			case DISPLAY:

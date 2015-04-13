@@ -6,8 +6,6 @@ package com.nexus.simplify.parser.core;
  * An abstract class to generalise the role of token parsers in Parser
  * component. TokenParser contains many useful methods that parsers might need
  * while they parse for specific type of tokens
- * 
- * @author Davis
  *
  */
 public abstract class TokenParser {
@@ -86,7 +84,7 @@ public abstract class TokenParser {
 	 * @return New token list that is fully filled with tokens.
 	 */
 	protected String[] removeNullTokens(String[] newTokenList,
-			String[] oldTokenList) {
+										String[] oldTokenList) {
 		// Populate newTokenList with remaining unused tokens.
 		if (newTokenList.length == ARRAY_EMPTY_SIZE) {
 			return newTokenList;
@@ -118,7 +116,7 @@ public abstract class TokenParser {
 	 * @return tokenList with used tokens filled with {@code null}.
 	 */
 	protected String[] replaceTokensWithNull(String[] tokenList,
-			String[] usedTokenList) {
+											String[] usedTokenList) {
 		String[] tempTokenList = tokenList.clone();
 
 		for (int i = 0; i < tempTokenList.length; i++) {
@@ -213,7 +211,7 @@ public abstract class TokenParser {
 	 * @return List of tokens where no tokens are enclosed in double quotes.
 	 */
 	protected String[] trimQuotesInTokens(String[] tokenList) {
-		String[] temp = tokenList.clone();
+										String[] temp = tokenList.clone();
 
 		for (int i = 0; i < temp.length; i++) {
 			String string = temp[i];

@@ -16,8 +16,6 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
  * A singleton which holds data such as the user specified operation and
  * parameters from parsing of token lists generated from user command string
  * input.
- * 
- * @author Davis
  *
  */
 public class CommandData {
@@ -230,6 +228,19 @@ public class CommandData {
 	 *
 	 */
 	private CommandData() {
+		initOpHash();
+
+		for (int i = 0; i < _searchArray.length; i++) {
+			_searchArray[i] = false;
+		}
+
+	}
+
+	/**
+	 * Adds all supported operation keyword into HashMap with the corresponding
+	 * OperationType
+	 */
+	private void initOpHash() {
 		// Adding support for all supported commands
 		_cmdHash.put("display", OperationType.DISPLAY);
 		_cmdHash.put("show", OperationType.DISPLAY);
@@ -255,11 +266,6 @@ public class CommandData {
 		_cmdHash.put("find", OperationType.SEARCH);
 		_paramArray = new String[ParameterType.MAX_SIZE];
 		_searchArray = new boolean[ParameterType.SEARCH_MAX_SIZE];
-
-		for (int i = 0; i < _searchArray.length; i++) {
-			_searchArray[i] = false;
-		}
-
 	}
 
 	public void setFileLocation(String filePathString) {

@@ -7,8 +7,6 @@ import com.nexus.simplify.parser.data.CommandData;
 /**
  * Parsing of name works by parsing the remaining tokens as new task name after
  * all other parameters had been parsed.
- * 
- * @author Davis
  *
  */
 public class NameParser extends TokenParser {

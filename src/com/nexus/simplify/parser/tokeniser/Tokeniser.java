@@ -5,8 +5,6 @@ package com.nexus.simplify.parser.tokeniser;
 /**
  * A tokeniser that splits a string into substrings that are seperated by
  * whitespaces.
- * 
- * @author Davis
  *
  */
 public class Tokeniser {
