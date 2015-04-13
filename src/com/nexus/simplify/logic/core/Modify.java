@@ -17,21 +17,27 @@ public class Modify {
 	private final String NO_INDEX = "Please enter a task index to modify.";
 	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
 	private final String NOTHING_TO_MODIFY = "Please specify something to modify.";
+	private final String LOCATION_MODIFIED = "file location modified ";
+	
 	public Modify() {}
 	
 	public String execute(String[] parameter) throws Exception {
 		// pattern follows Java.util.Date toString() method
 		SimpleDateFormat df = new SimpleDateFormat(FORMAT_PATTERN);
-		int indexToModify;
+		Database database = MainApp.getDatabase();
 		
-		try{
-			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
-		} catch (NumberFormatException e) {
-			throw new Exception(NO_INDEX);
+		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
+		if(newFileLocation != null && !newFileLocation.isEmpty()) {
+			exceptionHandling(database, newFileLocation);
+			String feedback = LOCATION_MODIFIED;
+			return feedback;
 		}
 		
-		Database database = MainApp.getDatabase();
+		int indexToModify;
+		exceptionHandling(parameter);
 		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		
+		
 		String feedback = "Task ";
 		String newName = parameter[ParameterType.NEW_NAME_POS];
 		if(newName != null && !newName.isEmpty()) {
@@ -43,44 +49,18 @@ public class Modify {
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		if(newStartTime != null && !newStartTime.isEmpty() && 
 			newEndTime != null && !newEndTime.isEmpty()) {
-			Date startTime;
-			Date endTime;
-			try {
-				startTime = df.parse(newStartTime);
-				endTime = df.parse(newEndTime);
-				database.modifyStartEnd(indexToModify, startTime, endTime);
-			} catch (Exception e) {
-				throw e;
-			}
+			exceptionHandling(df, indexToModify, database, newStartTime, newEndTime);
 			feedback += "time, ";
 		}
 		
 		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
 		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
 			int newWorkload;
-			try{
-				newWorkload = Integer.parseInt(newWorkloadStr);
-			} catch (NumberFormatException e) {
-				throw new Exception(INVALID_WORKLOAD);
-			}
+			exceptionHandling(newWorkloadStr);
 			
 			newWorkload = Integer.parseInt(newWorkloadStr);
-			try {
-				database.modifyWorkload(indexToModify, newWorkload);
-			} catch (Exception e) {
-				throw e;
-			}
+			exceptionHandling(indexToModify, database, newWorkload);
 			feedback += "workload, ";
-		}
-		
-		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
-		if(newFileLocation != null && !newFileLocation.isEmpty()) {
-			try {
-				database.modifyFileLocation(newFileLocation);
-			} catch (Exception e) {
-				throw e;
-			}
-			feedback += "file location, ";
 		}
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
@@ -91,6 +71,60 @@ public class Modify {
 		}
 		feedback += "modified.";
 		return feedback;
+	}
+
+	// exception handling for modifying file location
+	private void exceptionHandling(Database database, String newFileLocation) throws Exception {
+		try {
+			database.modifyFileLocation(newFileLocation);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	// exception handling for modifying workload
+	private void exceptionHandling(int indexToModify, Database database,
+									int newWorkload) throws Exception {
+		try {
+			database.modifyWorkload(indexToModify, newWorkload);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	// exception handling for modifying time
+	private void exceptionHandling(SimpleDateFormat df, int indexToModify, Database database, 
+								String newStartTime, String newEndTime) throws Exception {
+		Date startTime;
+		Date endTime;
+		try {
+			startTime = df.parse(newStartTime);
+			endTime = df.parse(newEndTime);
+			database.modifyStartEnd(indexToModify, startTime, endTime);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	// exception handling for wrong workload format
+	private void exceptionHandling(String newWorkloadStr) throws Exception {
+		try{
+			@SuppressWarnings("unused")
+			int newWorkload = Integer.parseInt(newWorkloadStr);
+		} catch (NumberFormatException e) {
+			throw new Exception(INVALID_WORKLOAD);
+		}
+	}
+	
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		@SuppressWarnings("unused")
+		int indexToModify;
+		try{
+			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
 	}
 	
 	// this method is for unit testing, which assumes that parser and
@@ -134,7 +168,7 @@ public class Modify {
 		}
 		
 		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
-				(newEndTime==null || newEndTime.isEmpty()) && 
+			(newEndTime==null || newEndTime.isEmpty()) && 
 				(newWorkloadStr==null || newWorkloadStr.isEmpty())) {
 				feedback = NOTHING_TO_MODIFY;
 				return feedback;

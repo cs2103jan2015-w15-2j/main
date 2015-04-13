@@ -19,6 +19,9 @@ public class Add {
 	private final String DATE_FORMAT_PATTERN = "E MMM dd HH:mm:ss zzz yyy";
 	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
 	private final String NO_NAME = "Please enter a name for this task.";
+	private final String LOGGER_FLOATING = "Floating task is added.";
+	private final String LOGGER_DEADLINE = "Deadline task is added.";
+	private final String LOGGER_TIMED = "Timed task is added.";
 	private static Logger logger = Logger.getLogger("AddOp"); 
 	
 	public Add() {}
@@ -30,20 +33,15 @@ public class Add {
 		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
 		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
 		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
 		String feedback;
 		int workload;
 		Database database = MainApp.getDatabase();
 		
-		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
-		// this if-else statement caters to workload
 		if (workloadStr == null || workloadStr.isEmpty()) {
 			workload = 0;
 		} else {
-			try {
-				workload = Integer.parseInt(workloadStr);
-			} catch (NumberFormatException e) {
-				throw new Exception(INVALID_WORKLOAD);
-			}
+			workload = exceptionHandling(workloadStr);
 		}
 		
 		if(name == null || name.isEmpty()) {
@@ -53,23 +51,34 @@ public class Add {
 		if((newStartTime == null || newStartTime.isEmpty()) &&
 		   (newEndTime == null || newEndTime.isEmpty())) {
 			database.addGenericTask(name, workload);
-			logger.log(Level.INFO, "Floating task is added.");
+			logger.log(Level.INFO, LOGGER_FLOATING);
 			feedback =  MESSAGE_TASK_ADDED;
 		} else {
 			if(newStartTime.equals(newEndTime)) {
 				Date deadline = df.parse(newStartTime);
 				database.addDeadlineTask(name,deadline,workload);
-				logger.log(Level.INFO, "Deadline task is added.");
+				logger.log(Level.INFO, LOGGER_DEADLINE);
 				feedback = MESSAGE_TASK_ADDED;
 			} else {
 				Date startTime = df.parse(newStartTime);
 				Date endTime = df.parse(newEndTime);
 				database.addTimedTask(name,startTime,endTime,workload);
-				logger.log(Level.INFO, "Timed task is added.");
+				logger.log(Level.INFO, LOGGER_TIMED);
 				feedback = MESSAGE_TASK_ADDED;
 			}
 		}
 		return feedback;
+	}
+
+	// exception handling for wrong workload format
+	private int exceptionHandling(String workloadStr) throws Exception {
+		int workload;
+		try {
+			workload = Integer.parseInt(workloadStr);
+		} catch (NumberFormatException e) {
+			throw new Exception(INVALID_WORKLOAD);
+		}
+		return workload;
 	}
 	
 	// this method is for unit testing, which assumes that parser and
@@ -88,13 +97,13 @@ public class Add {
 			try {
 				workload = Integer.parseInt(workloadStringForm);
 			} catch (NumberFormatException e) {
-				feedback = "Please enter a valid workload.";
+				feedback = INVALID_WORKLOAD;
 				return feedback;
 			}
 		}
 		
 		if(name == null || name.isEmpty()) {
-			feedback = "Please enter a name for this task.";
+			feedback = NO_NAME;
 			return feedback;
 		}
 		

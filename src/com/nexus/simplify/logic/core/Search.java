@@ -1,3 +1,4 @@
+//@author generated
 package com.nexus.simplify.logic.core;
 
 import java.text.ParseException;
@@ -5,8 +6,12 @@ import java.text.ParseException;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
+//@author A0094457U
+/*
+ * This class calls database to search for something.
+ */
 public class Search {
-	
+	private final String SUCCESS = "Search result displayed.";
 	public Search() {}
 	
 	public String execute(String[] parameter, boolean[] searchField) throws ParseException {
@@ -17,7 +22,7 @@ public class Search {
 		} catch (ParseException e) {
 			throw e;
 		}
-		feedback = "Search result displayed.";
+		feedback = SUCCESS;
 		return feedback;
 	}
 }

@@ -20,6 +20,7 @@ public class Display {
 	private final String BY_WORKLOAD = "Displayed tasks by workload.";
 	private final String DISPLAY_DONE = "Displayed tasks that are done.";
 	private final String INVALID_OPTION = "Invalid option for display, please try again.";
+	
 	public Display() {}
 		
 	public String execute(String[] parameter) throws Exception {
