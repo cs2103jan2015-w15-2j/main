@@ -272,9 +272,9 @@ public class Database implements IDatabase {
 	public void undoTask() throws Exception {
 		
 		if (!state.isEmpty()) {
-			setArchivedTL(state.getArchivedGenericState(), state.getArchivedDeadlineState(),
-					state.getArchivedTimedState());
-			setObservableTL(state.getGenericState(), state.getDeadlineState(), state.getTimedState());
+			setArchivedTL(state.getFixedArchivedGenericState(), state.getFixedArchivedDeadlineState(),
+					state.getFixedArchivedTimedState());
+			setObservableTL(state.getFixedGenericState(), state.getFixedDeadlineState(), state.getFixedTimedState());
 
 			writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
 					archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
@@ -682,8 +682,8 @@ public class Database implements IDatabase {
 
 	private Comparator<GenericTask> taskIdComparator = new Comparator<GenericTask>() {
 		public int compare(GenericTask t1, GenericTask t2) {
-			DateTime t1Id = t1.getIDAsDT();
-			DateTime t2Id = t2.getIDAsDT();
+			DateTime t1Id = t1.getIDAsDateTime();
+			DateTime t2Id = t2.getIDAsDateTime();
 			if(t1Id.isBefore(t2Id)) {
 				return -1;
 			} else {
@@ -706,8 +706,8 @@ public class Database implements IDatabase {
 
 	private Comparator<TimedTask> taskStartTimeComparator = new Comparator<TimedTask>() {
 		public int compare(TimedTask t1, TimedTask t2) {
-			DateTime t1StartTime = t1.getStartTimeAsDT();
-			DateTime t2StartTime = t2.getStartTimeAsDT();
+			DateTime t1StartTime = t1.getStartTimeAsDateTime();
+			DateTime t2StartTime = t2.getStartTimeAsDateTime();
 			if(t1StartTime.isBefore(t2StartTime)) {
 				return -1;
 			} else {

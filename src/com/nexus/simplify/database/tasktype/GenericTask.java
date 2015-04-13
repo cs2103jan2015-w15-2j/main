@@ -1,3 +1,4 @@
+//A0114887U
 package com.nexus.simplify.database.tasktype;
 
 import javafx.beans.property.*;
@@ -7,7 +8,6 @@ import org.joda.time.format.*;
 
 /**
  * Represents an instance of a task without due date or start and end time.
- * @author Tan Qian Yi
  * */
 public class GenericTask {
 	
@@ -110,6 +110,7 @@ public class GenericTask {
 	// Attribute Accessors //
 	//---------------------//
 	
+	//@author A0108361M
 	/**
 	 * Default getter method for attribute id.
 	 * 
@@ -141,7 +142,6 @@ public class GenericTask {
 	 * Returns the id of the task formatted as a StringProperty Object.
 	 * 
 	 * @return id of task as StringProperty Object
-	 * @author tohjianfeng
 	 * */
 	public StringProperty getIDAsStringProperty() {
 		return id;
@@ -152,7 +152,7 @@ public class GenericTask {
 	 * 
 	 * @return ID of task as DateTime
 	 * */
-	public DateTime getIDAsDT() {
+	public DateTime getIDAsDateTime() {
 		DateTimeFormatter format = DateTimeFormat.forPattern(ID_FORMAT);
 		DateTime ID = format.parseDateTime(id.get());
 		return ID;
@@ -176,6 +176,7 @@ public class GenericTask {
 		return workload;
 	}
 	
+	//A0111035A
 	/**
 	 * Returns an exact copy of the task.
 	 * */

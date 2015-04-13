@@ -1,3 +1,4 @@
+//@author A0114887U
 package com.nexus.simplify.database.tasktype;
 
 import java.util.Date;
@@ -9,7 +10,6 @@ import org.joda.time.format.*;
 
 /**
  * Represents an instance of task tagged with start and end time.
- * @author Tan Qian Yi
  */
 public class TimedTask extends GenericTask {
 	
@@ -24,9 +24,7 @@ public class TimedTask extends GenericTask {
 	// Class Attribute //
 	//-----------------//
 	
-	/**
-	 * @author tohjianfeng
-	 * */
+	//@author A0108361M
 
 	private final ObjectProperty<DateTime> startTime;
 	private final ObjectProperty<DateTime> endTime;
@@ -64,6 +62,7 @@ public class TimedTask extends GenericTask {
 		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
 	}
 	
+	//A0114887U
 	/**
 	 * Constructor for timed tasks without workload.
 	 * 
@@ -114,6 +113,7 @@ public class TimedTask extends GenericTask {
 	// Attribute Mutators //
 	//--------------------//
 	
+	//@author A0108361M
 	/**
 	 * Default setter for class attribute startTime.
 	 * 
@@ -159,7 +159,7 @@ public class TimedTask extends GenericTask {
 	 * 
 	 * @return start time of task
 	 * */
-	public DateTime getStartTimeAsDT() {
+	public DateTime getStartTimeAsDateTime() {
 		return startTime.get();
 	}
 	
@@ -168,7 +168,7 @@ public class TimedTask extends GenericTask {
 	 * 
 	 * @return end time of task
 	 * */
-	public DateTime getEndTimeAsDT() {
+	public DateTime getEndTimeAsDateTime() {
 		return endTime.get();
 	}
 	
@@ -208,6 +208,7 @@ public class TimedTask extends GenericTask {
 		return format.print(endTime.get());
 	}
 	
+	//A0111035A
 	/**
 	 * Returns an exact copy of the task.
 	 * */
@@ -215,8 +216,8 @@ public class TimedTask extends GenericTask {
 		StringProperty cName = new SimpleStringProperty(getName());
 		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
 		StringProperty cID = new SimpleStringProperty(getId());
-		DateTime cStart = getStartTimeAsDT();
-		DateTime cEnd = getEndTimeAsDT();
+		DateTime cStart = getStartTimeAsDateTime();
+		DateTime cEnd = getEndTimeAsDateTime();
 		TimedTask copy = new TimedTask(cName, cStart, cEnd, cWorkload, cID);
 		return copy;
 	}
