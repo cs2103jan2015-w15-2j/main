@@ -21,14 +21,20 @@ public abstract class TokenParser {
 	 * Takes a list of tokens and process the tokens that it is able to parse.
 	 * 
 	 * @param tokenList
-	 *            List of tokens for different parsers to identify its
-	 *            respective tokens.
+	 *            List of tokens to be parsed.
 	 * @return List of remaining tokens that were not used.
 	 * @throws Exception
 	 *             When parsing of specified token list fails.
 	 */
 	public abstract String[] parseTokens(String[] tokenList) throws Exception;
 
+	/**
+	 * Returns a list of tokens with all tokens in usedTokens removed.
+	 * 
+	 * @param usedTokens	List of tokens to be removed.
+	 * @param tokenList		List of tokens containing usedTokens.
+	 * @return				List of tokens with tokens in usedTokens removed.
+	 */
 	protected String[] getRemainingTokens(String usedTokens, String[] tokenList) {
 		// Specified token list cannot be a null object, else there is nothing
 		// to remove tokens from.
@@ -70,7 +76,7 @@ public abstract class TokenParser {
 	/**
 	 * Transfer non-null elements from oldTokenList to newTokenList. Length of
 	 * newTokenList specified must be exactly the same with number of non-null
-	 * elements
+	 * elements.
 	 * 
 	 * @param newTokenList
 	 *            New empty token that has the length of non {@code null}
@@ -109,7 +115,7 @@ public abstract class TokenParser {
 	 *            List of tokens to remove tokens from.
 	 * @param usedTokenList
 	 *            List of tokens to be removed.
-	 * @return tokenList with used tokens removed.
+	 * @return tokenList with used tokens filled with {@code null}.
 	 */
 	protected String[] replaceTokensWithNull(String[] tokenList,
 			String[] usedTokenList) {
@@ -130,7 +136,7 @@ public abstract class TokenParser {
 	 * enclosed in double quotations.
 	 * 
 	 * @param tokenList
-	 *            List of tokens
+	 *            List of tokens.
 	 * @return {@code true} if tokenList contains at least one token enclosed in
 	 *         double quotations, otherwise {@code false}.
 	 */
@@ -204,7 +210,7 @@ public abstract class TokenParser {
 	 * 
 	 * @param tokenList
 	 *            List of tokens.
-	 * @return List of tokens where no tokens are enclosed in double quotes
+	 * @return List of tokens where no tokens are enclosed in double quotes.
 	 */
 	protected String[] trimQuotesInTokens(String[] tokenList) {
 		String[] temp = tokenList.clone();

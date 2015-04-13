@@ -5,6 +5,9 @@ import com.nexus.simplify.parser.data.CommandData;
 public class IndexParser extends TokenParser {
 	CommandData commandData = CommandData.getInstance();
 
+	/**
+	 * Parses tokenList for index tokens.
+	 */
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
 		if (isTokenListEmpty(tokenList)) {

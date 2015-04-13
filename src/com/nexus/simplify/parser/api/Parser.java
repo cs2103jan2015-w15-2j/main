@@ -27,7 +27,7 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  */
 
 public class Parser implements IParser {
-	private static final String MESSAGE_PARSE_ERROR = "Error parsing command: %1$s. "
+	private static final String ERROR_PARSING__COMMAND = "Error parsing command: %1$s. "
 			+ "/n" + "Please specify parameters as clear as possible";
 
 	private static final String LOG_USER_INPUT = "Parsing user input: {}";
@@ -57,7 +57,7 @@ public class Parser implements IParser {
 
 			return userCommand;
 		} catch (Exception e) {
-			throw new Exception(String.format(MESSAGE_PARSE_ERROR, _input));
+			throw new Exception(String.format(ERROR_PARSING__COMMAND, _input));
 		}
 	}
 

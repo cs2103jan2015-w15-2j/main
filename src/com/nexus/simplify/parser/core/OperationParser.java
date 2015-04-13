@@ -21,8 +21,9 @@ public class OperationParser extends TokenParser {
 			String opString = tokenList[0].toLowerCase();
 			tokenList[0] = opString;
 			OperationType userOp = commandData.getOperationType(opString);
-			
-			// Implement adding of task without providing keywords for add e.g "add"
+
+			// Implement adding of task without providing keywords for add e.g
+			// "add"
 			if (userOp == OperationType.INVALID) {
 				userOp = OperationType.ADD;
 				opString = "";
@@ -31,28 +32,29 @@ public class OperationParser extends TokenParser {
 
 			// Handle commands that have special first parameters
 			switch (userOp) {
-			case DISPLAY : 
+			case DISPLAY:
 				commandData.setOp(userOp);
 				return displayParser.parseTokens(remainingTokens);
 
-			case MODIFY :
+			case MODIFY:
 				commandData.setOp(userOp);
-				String[] postIndexParseTokens = indexParser.parseTokens(remainingTokens); 
+				String[] postIndexParseTokens = indexParser
+						.parseTokens(remainingTokens);
 				if (postIndexParseTokens.equals(remainingTokens)) {
-					return fileLocationParser.parseTokens(remainingTokens); 
+					return fileLocationParser.parseTokens(remainingTokens);
 				} else {
 					return postIndexParseTokens;
 				}
 
-			case DONE :
+			case DONE:
 				commandData.setOp(userOp);
 				return indexParser.parseTokens(remainingTokens);
 
-			case DELETE :
+			case DELETE:
 				commandData.setOp(userOp);
 				return indexParser.parseTokens(remainingTokens);
 
-			default : 
+			default:
 				commandData.setOp(userOp);
 				return remainingTokens;
 			}

@@ -3,14 +3,18 @@ package com.nexus.simplify.parser.core;
 import com.nexus.simplify.parser.data.CommandData;
 
 /**
- * Parsing of name works by parsing the remaining tokens as new task name after all other parameters had been parsed.
+ * Parsing of name works by parsing the remaining tokens as new task name after
+ * all other parameters had been parsed.
  * 
  * @author Davis
  *
  */
 public class NameParser extends TokenParser {
 	CommandData commandData = CommandData.getInstance();
-	
+
+	/**
+	 * Parses remaining tokens in tokenList as name tokens.
+	 */
 	@Override
 	public String[] parseTokens(String[] tokenList) throws Exception {
 		if (isTokenListEmpty(tokenList)) {
@@ -23,15 +27,5 @@ public class NameParser extends TokenParser {
 			commandData.setNewName(name);
 			return getRemainingTokens(name, tokenList);
 		}
-	}
-	
-	@Override
-	protected String tokenListToStr(String[] strArr) {
-		StringBuilder builder = new StringBuilder();
-		for(String s : strArr) {
-			builder.append(s);
-			builder.append(" ");
-		}
-		return builder.toString().trim();
 	}
 }
