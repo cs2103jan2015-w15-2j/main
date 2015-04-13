@@ -13,7 +13,7 @@ import org.junit.Test;
 /**
  * Provides a series of tests for the methods found in the CommandHistory class.
  * */
-public class CommandHistoryAdt {
+public class CommandHistoryTest {
 
 	private static final String EMPTY_STRING = "";
 	
