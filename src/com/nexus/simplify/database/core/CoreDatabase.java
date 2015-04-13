@@ -1,6 +1,4 @@
-/**
- * @author Tan Qian Yi
- */
+//@author A0114887U
 
 package com.nexus.simplify.database.core;
 
@@ -34,12 +32,12 @@ public class CoreDatabase {
 	private State state;
 	private String dataFileLocation;
 	
-	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> archivedGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimedTl = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> observableGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimedTl = FXCollections.observableArrayList();
 
 	private Logger LOGGER = LoggerFactory.getLogger(CoreDatabase.class.getName());
 	
@@ -94,28 +92,28 @@ public class CoreDatabase {
 	// Attribute Accessors //
 	//---------------------//
 
-	public ObservableList<GenericTask> getObservableGenericTL() {
-		return this.observableGenericTL;
+	public ObservableList<GenericTask> getObservableGenericTl() {
+		return this.observableGenericTl;
 	}
 
-	public ObservableList<TimedTask> getObservableTimedTL() {
-		return this.observableTimedTL;
+	public ObservableList<TimedTask> getObservableTimedTl() {
+		return this.observableTimedTl;
 	}
 
-	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
-		return this.observableDeadlineTL;
+	public ObservableList<DeadlineTask> getObservableDeadlineTl() {
+		return this.observableDeadlineTl;
 	}
 
-	public ObservableList<GenericTask> getArchivedGenericTL() {
-		return this.archivedGenericTL;
+	public ObservableList<GenericTask> getArchivedGenericTl() {
+		return this.archivedGenericTl;
 	}
 
-	public ObservableList<TimedTask> getArchivedTimedTL() {
-		return this.archivedTimedTL;
+	public ObservableList<TimedTask> getArchivedTimedTl() {
+		return this.archivedTimedTl;
 	}
 
-	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
-		return this.archivedDeadlineTL;
+	public ObservableList<DeadlineTask> getArchivedDeadlineTl() {
+		return this.archivedDeadlineTl;
 	}
 	
 	public State getState() {
@@ -140,28 +138,28 @@ public class CoreDatabase {
 	// Attribute Mutators //
 	//--------------------//
 
-	public void setObservableGenericTL(ObservableList<GenericTask> generic) {
-		this.observableGenericTL = generic;
+	public void setObservableGenericTl(ObservableList<GenericTask> generic) {
+		this.observableGenericTl = generic;
 	}
 
-	public void setObservableTimedTL(ObservableList<TimedTask> timed) {
-		this.observableTimedTL = timed;
+	public void setObservableTimedTl(ObservableList<TimedTask> timed) {
+		this.observableTimedTl = timed;
 	}
 
-	public void setObservableDeadlineTL(ObservableList<DeadlineTask> deadline) {
-		this.observableDeadlineTL = deadline;
+	public void setObservableDeadlineTl(ObservableList<DeadlineTask> deadline) {
+		this.observableDeadlineTl = deadline;
 	}
 
-	public void setArchivedGenericTL(ObservableList<GenericTask> generic) {
-		this.archivedGenericTL = generic;
+	public void setArchivedGenericTl(ObservableList<GenericTask> generic) {
+		this.archivedGenericTl = generic;
 	}
 
-	public void setArchivedTimedTL(ObservableList<TimedTask> timed) {
-		this.archivedTimedTL = timed;
+	public void setArchivedTimedTl(ObservableList<TimedTask> timed) {
+		this.archivedTimedTl = timed;
 	}
 
-	public void setArchivedDeadlineTL(ObservableList<DeadlineTask> deadline) {
-		this.archivedDeadlineTL = deadline;
+	public void setArchivedDeadlineTl(ObservableList<DeadlineTask> deadline) {
+		this.archivedDeadlineTl = deadline;
 	}
 
 	public void setDataFileLocation(String newFileLocation) throws IOException {
@@ -179,8 +177,8 @@ public class CoreDatabase {
 		
 		file.getParentFile().mkdirs();
 		file.createNewFile();
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL, file);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl, file);
 		
 	}
 

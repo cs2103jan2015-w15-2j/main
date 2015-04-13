@@ -74,7 +74,6 @@ public class Reader {
 	 * @param dataFileName specified file to retrieve data from.
 	 * */
 	public JSONArray retrieveDataFromDataFile(String dataFileName) {
-		
 		JSONArray jsonTaskArray = new JSONArray();
 
 		try {
@@ -129,12 +128,12 @@ public class Reader {
 				break;
 			}
 			
-			coreDatabase.setObservableGenericTL(observableGenericTL);
-			coreDatabase.setObservableDeadlineTL(observableDeadlineTL);
-			coreDatabase.setObservableTimedTL(observableTimedTL);
-			coreDatabase.setArchivedGenericTL(archivedGenericTL);
-			coreDatabase.setArchivedDeadlineTL(archivedDeadlineTL);
-			coreDatabase.setArchivedTimedTL(archivedTimedTL);
+			coreDatabase.setObservableGenericTl(observableGenericTL);
+			coreDatabase.setObservableDeadlineTl(observableDeadlineTL);
+			coreDatabase.setObservableTimedTl(observableTimedTL);
+			coreDatabase.setArchivedGenericTl(archivedGenericTL);
+			coreDatabase.setArchivedDeadlineTl(archivedDeadlineTL);
+			coreDatabase.setArchivedTimedTl(archivedTimedTL);
 		}
 		
 	}

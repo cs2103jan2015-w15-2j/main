@@ -1,3 +1,4 @@
+//@author A0114887U
 package com.nexus.simplify.database.api;
 
 import java.util.*;
@@ -8,8 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.nexus.simplify.database.core.CoreDatabase;
 import com.nexus.simplify.database.core.LogicRequest;
@@ -51,18 +50,18 @@ public class Database implements IDatabase {
 	private Writer writer;	
 	private LogicRequest logicRequest = new LogicRequest();
 
-	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> resultantGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> resultantDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> resultantTimedTL = FXCollections.observableArrayList();
-	private ObservableList<GenericTask> temporaryGenericTL = FXCollections.observableArrayList();
-	private ObservableList<DeadlineTask> temporaryDeadlineTL = FXCollections.observableArrayList();
-	private ObservableList<TimedTask> temporaryTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> archivedGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimedTl = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> observableGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimedTl = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> resultantGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> resultantDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> resultantTimedTl = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> temporaryGenericTl = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> temporaryDeadlineTl = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> temporaryTimedTl = FXCollections.observableArrayList();
 
 	//-------------//
 	// Constructor //
@@ -73,12 +72,12 @@ public class Database implements IDatabase {
 		this.coreDatabase = new CoreDatabase();
 		state = coreDatabase.getState();
 		writer = new Writer(coreDatabase);
-		archivedGenericTL = coreDatabase.getArchivedGenericTL();
-		archivedDeadlineTL = coreDatabase.getArchivedDeadlineTL();
-		archivedTimedTL = coreDatabase.getArchivedTimedTL();
-		observableGenericTL = coreDatabase.getObservableGenericTL();
-		observableDeadlineTL = coreDatabase.getObservableDeadlineTL();
-		observableTimedTL = coreDatabase.getObservableTimedTL();
+		archivedGenericTl = coreDatabase.getArchivedGenericTl();
+		archivedDeadlineTl = coreDatabase.getArchivedDeadlineTl();
+		archivedTimedTl = coreDatabase.getArchivedTimedTl();
+		observableGenericTl = coreDatabase.getObservableGenericTl();
+		observableDeadlineTl = coreDatabase.getObservableDeadlineTl();
+		observableTimedTl = coreDatabase.getObservableTimedTl();
 		
 	}
 	
@@ -87,12 +86,12 @@ public class Database implements IDatabase {
 		this.coreDatabase = coreDatabase;
 		state = coreDatabase.getState();
 		writer = new Writer(coreDatabase);
-		archivedGenericTL = coreDatabase.getArchivedGenericTL();
-		archivedDeadlineTL = coreDatabase.getArchivedDeadlineTL();
-		archivedTimedTL = coreDatabase.getArchivedTimedTL();
-		observableGenericTL = coreDatabase.getObservableGenericTL();
-		observableDeadlineTL = coreDatabase.getObservableDeadlineTL();
-		observableTimedTL = coreDatabase.getObservableTimedTL();
+		archivedGenericTl = coreDatabase.getArchivedGenericTl();
+		archivedDeadlineTl = coreDatabase.getArchivedDeadlineTl();
+		archivedTimedTl = coreDatabase.getArchivedTimedTl();
+		observableGenericTl = coreDatabase.getObservableGenericTl();
+		observableDeadlineTl = coreDatabase.getObservableDeadlineTl();
+		observableTimedTl = coreDatabase.getObservableTimedTl();
 	
 	}
 
@@ -104,27 +103,27 @@ public class Database implements IDatabase {
 	}
 	
 	public ObservableList<GenericTask> getObservableGenericTL() {
-		return observableGenericTL;
+		return observableGenericTl;
 	}
 
 	public ObservableList<TimedTask> getObservableTimedTL() {
-		return observableTimedTL;
+		return observableTimedTl;
 	}
 
 	public ObservableList<DeadlineTask> getObservableDeadlineTL() {
-		return observableDeadlineTL;
+		return observableDeadlineTl;
 	}
 
 	public ObservableList<GenericTask> getArchivedGenericTL() {
-		return archivedGenericTL;
+		return archivedGenericTl;
 	}
 
 	public ObservableList<TimedTask> getArchivedTimedTL() {
-		return archivedTimedTL;
+		return archivedTimedTl;
 	}
 
 	public ObservableList<DeadlineTask> getArchivedDeadlineTL() {
-		return archivedDeadlineTL;
+		return archivedDeadlineTl;
 	}
 	
 	//---------------//
@@ -143,13 +142,13 @@ public class Database implements IDatabase {
 		logicRequest.addGenericTask(name, workload);
 
 		if (workload == ZERO) {
-			observableGenericTL.add(new GenericTask(name));
+			observableGenericTl.add(new GenericTask(name));
 		} else {
-			observableGenericTL.add(new GenericTask(name, workload));
+			observableGenericTl.add(new GenericTask(name, workload));
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -171,24 +170,24 @@ public class Database implements IDatabase {
 
 		if (workload == ZERO) {
 			if (isStartEqualEnd) {
-				observableDeadlineTL.add(new DeadlineTask(name, startTime));
+				observableDeadlineTl.add(new DeadlineTask(name, startTime));
 			} else if (isStartBeforeEnd) {
-				observableTimedTL.add(new TimedTask(name, startTime, endTime));
+				observableTimedTl.add(new TimedTask(name, startTime, endTime));
 			} else {
 				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 		} else {
 			if (isStartEqualEnd) {
-				observableDeadlineTL.add(new DeadlineTask(name, startTime, workload));
+				observableDeadlineTl.add(new DeadlineTask(name, startTime, workload));
 			} else if (isStartBeforeEnd) {
-				observableTimedTL.add(new TimedTask(name, startTime, endTime, workload));
+				observableTimedTl.add(new TimedTask(name, startTime, endTime, workload));
 			} else {
 				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -205,13 +204,13 @@ public class Database implements IDatabase {
 		logicRequest.addDeadlineTask(name, deadline, workload);
 
 		if (workload == ZERO) {
-			observableDeadlineTL.add(new DeadlineTask(name, deadline));
+			observableDeadlineTl.add(new DeadlineTask(name, deadline));
 		} else {
-			observableDeadlineTL.add(new DeadlineTask(name, deadline, workload));
+			observableDeadlineTl.add(new DeadlineTask(name, deadline, workload));
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 	}
 
 	/**
@@ -227,21 +226,21 @@ public class Database implements IDatabase {
 		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
-		int deadlineTLSize = observableDeadlineTL.size();
-		int timedTLSize = observableTimedTL.size();
+		int deadlineTLSize = observableDeadlineTl.size();
+		int timedTLSize = observableTimedTl.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.remove(index + INDEX_OFFSET_BY_ONE);
+			observableDeadlineTl.remove(index + INDEX_OFFSET_BY_ONE);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.remove(index + INDEX_OFFSET_BY_ONE);
+			observableTimedTl.remove(index + INDEX_OFFSET_BY_ONE);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
+			observableGenericTl.remove(index + INDEX_OFFSET_BY_ONE);
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -253,15 +252,15 @@ public class Database implements IDatabase {
 		saveState();
 		logicRequest.clearContent();
 
-		observableGenericTL.clear();
-		observableTimedTL.clear();
-		observableDeadlineTL.clear();
-		archivedGenericTL.clear();
-		archivedTimedTL.clear();
-		archivedDeadlineTL.clear();
+		observableGenericTl.clear();
+		observableTimedTl.clear();
+		observableDeadlineTl.clear();
+		archivedGenericTl.clear();
+		archivedTimedTl.clear();
+		archivedDeadlineTl.clear();
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -276,8 +275,8 @@ public class Database implements IDatabase {
 			setArchivedTL(state.getFixedArchivedGenericState(), state.getFixedArchivedDeadlineState(),
 					state.getFixedArchivedTimedState());
 
-			writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-					archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+			writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+					archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 		} else {
 			throw new Exception(MSG_FOR_UNDO_ERROR);
 		}
@@ -289,7 +288,7 @@ public class Database implements IDatabase {
 	 * 
 	 * */
 	public void retrieveActiveTasklists() {
-		setObservableTL(temporaryGenericTL, temporaryDeadlineTL, temporaryTimedTL);
+		setObservableTL(temporaryGenericTl, temporaryDeadlineTl, temporaryTimedTl);
 	}
 
 	/**
@@ -301,10 +300,10 @@ public class Database implements IDatabase {
 	 * */
 	public void searchDatabase(String[] parameter, boolean[] searchForTimeUnit) throws java.text.ParseException {
 
-		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-		resultantGenericTL.clear();
-		resultantDeadlineTL.clear();
-		resultantTimedTL.clear();
+		setTemporaryTL(observableGenericTl, observableDeadlineTl, observableTimedTl);
+		resultantGenericTl.clear();
+		resultantDeadlineTl.clear();
+		resultantTimedTl.clear();
 
 		if (parameter[PARAMETER_NAME] != null) {
 			searchInName(parameter[PARAMETER_NAME]);
@@ -324,21 +323,21 @@ public class Database implements IDatabase {
 	public void toggleDisplay(String keyword) {
 
 		if (keyword.equals(KEYWORD_DONE)) {
-			setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-			setObservableTL(archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+			setTemporaryTL(observableGenericTl, observableDeadlineTl, observableTimedTl);
+			setObservableTL(archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 		} else {
-			setObservableTL(temporaryGenericTL, temporaryDeadlineTL, temporaryTimedTL);
+			setObservableTL(temporaryGenericTl, temporaryDeadlineTl, temporaryTimedTl);
 			if (keyword.equals(KEYWORD_DEADLINE)) {
-				Collections.sort(observableTimedTL, taskStartTimeComparator);
-				Collections.sort(observableDeadlineTL, taskDeadlineComparator);
+				Collections.sort(observableTimedTl, taskStartTimeComparator);
+				Collections.sort(observableDeadlineTl, taskDeadlineComparator);
 			} else if (keyword.equals(KEYWORD_WORKLOAD)) {
-				Collections.sort(observableGenericTL, taskWorkloadComparator);
-				Collections.sort(observableTimedTL, taskWorkloadComparator);
-				Collections.sort(observableDeadlineTL, taskWorkloadComparator);
+				Collections.sort(observableGenericTl, taskWorkloadComparator);
+				Collections.sort(observableTimedTl, taskWorkloadComparator);
+				Collections.sort(observableDeadlineTl, taskWorkloadComparator);
 			} else if (keyword.equals(KEYWORD_DEFAULT)){
-				Collections.sort(observableGenericTL, taskIdComparator);
-				Collections.sort(observableTimedTL, taskIdComparator);
-				Collections.sort(observableDeadlineTL, taskIdComparator);
+				Collections.sort(observableGenericTl, taskIdComparator);
+				Collections.sort(observableTimedTl, taskIdComparator);
+				Collections.sort(observableDeadlineTl, taskIdComparator);
 			} else {
 				// no sorting of list is performed
 			}
@@ -360,21 +359,21 @@ public class Database implements IDatabase {
 		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
-		int deadlineTLSize = observableDeadlineTL.size();
-		int timedTLSize = observableTimedTL.size();
+		int deadlineTLSize = observableDeadlineTl.size();
+		int timedTLSize = observableTimedTl.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
+			observableDeadlineTl.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
+			observableTimedTl.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
+			observableGenericTl.get(index + INDEX_OFFSET_BY_ONE).setName(newName);
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -393,21 +392,21 @@ public class Database implements IDatabase {
 		assert index > ZERO;
 		assert index < this.totalSizeOfAllLists();
 
-		int deadlineTLSize = observableDeadlineTL.size();
-		int timedTLSize = observableTimedTL.size();
+		int deadlineTLSize = observableDeadlineTl.size();
+		int timedTLSize = observableTimedTl.size();
 
 		if (index <= deadlineTLSize) {
-			observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
+			observableDeadlineTl.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		} else if (index - deadlineTLSize <= timedTLSize) {
 			index = index - deadlineTLSize;
-			observableTimedTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
+			observableTimedTl.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		} else {
 			index = index - deadlineTLSize - timedTLSize;
-			observableGenericTL.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
+			observableGenericTl.get(index + INDEX_OFFSET_BY_ONE).setWorkload(newWorkloadValue);
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 	}
 
 	/**
@@ -431,20 +430,20 @@ public class Database implements IDatabase {
 
 		DateTime startTime = new DateTime(newStartTime);
 		DateTime endTime = new DateTime(newEndTime);
-		int deadlineTLSize = observableDeadlineTL.size();
-		int timedTLSize = observableTimedTL.size();
+		int deadlineTLSize = observableDeadlineTl.size();
+		int timedTLSize = observableTimedTl.size();
 		boolean isStartEqualEnd = newStartTime.equals(newEndTime);
 		boolean isStartBeforeEnd = newStartTime.before(newEndTime);
 
 		if (index <= deadlineTLSize) {
 
 			if (isStartEqualEnd) {
-				observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE).setDeadline(newStartTime);
+				observableDeadlineTl.get(index + INDEX_OFFSET_BY_ONE).setDeadline(newStartTime);
 			} else if (isStartBeforeEnd){
-				DeadlineTask task = observableDeadlineTL.get(index + INDEX_OFFSET_BY_ONE);
-				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
+				DeadlineTask task = observableDeadlineTl.get(index + INDEX_OFFSET_BY_ONE);
+				observableTimedTl.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableDeadlineTL.remove(index + INDEX_OFFSET_BY_ONE);
+				observableDeadlineTl.remove(index + INDEX_OFFSET_BY_ONE);
 			} else {
 				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
@@ -452,11 +451,11 @@ public class Database implements IDatabase {
 		} else if (index - deadlineTLSize <= timedTLSize) {
 
 			index = index - deadlineTLSize;
-			TimedTask task = observableTimedTL.get(index + INDEX_OFFSET_BY_ONE);
+			TimedTask task = observableTimedTl.get(index + INDEX_OFFSET_BY_ONE);
 			if (isStartEqualEnd) {
-				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), startTime,
+				observableDeadlineTl.add(new DeadlineTask(task.getNameAsStringProperty(), startTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableTimedTL.remove(index + INDEX_OFFSET_BY_ONE);
+				observableTimedTl.remove(index + INDEX_OFFSET_BY_ONE);
 			} else if (isStartBeforeEnd) {
 				task.setStartTime(newStartTime);
 				task.setEndTime(newEndTime);
@@ -467,23 +466,23 @@ public class Database implements IDatabase {
 		} else {
 
 			index = index - deadlineTLSize - timedTLSize;
-			GenericTask task = observableGenericTL.get(index + INDEX_OFFSET_BY_ONE);
+			GenericTask task = observableGenericTl.get(index + INDEX_OFFSET_BY_ONE);
 			if (isStartEqualEnd) {
-				observableDeadlineTL.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime,
+				observableDeadlineTl.add(new DeadlineTask(task.getNameAsStringProperty(), newStartTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
+				observableGenericTl.remove(index + INDEX_OFFSET_BY_ONE);
 			} else if (isStartBeforeEnd) {
-				observableTimedTL.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
+				observableTimedTl.add(new TimedTask(task.getNameAsStringProperty(), startTime, endTime,
 						task.getWorkloadAsIntegerProperty(), task.getIDAsStringProperty()));
-				observableGenericTL.remove(index + INDEX_OFFSET_BY_ONE);
+				observableGenericTl.remove(index + INDEX_OFFSET_BY_ONE);
 			} else {
 				throw new Exception(MSG_START_TIME_AFTER_END_TIME);
 			}
 
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 
 	}
 
@@ -501,24 +500,24 @@ public class Database implements IDatabase {
 		assert indexToMarkDone > ZERO;
 		assert indexToMarkDone < this.totalSizeOfAllLists();
 
-		int deadlineTLSize = observableDeadlineTL.size();
-		int timedTLSize = observableTimedTL.size();
+		int deadlineTLSize = observableDeadlineTl.size();
+		int timedTLSize = observableTimedTl.size();
 
 		if (indexToMarkDone <= deadlineTLSize) {
-			archivedDeadlineTL.add(observableDeadlineTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
-			observableDeadlineTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
+			archivedDeadlineTl.add(observableDeadlineTl.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableDeadlineTl.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		} else if (indexToMarkDone - deadlineTLSize <= timedTLSize) {
 			indexToMarkDone = indexToMarkDone - deadlineTLSize;
-			archivedTimedTL.add(observableTimedTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
-			observableTimedTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
+			archivedTimedTl.add(observableTimedTl.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableTimedTl.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		} else {
 			indexToMarkDone = indexToMarkDone - deadlineTLSize - timedTLSize;
-			archivedGenericTL.add(observableGenericTL.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
-			observableGenericTL.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
+			archivedGenericTl.add(observableGenericTl.get(indexToMarkDone + INDEX_OFFSET_BY_ONE));
+			observableGenericTl.remove(indexToMarkDone + INDEX_OFFSET_BY_ONE);
 		}
 
-		writer.writeToFile(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		writer.writeToFile(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 	}
 
 	/**
@@ -556,24 +555,24 @@ public class Database implements IDatabase {
 			if (boo == true) {
 
 				if (searchFor == TIME_HOUR) {
-					search.searchDeadlineTlByHour(date.getHourOfDay(), observableDeadlineTL,
-							resultantDeadlineTL);
-					search.searchTimedTlByHour(date.getHourOfDay(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByHour(date.getHourOfDay(), observableDeadlineTl,
+							resultantDeadlineTl);
+					search.searchTimedTlByHour(date.getHourOfDay(), observableTimedTl, resultantTimedTl);
 				} else if (searchFor == TIME_WEEKDAY) {
-					search.searchDeadlineTlByWeekday(date.getDayOfWeek(), observableDeadlineTL,
-							resultantDeadlineTL);
-					search.searchTimedTlByWeekday(date.getDayOfWeek(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByWeekday(date.getDayOfWeek(), observableDeadlineTl,
+							resultantDeadlineTl);
+					search.searchTimedTlByWeekday(date.getDayOfWeek(), observableTimedTl, resultantTimedTl);
 				} else if (searchFor == TIME_DAY) {
-					search.searchDeadlineTlByDay(date.getDayOfMonth(), observableDeadlineTL,
-							resultantDeadlineTL);
-					search.searchTimedTlByDay(date.getDayOfMonth(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByDay(date.getDayOfMonth(), observableDeadlineTl,
+							resultantDeadlineTl);
+					search.searchTimedTlByDay(date.getDayOfMonth(), observableTimedTl, resultantTimedTl);
 				} else if (searchFor == TIME_MONTH) {
-					search.searchDeadlineTlByMonth(date.getMonthOfYear(), observableDeadlineTL,
-							resultantDeadlineTL);
-					search.searchTimedTlByMonth(date.getMonthOfYear(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByMonth(date.getMonthOfYear(), observableDeadlineTl,
+							resultantDeadlineTl);
+					search.searchTimedTlByMonth(date.getMonthOfYear(), observableTimedTl, resultantTimedTl);
 				} else {
-					search.searchDeadlineTlByYear(date.getYear(), observableDeadlineTL, resultantDeadlineTL);
-					search.searchTimedTlByYear(date.getYear(), observableTimedTL, resultantTimedTL);
+					search.searchDeadlineTlByYear(date.getYear(), observableDeadlineTl, resultantDeadlineTl);
+					search.searchTimedTlByYear(date.getYear(), observableTimedTl, resultantTimedTl);
 				}
 
 			}
@@ -582,8 +581,8 @@ public class Database implements IDatabase {
 
 		}
 
-		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
+		setTemporaryTL(observableGenericTl, observableDeadlineTl, observableTimedTl);
+		setObservableTL(resultantGenericTl, resultantDeadlineTl, resultantTimedTl);
 
 	}
 
@@ -596,12 +595,12 @@ public class Database implements IDatabase {
 	 * */
 	private void searchInName(String term){
 
-		search.searchDeadlineTlByName(term, observableDeadlineTL, resultantDeadlineTL);
-		search.searchGenericTlByName(term, observableGenericTL, resultantGenericTL);
-		search.searchTimedTlByName(term, observableTimedTL, resultantTimedTL);
+		search.searchDeadlineTlByName(term, observableDeadlineTl, resultantDeadlineTl);
+		search.searchGenericTlByName(term, observableGenericTl, resultantGenericTl);
+		search.searchTimedTlByName(term, observableTimedTl, resultantTimedTl);
 
-		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
+		setTemporaryTL(observableGenericTl, observableDeadlineTl, observableTimedTl);
+		setObservableTL(resultantGenericTl, resultantDeadlineTl, resultantTimedTl);
 
 	}
 
@@ -614,12 +613,12 @@ public class Database implements IDatabase {
 	 * */
 	private void searchForWorkload(int workload){
 
-		search.searchDeadlineTlByWorkload(workload, observableDeadlineTL, resultantDeadlineTL);
-		search.searchGenericTlByWorkload(workload, observableGenericTL, resultantGenericTL);
-		search.searchTimedTlByWorkload(workload, observableTimedTL, resultantTimedTL);
+		search.searchDeadlineTlByWorkload(workload, observableDeadlineTl, resultantDeadlineTl);
+		search.searchGenericTlByWorkload(workload, observableGenericTl, resultantGenericTl);
+		search.searchTimedTlByWorkload(workload, observableTimedTl, resultantTimedTl);
 
-		setTemporaryTL(observableGenericTL, observableDeadlineTL, observableTimedTL);
-		setObservableTL(resultantGenericTL, resultantDeadlineTL, resultantTimedTL);
+		setTemporaryTL(observableGenericTl, observableDeadlineTl, observableTimedTl);
+		setObservableTL(resultantGenericTl, resultantDeadlineTl, resultantTimedTl);
 
 	}
 
@@ -629,15 +628,15 @@ public class Database implements IDatabase {
 	 * @return total size of all three task lists
 	 * */
 	private int totalSizeOfAllLists() {
-		return observableGenericTL.size() + observableDeadlineTL.size() + observableTimedTL.size();
+		return observableGenericTl.size() + observableDeadlineTl.size() + observableTimedTl.size();
 	}
 
 	/**
 	 * Saves the state of all observable and archived lists to facilitate undo method.
 	 * */
 	private void saveState() {
-		state.saveState(observableGenericTL, observableDeadlineTL, observableTimedTL,
-				archivedGenericTL, archivedDeadlineTL, archivedTimedTL);
+		state.saveState(observableGenericTl, observableDeadlineTl, observableTimedTl,
+				archivedGenericTl, archivedDeadlineTl, archivedTimedTl);
 	}
 	
 	//------------------//
@@ -648,27 +647,27 @@ public class Database implements IDatabase {
 									ObservableList<DeadlineTask> deadlineTL,
 									ObservableList<TimedTask> timedTL) {
 		
-		observableDeadlineTL.setAll(deadlineTL);
-		observableTimedTL.setAll(timedTL);
-		observableGenericTL.setAll(genericTL);
+		observableDeadlineTl.setAll(deadlineTL);
+		observableTimedTl.setAll(timedTL);
+		observableGenericTl.setAll(genericTL);
 	}
 
 	private void setTemporaryTL(ObservableList<GenericTask> genericTL,
 								ObservableList<DeadlineTask> deadlineTL,
 								ObservableList<TimedTask> timedTL) {
 		
-		temporaryDeadlineTL.setAll(deadlineTL);
-		temporaryTimedTL.setAll(timedTL);
-		temporaryGenericTL.setAll(genericTL);
+		temporaryDeadlineTl.setAll(deadlineTL);
+		temporaryTimedTl.setAll(timedTL);
+		temporaryGenericTl.setAll(genericTL);
 	}
 
 	private void setArchivedTL(ObservableList<GenericTask>genericTL,
 								ObservableList<DeadlineTask> deadlineTL,
 								ObservableList<TimedTask> timedTL) {
 		
-		archivedDeadlineTL.setAll(deadlineTL);
-		archivedTimedTL.setAll(timedTL);
-		archivedGenericTL.setAll(genericTL);
+		archivedDeadlineTl.setAll(deadlineTL);
+		archivedTimedTl.setAll(timedTL);
+		archivedGenericTl.setAll(genericTL);
 	}
 
 	//-------------//
