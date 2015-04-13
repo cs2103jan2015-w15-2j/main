@@ -111,8 +111,12 @@ public class State {
 	}
 	
 	public boolean isEmpty() {
-		if (genericTlState.isEmpty() && deadlineTlState.isEmpty() && timedTlState.isEmpty() &&
-				genericArchivedTlState.isEmpty() && deadlineArchivedTlState.isEmpty() && timedArchivedTlState.isEmpty()) {
+		if (genericTlState.isEmpty()
+				&& deadlineTlState.isEmpty()
+				&& timedTlState.isEmpty()
+				&& genericArchivedTlState.isEmpty()
+				&& deadlineArchivedTlState.isEmpty()
+				&& timedArchivedTlState.isEmpty()) {
 			return true;
 		} else {
 			return false;

@@ -52,9 +52,11 @@ public class Writer {
 	//--------------//
 
 	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric,
-			ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed,
-			ObservableList<GenericTask> inputArchivedGeneric, ObservableList<DeadlineTask> inputArchivedDeadline,
-			ObservableList<TimedTask> inputArchivedTimed) {
+							ObservableList<DeadlineTask> inputObservableDeadline,
+							ObservableList<TimedTask> inputObservableTimed,
+							ObservableList<GenericTask> inputArchivedGeneric,
+							ObservableList<DeadlineTask> inputArchivedDeadline,
+							ObservableList<TimedTask> inputArchivedTimed) {
 		
 		try {
 			String fileName = coreDatabase.getDataFilePath();
@@ -78,9 +80,11 @@ public class Writer {
 	}
 	
 	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric,
-			ObservableList<DeadlineTask> inputObservableDeadline, ObservableList<TimedTask> inputObservableTimed,
-			ObservableList<GenericTask> inputArchivedGeneric, ObservableList<DeadlineTask> inputArchivedDeadline,
-			ObservableList<TimedTask> inputArchivedTimed, File outputFile) {
+							ObservableList<DeadlineTask> inputObservableDeadline,
+							ObservableList<TimedTask> inputObservableTimed,
+							ObservableList<GenericTask> inputArchivedGeneric,
+							ObservableList<DeadlineTask> inputArchivedDeadline,
+							ObservableList<TimedTask> inputArchivedTimed, File outputFile) {
 		
 		try {
 			FileWriter fileWriter = new FileWriter(outputFile);
@@ -106,7 +110,8 @@ public class Writer {
 	//---------------------//
 
 	@SuppressWarnings("unchecked")
-	private void convertGenericTlToStore(ObservableList<GenericTask> taskList, JSONArray jsonArrayForStorage) {
+	private void convertGenericTlToStore(ObservableList<GenericTask> taskList,
+											JSONArray jsonArrayForStorage) {
 		
 		if (!taskList.isEmpty()) {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -125,7 +130,8 @@ public class Writer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void convertDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList, JSONArray jsonArrayForStorage) {
+	private void convertDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList, 
+											JSONArray jsonArrayForStorage) {
 
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
@@ -145,7 +151,8 @@ public class Writer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void convertTimedTlToStore(ObservableList<TimedTask> timedTaskList, JSONArray jsonArrayForStorage) {
+	private void convertTimedTlToStore(ObservableList<TimedTask> timedTaskList,
+										JSONArray jsonArrayForStorage) {
 
 		if (!timedTaskList.isEmpty()) {
 			for (int i = 0; i < timedTaskList.size(); i++) {
@@ -166,7 +173,8 @@ public class Writer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void convertArchivedGenericTlToStore(ObservableList<GenericTask> taskList, JSONArray jsonArrayForStorage) {
+	private void convertArchivedGenericTlToStore(ObservableList<GenericTask> taskList,
+													JSONArray jsonArrayForStorage) {
 		
 		if (!taskList.isEmpty()) {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -185,7 +193,8 @@ public class Writer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void convertArchivedDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList, JSONArray jsonArrayForStorage) {
+	private void convertArchivedDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList,
+													JSONArray jsonArrayForStorage) {
 
 		if (!deadlineTaskList.isEmpty()) {
 			for (int i = 0; i < deadlineTaskList.size(); i++) {
@@ -205,7 +214,8 @@ public class Writer {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void convertArchivedTimedTlToStore(ObservableList<TimedTask> timedTaskList, JSONArray jsonArrayForStorage) {
+	private void convertArchivedTimedTlToStore(ObservableList<TimedTask> timedTaskList,
+												JSONArray jsonArrayForStorage) {
 
 		if (!timedTaskList.isEmpty()) {
 			for (int i = 0; i < timedTaskList.size(); i++) {
