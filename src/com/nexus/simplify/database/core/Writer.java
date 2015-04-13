@@ -10,6 +10,10 @@ import javafx.collections.ObservableList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.nexus.simplify.database.tasktype.DeadlineTask;
 import com.nexus.simplify.database.tasktype.GenericTask;
 import com.nexus.simplify.database.tasktype.TimedTask;
@@ -64,8 +68,9 @@ public class Writer {
 			File outputFile = new File(fileName);
 			FileWriter fileWriter = new FileWriter(outputFile);
 			JSONArray jsonArrayForStorage = new JSONArray();
-
-			convertGenericTlToStore(inputObservableGeneric, jsonArrayForStorage);
+			String tasksInGson = null;
+			
+			convertGenericTlToStore(inputObservableGeneric, tasksInGson);
 			convertDeadlineTlToStore(inputObservableDeadline, jsonArrayForStorage);
 			convertTimedTlToStore(inputObservableTimed, jsonArrayForStorage);
 			convertArchivedGenericTlToStore(inputArchivedGeneric, jsonArrayForStorage);
@@ -90,15 +95,16 @@ public class Writer {
 		try {
 			FileWriter fileWriter = new FileWriter(outputFile);
 			JSONArray jsonArrayForStorage = new JSONArray();
-
-			convertGenericTlToStore(inputObservableGeneric, jsonArrayForStorage);
+			String tasksInGson = null;
+			
+			convertGenericTlToStore(inputObservableGeneric, tasksInGson);
 			convertDeadlineTlToStore(inputObservableDeadline, jsonArrayForStorage);
 			convertTimedTlToStore(inputObservableTimed, jsonArrayForStorage);
 			convertArchivedGenericTlToStore(inputArchivedGeneric, jsonArrayForStorage);
 			convertArchivedDeadlineTlToStore(inputArchivedDeadline, jsonArrayForStorage);
 			convertArchivedTimedTlToStore(inputArchivedTimed, jsonArrayForStorage);
 
-			fileWriter.write(jsonArrayForStorage.toJSONString());
+			fileWriter.write(tasksInGson);
 			fileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -111,8 +117,8 @@ public class Writer {
 	//---------------------//
 
 	@SuppressWarnings("unchecked")
-	private void convertGenericTlToStore(ObservableList<GenericTask> taskList,
-											JSONArray jsonArrayForStorage) {
+	private String convertGenericTlToStore(ObservableList<GenericTask> taskList,
+											String tasks) {
 		
 		if (!taskList.isEmpty()) {
 			for (int i = 0; i < taskList.size(); i++) {
@@ -123,11 +129,16 @@ public class Writer {
 				jsonTask.put(JSON_KEY_WORKLOAD, currentGenericTask.getWorkload());
 				jsonTask.put(JSON_KEY_ID, currentGenericTask.getId());
 				jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_GENERIC);
-
-				jsonArrayForStorage.add(jsonTask);
+				
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				String taskInGson = gson.toJson(jsonElement);
+				tasks.concat(taskInGson);
 			}
+			return tasks;
 		}
-		
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")

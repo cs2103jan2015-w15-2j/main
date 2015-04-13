@@ -6,15 +6,13 @@ package com.nexus.simplify.database.core;
 
 import java.io.*;
 import java.net.URL;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,11 +24,11 @@ import com.nexus.simplify.database.tasktype.TimedTask;
 public class CoreDatabase {
 
 
-	private static final String DEFAULT_FILE_NAME = "input.json";
+	private static final String DEFAULT_FILE_NAME = "Simplify-Data.json";
 	private static final String KEY_FILE_LOCATION = "File location";
 	
 	private URL url = CoreDatabase.class.getProtectionDomain().getCodeSource().getLocation();
-	private String DEFAULT_DATA_FILE_LOCATION = url.getPath();
+	private String defaultFileLocation = url.getPath();
 
 	private Preferences preference;
 	private State state;
@@ -71,12 +69,19 @@ public class CoreDatabase {
 	public void initDatabase() throws IOException {
 		
 		preference = Preferences.userRoot().node(this.getClass().getName());
+		try {
+			preference.clear();
+		} catch (BackingStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		final String NO_SAVED_FILEPATH_FOUND = "";
 		String fileLocationPath = preference.get(KEY_FILE_LOCATION, NO_SAVED_FILEPATH_FOUND);
 		
 		if (fileLocationPath.equals(NO_SAVED_FILEPATH_FOUND)) {
-			preference.put(KEY_FILE_LOCATION, DEFAULT_DATA_FILE_LOCATION);
-			dataFileLocation = DEFAULT_DATA_FILE_LOCATION;
+			defaultFileLocation = defaultFileLocation.replace("Simplify.jar", "");
+			preference.put(KEY_FILE_LOCATION, defaultFileLocation);
+			dataFileLocation = defaultFileLocation;
 			LOGGER.info("Default settings for file location will be loaded.");
 		} else {
 			dataFileLocation = fileLocationPath;
