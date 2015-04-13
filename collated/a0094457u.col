@@ -1,0 +1,1190 @@
+//@author: a0094457u
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
+	 */
+
+public interface ILogic {
+	public String executeCommand(String command) throws Exception;
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+	 */
+
+/*
+ * This class acts as a facade for other components to interact
+ * with the logic component.
+ */
+public class Logic implements ILogic {
+	private static Logic theOne;
+	private OperationType savedCommandType;
+	private Parser parser = new Parser();
+
+	private Logic() {}
+	
+	public static Logic getInstance() {
+		if(theOne == null){
+			theOne = new Logic();
+		}
+		return theOne;
+	}
+	
+	@Override
+	public String executeCommand(String userInput) throws Exception {
+		UserCommand command = getParsedCommand(userInput);
+		String feedback;
+		OperationType operationType = command.getOperationType();
+		String[] parameter = command.getParameter();
+		boolean[] searchField = command.getSearchField();
+		
+		CoreLogic core = new CoreLogic();
+		feedback = core.execute(operationType, savedCommandType, parameter, searchField);
+		return feedback;
+	}
+	
+	public Parser getParser() {
+		return parser;
+	}
+
+	public UserCommand getParsedCommand(String userInput) throws Exception {
+		UserCommand command = parser.parseInput(userInput);
+		return command;
+	}
+}
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+	 */
+
+/*
+ * This class determines task type and calls database
+ * to add a task into the storage.
+ */
+public class Add {
+	private final String DATE_FORMAT_PATTERN = "E MMM dd HH:mm:ss zzz yyy";
+	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
+	private final String NO_NAME = "Please enter a name for this task.";
+	private final String LOGGER_FLOATING = "Floating task is added.";
+	private final String LOGGER_DEADLINE = "Deadline task is added.";
+	private final String LOGGER_TIMED = "Timed task is added.";
+	private static Logger logger = Logger.getLogger("AddOp"); 
+	
+	public Add() {}
+	
+	public String execute(String[] parameter) throws Exception { 
+		SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT_PATTERN);
+		
+		String name = parameter[ParameterType.NEW_NAME_POS];
+		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		String workloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		final String MESSAGE_TASK_ADDED = "Task \"" + name + "\" added successfully.";
+		String feedback;
+		int workload;
+		Database database = MainApp.getDatabase();
+		
+		if (workloadStr == null || workloadStr.isEmpty()) {
+			workload = 0;
+		} else {
+			workload = exceptionHandling(workloadStr);
+		}
+		
+		if(name == null || name.isEmpty()) {
+			throw new Exception(NO_NAME);
+		}
+		
+		if((newStartTime == null || newStartTime.isEmpty()) &&
+		   (newEndTime == null || newEndTime.isEmpty())) {
+			database.addGenericTask(name, workload);
+			logger.log(Level.INFO, LOGGER_FLOATING);
+			feedback =  MESSAGE_TASK_ADDED;
+		} else {
+			if(newStartTime.equals(newEndTime)) {
+				Date deadline = df.parse(newStartTime);
+				database.addDeadlineTask(name,deadline,workload);
+				logger.log(Level.INFO, LOGGER_DEADLINE);
+				feedback = MESSAGE_TASK_ADDED;
+			} else {
+				Date startTime = df.parse(newStartTime);
+				Date endTime = df.parse(newEndTime);
+				database.addTimedTask(name,startTime,endTime,workload);
+				logger.log(Level.INFO, LOGGER_TIMED);
+				feedback = MESSAGE_TASK_ADDED;
+			}
+		}
+		return feedback;
+	}
+
+	// exception handling for wrong workload format
+	private int exceptionHandling(String workloadStr) throws Exception {
+		int workload;
+		try {
+			workload = Integer.parseInt(workloadStr);
+		} catch (NumberFormatException e) {
+			throw new Exception(INVALID_WORKLOAD);
+		}
+		return workload;
+	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter) {
+		String name = parameter[ParameterType.NEW_NAME_POS];
+		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		String workloadStringForm = parameter[ParameterType.NEW_WORKLOAD_POS];
+		String feedback;
+		int workload;
+		
+		if(workloadStringForm == null || workloadStringForm.isEmpty()) {
+			workload = 0;
+		} else {
+			try {
+				workload = Integer.parseInt(workloadStringForm);
+			} catch (NumberFormatException e) {
+				feedback = INVALID_WORKLOAD;
+				return feedback;
+			}
+		}
+		
+		if(name == null || name.isEmpty()) {
+			feedback = NO_NAME;
+			return feedback;
+		}
+		
+		if((newStartTime == null || newStartTime.isEmpty()) &&
+			(newEndTime == null || newEndTime.isEmpty())) {
+			feedback = "Successfully added floating task \"" + name + 
+					"\" with workload " + String.valueOf(workload) + ".";
+		} else {
+			if(newStartTime.equals(newEndTime)) {
+				feedback = "Successfully added deadline task \"" + name + 
+					"\" with deadline " + newStartTime + " and workload of " +
+					String.valueOf(workload) + ".";
+			} else {
+				feedback = "Successfully added timed task \"" + name + 
+					"\" with starting time " + newStartTime + " and ending time " +
+					newEndTime + " and workload of " + String.valueOf(workload) + ".";
+			}
+		}
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+	 */
+
+/*
+ * this class calls database to clear stored contents
+ */
+public class Clear {
+	private final String SUCCESS = "All tasks cleared successfully.";
+	public Clear() {}
+	
+	public String execute() {
+		Database database = MainApp.getDatabase();
+		database.clearContent();
+		String feedback = SUCCESS;
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+	 */
+
+/*
+ * This class acts as a switch for different type of operations and creates
+ * classes related to specific operations to operate on parameters passed.
+ */
+public class CoreLogic {
+	private final String MESSAGE_INVALID = "Please enter a valid command.";
+	private final String LOGGER_ADD = "Calling database to add";
+	private final String LOGGER_DISPLAY = "Calling database to display";
+	private final String LOGGER_MODIFY = "Calling database to modify";
+	private final String LOGGER_DELETE = "Calling database to delete";
+	private final String LOGGER_DONE = "Calling database to mark done";
+	private final String LOGGER_SEARCH = "Calling database to search";
+	private final String LOGGER_UNDO = "Calling database to undo";
+	private final String LOGGER_CLEAR = "Calling database to clear";
+	private final String LOGGER_EXIT = "Calling system to exit";
+	private static Logger logger = Logger.getLogger("Logic");
+	
+	public CoreLogic() {}
+	
+	public String execute(OperationType operationType, OperationType savedCommandType,
+			String[] parameter, boolean[] searchField) throws Exception {
+		Database database = MainApp.getDatabase();
+		String feedback;
+		
+		switch (operationType) {
+			case ADD :
+				Add addOp = new Add();
+				if(savedCommandType != null && (savedCommandType.equals(OperationType.SEARCH)
+					|| savedCommandType.equals(OperationType.DISPLAY))) {
+					database.retrieveActiveTasklists();
+				}
+				logger.log(Level.INFO, LOGGER_ADD);
+				feedback = addOp.execute(parameter);
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case DISPLAY :
+				Display displayOp = new Display();
+				logger.log(Level.INFO, LOGGER_DISPLAY);
+				feedback = displayOp.execute(parameter);
+				assert !feedback.isEmpty();
+				savedCommandType = OperationType.DISPLAY;
+				return feedback;
+			case MODIFY :
+				Modify modifyOp = new Modify();
+				if(savedCommandType != null && (savedCommandType.equals(OperationType.SEARCH)
+						|| savedCommandType.equals(OperationType.DISPLAY))) {
+					database.retrieveActiveTasklists();
+				}
+				logger.log(Level.INFO, LOGGER_MODIFY);
+				feedback = modifyOp.execute(parameter);
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case DELETE :
+				Delete deleteOp = new Delete();
+				logger.log(Level.INFO, LOGGER_DELETE);
+				feedback = deleteOp.execute(parameter);
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case DONE :
+				Done doneOp = new Done();
+				logger.log(Level.INFO, LOGGER_DONE);
+				feedback = doneOp.execute(parameter);
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case SEARCH :
+				Search searchOp = new Search();
+				logger.log(Level.INFO, LOGGER_SEARCH);
+				feedback = searchOp.execute(parameter, searchField);
+				assert !feedback.isEmpty();
+				savedCommandType = OperationType.SEARCH;
+				return feedback;
+			case UNDO :
+				Undo undoOp = new Undo();
+				logger.log(Level.INFO, LOGGER_UNDO);
+				feedback = undoOp.execute();
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case CLEAR :
+				Clear clearOp = new Clear();
+				logger.log(Level.INFO, LOGGER_CLEAR);
+				feedback = clearOp.execute();
+				assert !feedback.isEmpty();
+				savedCommandType = null;
+				return feedback;
+			case EXIT :
+				Exit exitOp = new Exit();
+				logger.log(Level.INFO, LOGGER_EXIT);
+				exitOp.execute();
+				return null;
+			default:
+				throw new Exception(MESSAGE_INVALID);
+		}
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+	 */
+
+/*
+ * This class calls database to delete a task in database
+ * by passing a task index.
+ */
+public class Delete {
+	private final String NO_INDEX = "Please enter a task index to delete.";
+	private final String SUCCESS = "Successfully deleted entry #";
+
+	public Delete() {}
+	
+	public String execute(String[] parameter) throws Exception {
+		int indexToDelete;
+		
+		exceptionHandling(parameter);
+		
+		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		
+		Database database = MainApp.getDatabase();
+		database.deleteTaskByIndex(indexToDelete);
+
+		String feedback = SUCCESS + parameter[ParameterType.INDEX_POS] + ".";
+		return feedback; 
+	}
+
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		try {
+			@SuppressWarnings("unused")
+			int indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
+	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter) {
+		int indexToDelete;
+		
+		try {
+			indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			String feedback = NO_INDEX;
+			return feedback;
+		}
+		indexToDelete = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		
+		String feedback = SUCCESS + String.valueOf(indexToDelete) + ".";
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
+	 */
+
+/*
+ * This class calls database to display stored tasks
+ * in a format chosen by the user. Currently supporting:
+ * a number, null(default), all, week, deadline, workload, 
+ * done, file location.
+ * */
+public class Display {
+	private final String BY_DEFAULT_SETTING = "Displayed tasks by default setting.";
+	private final String ALL_TASKS = "Displayed all tasks.";
+	private final String WITHIN_WEEK = "Displayed tasks due within a week.";
+	private final String BY_DEADLINE = "Displayed tasks by deadline.";
+	private final String BY_WORKLOAD = "Displayed tasks by workload.";
+	private final String DISPLAY_DONE = "Displayed tasks that are done.";
+	private final String INVALID_OPTION = "Invalid option for display, please try again.";
+	
+	public Display() {}
+		
+	public String execute(String[] parameter) throws Exception {
+		final String FILE_LOCATION = "file";
+		String option = parameter[ParameterType.INDEX_POS];
+		String feedback;
+		Database database = MainApp.getDatabase();
+		
+		if(isNumeric(option)) {
+			database.toggleDisplay(option);
+			if(Integer.parseInt(option) == 1) {
+				feedback = "Displayed 1 task.";
+			} else {
+				feedback = "Displayed " + option + " tasks.";
+			}
+			return feedback;
+		} else {
+			if (option == null || option.isEmpty()) {
+				database.toggleDisplay("default");
+				feedback = BY_DEFAULT_SETTING;
+				return feedback;
+			}
+			
+			switch (option) {
+				case "all" :
+					database.toggleDisplay(option);
+					feedback = ALL_TASKS;
+					return feedback;
+					
+				case "week" :
+					database.toggleDisplay(option);
+					feedback = WITHIN_WEEK;
+					return feedback;
+				
+				case "deadline" :
+					database.toggleDisplay(option);
+					feedback = BY_DEADLINE;
+					return feedback;
+					
+				case "workload" :
+					database.toggleDisplay(option);
+					feedback = BY_WORKLOAD;
+					return feedback;
+					
+				case FILE_LOCATION :
+					feedback = "File location: ";
+					feedback += database.getDataFileLocation();
+					return feedback;
+					
+				case "done" :
+					database.toggleDisplay(option);
+					feedback = DISPLAY_DONE;
+					return feedback;
+					
+				default :
+					throw new Exception(INVALID_OPTION);
+			}
+		}
+	}
+	
+	private static boolean isNumeric(String str) {
+		return str.matches("\\d+");	// digits: [0-9]
+	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter) {
+		String option = parameter[ParameterType.INDEX_POS];
+		String feedback;
+		
+		if(isNumeric(option)) {
+			if(Integer.parseInt(option) == 1) {
+				feedback = "Displayed 1 task.";
+			} else {
+				feedback = "Displayed " + option + " tasks.";
+			}
+			return feedback;
+		} else {
+			if (option == null || option.isEmpty()) {
+				feedback = BY_DEFAULT_SETTING;
+				return feedback;
+			}
+			
+			switch (option) {
+				case "all" :
+					feedback = ALL_TASKS;
+					return feedback;
+					
+				case "week" :
+					feedback = WITHIN_WEEK;
+					return feedback;
+				
+				case "deadline" :
+					feedback = BY_DEADLINE;
+					return feedback;
+				
+				case "workload" :
+					feedback = BY_WORKLOAD;
+					return feedback;
+					
+				case "done" :
+					feedback = DISPLAY_DONE;
+					return feedback;
+
+				default :
+					feedback = INVALID_OPTION;
+					return feedback;
+			}
+		}
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+	 */
+
+/*
+ * This class determines that user wants to mark
+ * a task as done and calls database to modify the storage.
+ */
+public class Done {
+	private final String NO_INDEX = "Please enter a task index to mark as done.";
+	
+	public Done() {}
+	
+	public String execute(String[] parameter) throws Exception {
+		int indexToMarkDone;
+		
+		exceptionHandling(parameter);
+		
+		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		Database database = MainApp.getDatabase();
+
+		database.markTaskDone(indexToMarkDone);
+		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
+		return feedback; 
+	}
+
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		try {
+			@SuppressWarnings("unused")
+			int indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
+	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter) {
+		@SuppressWarnings("unused")
+		int indexToMarkDone;
+		
+		try {
+			indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			String feedback = NO_INDEX;
+			return feedback;
+		}
+		
+		indexToMarkDone = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		String feedback = "Successfully marked entry #" + parameter[ParameterType.INDEX_POS] + " as done.";
+		return feedback; 
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+	 */
+
+/*
+ * class for executing exit command
+ */
+public class Exit {
+	public Exit() {}
+	
+	public void execute() {
+		System.exit(0);
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+	 */
+
+/*
+ * This class determines what fields of a task to modify 
+ * and calls APIs provided by database to modify storage.
+ */
+public class Modify {
+	private final String FORMAT_PATTERN = "E MMM dd hh:mm:ss zzz yyy";
+	private final String NO_INDEX = "Please enter a task index to modify.";
+	private final String INVALID_WORKLOAD = "Please enter a valid workload.";
+	private final String NOTHING_TO_MODIFY = "Please specify something to modify.";
+	private final String LOCATION_MODIFIED = "file location modified ";
+	
+	public Modify() {}
+	
+	public String execute(String[] parameter) throws Exception {
+		// pattern follows Java.util.Date toString() method
+		SimpleDateFormat df = new SimpleDateFormat(FORMAT_PATTERN);
+		Database database = MainApp.getDatabase();
+		
+		String newFileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
+		if(newFileLocation != null && !newFileLocation.isEmpty()) {
+			exceptionHandling(database, newFileLocation);
+			String feedback = LOCATION_MODIFIED;
+			return feedback;
+		}
+		
+		int indexToModify;
+		exceptionHandling(parameter);
+		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		
+		
+		String feedback = "Task ";
+		String newName = parameter[ParameterType.NEW_NAME_POS];
+		if(newName != null && !newName.isEmpty()) {
+			database.modifyName(indexToModify, newName);
+			feedback += "name, ";
+		}
+		
+		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		if(newStartTime != null && !newStartTime.isEmpty() && 
+			newEndTime != null && !newEndTime.isEmpty()) {
+			exceptionHandling(df, indexToModify, database, newStartTime, newEndTime);
+			feedback += "time, ";
+		}
+		
+		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
+			int newWorkload;
+			exceptionHandling(newWorkloadStr);
+			
+			newWorkload = Integer.parseInt(newWorkloadStr);
+			exceptionHandling(indexToModify, database, newWorkload);
+			feedback += "workload, ";
+		}
+		
+		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
+			(newEndTime==null || newEndTime.isEmpty()) && (newWorkloadStr==null || newWorkloadStr.isEmpty())
+			&& (newFileLocation==null || newFileLocation.isEmpty())) { // if everything if null
+			feedback = NOTHING_TO_MODIFY;
+			return feedback;
+		}
+		feedback += "modified.";
+		return feedback;
+	}
+
+	// exception handling for modifying file location
+	private void exceptionHandling(Database database, String newFileLocation) throws Exception {
+		try {
+			database.modifyFileLocation(newFileLocation);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
+	// exception handling for modifying workload
+	private void exceptionHandling(int indexToModify, Database database,
+									int newWorkload) throws Exception {
+		try {
+			database.modifyWorkload(indexToModify, newWorkload);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	// exception handling for modifying time
+	private void exceptionHandling(SimpleDateFormat df, int indexToModify, Database database, 
+								String newStartTime, String newEndTime) throws Exception {
+		Date startTime;
+		Date endTime;
+		try {
+			startTime = df.parse(newStartTime);
+			endTime = df.parse(newEndTime);
+			database.modifyStartEnd(indexToModify, startTime, endTime);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	// exception handling for wrong workload format
+	private void exceptionHandling(String newWorkloadStr) throws Exception {
+		try{
+			@SuppressWarnings("unused")
+			int newWorkload = Integer.parseInt(newWorkloadStr);
+		} catch (NumberFormatException e) {
+			throw new Exception(INVALID_WORKLOAD);
+		}
+	}
+	
+	// exception handling for wrong index format
+	private void exceptionHandling(String[] parameter) throws Exception {
+		@SuppressWarnings("unused")
+		int indexToModify;
+		try{
+			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			throw new Exception(NO_INDEX);
+		}
+	}
+	
+	// this method is for unit testing, which assumes that parser and
+	// database function correctly
+	public String executeForTesting(String[] parameter) {
+		@SuppressWarnings("unused")
+		int indexToModify;
+		try{
+			indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		} catch (NumberFormatException e) {
+			String feedback = NO_INDEX;
+			return feedback;
+		}
+		
+		indexToModify = Integer.parseInt(parameter[ParameterType.INDEX_POS]);
+		String feedback = "Task ";
+		String newName = parameter[ParameterType.NEW_NAME_POS];
+		if(newName != null && !newName.isEmpty()) {
+			feedback += "name, ";
+		}
+		
+		String newStartTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		String newEndTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		if(newStartTime != null && !newStartTime.isEmpty() && 
+			newEndTime != null && !newEndTime.isEmpty()) {
+			feedback += "time, ";
+		}
+		
+		String newWorkloadStr = parameter[ParameterType.NEW_WORKLOAD_POS];
+		if(newWorkloadStr != null && !newWorkloadStr.isEmpty()) {
+			@SuppressWarnings("unused")
+			int newWorkload;
+			try{
+				newWorkload = Integer.parseInt(newWorkloadStr);
+			}catch(NumberFormatException e){
+				feedback = INVALID_WORKLOAD;
+				return feedback;
+			}
+			newWorkload = Integer.parseInt(newWorkloadStr);
+			feedback += "workload, ";
+		}
+		
+		if((newName==null || newName.isEmpty()) && (newStartTime==null || newStartTime.isEmpty()) &&
+			(newEndTime==null || newEndTime.isEmpty()) && 
+				(newWorkloadStr==null || newWorkloadStr.isEmpty())) {
+				feedback = NOTHING_TO_MODIFY;
+				return feedback;
+		}
+		feedback += "modified.";
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+	 */
+
+/*
+ * This class calls database to search for something.
+ */
+public class Search {
+	private final String SUCCESS = "Search result displayed.";
+	public Search() {}
+	
+	public String execute(String[] parameter, boolean[] searchField) throws ParseException {
+		Database database = MainApp.getDatabase();
+		String feedback;
+		try {
+			database.searchDatabase(parameter, searchField);
+		} catch (ParseException e) {
+			throw e;
+		}
+		feedback = SUCCESS;
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+	 */
+
+/*
+ * This class calls database to undo task.
+ */
+public class Undo {
+	private final String SUCCESS = "Undo operation is successful.";
+	public Undo(){}
+	
+	public String execute() throws Exception{
+		Database database = MainApp.getDatabase();
+		database.undoTask();
+		String feedback = SUCCESS;
+		return feedback;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+	 */
+
+/*
+ * an object that holds the enumeration for operation types
+ */
+public enum OperationType {
+	DISPLAY, ADD, MODIFY, DELETE, DONE, CLEAR, EXIT, UNDO, SEARCH, INVALID  
+};
+
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
+	 */
+
+public class ParameterType {
+	/**
+	 * An object to hold properties of parameter array passed from parser to logic
+	 */
+	public final static int INDEX_POS = 0;
+	public final static int NEW_NAME_POS = 1;
+	public final static int NEW_STARTTIME_POS = 2;
+	public final static int NEW_ENDTIME_POS = 3;
+	public final static int NEW_WORKLOAD_POS = 4;
+	public final static int NEW_FILELOCATION_POS = 5;
+	public final static int MAX_SIZE = 6;
+	
+	public final static int SEARCH_HOUR_POS = 0;
+	public final static int SEARCH_WEEKDAY_POS = 1;
+	public final static int SEARCH_DAY_POS = 2;
+	public final static int SEARCH_MONTH_POS = 3;
+	public final static int SEARCH_YEAR_POS = 4;
+	public final static int SEARCH_MAX_SIZE = 5;
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+	 */
+
+/*
+ * methods and fields in this class are mainly
+ * for Parser to use
+ */
+public class UserCommand {
+	// these constants are for search functionality
+	public final int CURRENT_TIME_POS = 0;
+	public final int DAY_OF_WEEK_POS = 1;
+	public final int DAY_OF_MONTH_POS = 2;
+	public final int MONTH_OF_YEAR = 3;
+	public final int CURRENT_YEAR_POS = 4;
+	
+	private OperationType operation;
+	private String[] parameter;
+	private boolean[] searchField;
+
+	public UserCommand(OperationType operation, String[] parameter) {
+		this.operation = operation;
+		this.parameter = parameter;
+	}
+
+	public UserCommand(OperationType operation, 
+					   String[] parameter, boolean[] searchField) {
+		this.operation = operation;
+		this.parameter = parameter;
+		this.searchField = searchField;
+	}
+	
+	public OperationType getOperationType() {
+		return operation;
+	}
+
+	public String[] getParameter() {
+		return parameter;
+	}
+	
+	public boolean[] getSearchField() {
+		return searchField;
+	}
+
+	public String getIndex() {
+		String index = parameter[ParameterType.INDEX_POS];
+		return index;
+	}
+	
+	public String getName() {
+		String name = parameter[ParameterType.NEW_NAME_POS];
+		return name;
+	}
+	
+	public String getStartTime() {
+		String startTime = parameter[ParameterType.NEW_STARTTIME_POS];
+		return startTime;
+	}
+	
+	public String getEndTime() {
+		String endTime = parameter[ParameterType.NEW_ENDTIME_POS];
+		return endTime;
+	}
+	
+	public String getWorkload() {
+		String workload = parameter[ParameterType.NEW_WORKLOAD_POS];
+		return workload;
+	}
+	
+	public String getFileLocation() {
+		String fileLocation = parameter[ParameterType.NEW_FILELOCATION_POS];
+		return fileLocation;
+	}	
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+	 */
+
+public class TestAdd {
+	
+	// This method tests boundary cases for unit testing
+	@Test
+	public void testExecute() throws Exception {
+		Add stubAdd = new Add();
+		String[] testParameter;
+		String feedback;
+		
+		// for no name partition
+		testParameter = new String[]{"dummy", "", "dummy", "dummy", "1"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Please enter a name for this task.");
+		
+		// for invalid workload partition
+		testParameter = new String[]{"dummy", "dummy", "dummy", "dummy", "dummy"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Please enter a valid workload.");
+		
+		// for floating tasks partition
+		testParameter = new String[]{"", "play dota", null, null, "1"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully added floating task \"play dota\" with workload 1.");
+		
+		// for floating tasks partition
+		testParameter = new String[]{"dummy", "play dota", "", null, "1"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully added floating task \"play dota\" with workload 1.");
+		
+		// for timed tasks partition
+		testParameter = new String[]{"dummy", "anime seminar", "Jan 18 11:11", "Jan 18 12:22", "2"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully added timed task \"anime seminar\" with starting time Jan 18 11:11 and ending time Jan 18 12:22 and workload of 2.");
+		
+		// for deadline tasks partition
+		testParameter = new String[]{"dummy", "finish game XYZ", "Tue Feb 22 10:00", "Tue Feb 22 10:00", "3"};
+		feedback = stubAdd.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully added deadline task \"finish game XYZ\" with deadline Tue Feb 22 10:00 and workload of 3.");
+	}
+}
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+	 */
+
+public class TestDelete {
+	
+	// This method tests boundary cases for unit testing
+	@Test
+	public void testExecute() throws Exception {
+		Delete stubDelete = new Delete();
+		String[] testParameter;
+		String feedback;
+		
+		// for invalid index
+		testParameter = new String[]{"","dummy","dummy","dummy","dummy"};
+		feedback = stubDelete.executeForTesting(testParameter);
+		assertEquals(feedback,"Please enter a task index to delete.");
+		
+		// for valid command
+		testParameter = new String[]{"5","dummy","dummy","dummy","dummy"};
+		feedback = stubDelete.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully deleted entry #5.");
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+	 */
+
+public class TestDisplay {
+	// This method tests boundary cases for unit testing
+	@Test
+	public void testExecute() throws Exception {
+		Display stubDisplay = new Display();
+		String[] testParameter;
+		String feedback;
+		
+		// for displaying a specific number of tasks
+		testParameter = new String[]{"9","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed 9 tasks.");
+		
+		// for display by default setting
+		testParameter = new String[]{"","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed tasks by default setting.");
+		
+		// for display all
+		testParameter = new String[]{"all","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed all tasks.");
+		
+		// for display week
+		testParameter = new String[]{"week","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed tasks due within a week.");
+		
+		// for display deadline
+		testParameter = new String[]{"deadline","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed tasks by deadline.");
+		
+		// for display workload
+		testParameter = new String[]{"workload","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Displayed tasks by workload.");
+		
+		// for invalid command
+		testParameter = new String[]{"dummy","","","",""};
+		feedback = stubDisplay.executeForTesting(testParameter);
+		assertEquals(feedback,"Invalid option for display, please try again.");
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+	 */
+
+public class TestDone {
+	// This method tests boundary cases for unit testing
+	@Test
+	public void testExecute() throws Exception {
+		Done stubDone = new Done();
+		String[] testParameter;
+		String feedback;
+		
+		// for invalid index
+		testParameter = new String[]{"dummy","dummy","dummy","dummy","dummy"};
+		feedback = stubDone.executeForTesting(testParameter);
+		assertEquals(feedback,"Please enter a task index to mark as done.");
+				
+		// for valid command
+		testParameter = new String[]{"5","dummy","dummy","dummy","dummy"};
+		feedback = stubDone.executeForTesting(testParameter);
+		assertEquals(feedback,"Successfully marked entry #5 as done.");
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+	 */
+
+public class TestModify {
+	
+	// This method tests boundary cases for unit testing
+		@Test
+		public void testExecute() throws Exception {
+			Modify stubModify = new Modify();
+			String[] testParameter;
+			String feedback;
+			
+			// for invalid index
+			testParameter = new String[]{"","dummy","dummy","dummy","5"};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Please enter a task index to modify.");
+			
+			// for invalid workload
+			testParameter = new String[]{"5","dummy","dummy","dummy","invalid"};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Please enter a valid workload.");
+			
+			// for nothing to modify
+			testParameter = new String[]{"4","",null,"",null};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Please specify something to modify.");
+			
+			// for no name
+			testParameter = new String[]{"5",null,"dummy","dummy","5"};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Task time, workload, modified.");
+			
+			// for no time
+			testParameter = new String[]{"1","dummy","",null,"5"};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Task name, workload, modified.");
+			
+			// for no workload
+			testParameter = new String[]{"1","dummy","dummy","dummy",""};
+			feedback = stubModify.executeForTesting(testParameter);
+			assertEquals(feedback,"Task name, time, modified.");
+		}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+
+
+
+
+

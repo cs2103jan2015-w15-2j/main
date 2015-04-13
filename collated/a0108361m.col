@@ -1,0 +1,2532 @@
+//@author: a0108361m
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Reader.java
+	 */
+
+package com.nexus.simplify.database.core;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.nexus.simplify.database.core.CoreDatabase;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
+
+/**
+ * Represents an instance of a reader used to read from JSON formatted file.
+ * */
+
+public class Reader {
+
+	/**
+	 * All dates will be shaped according to this format. 
+	 * <DAY> <MONTH> <YEAR> <HOUR>:<MINUTE>
+	 * */
+	private static final String JAVA_DATE_FORMAT = "dd MMM yyyy HH:mm";
+	
+	private static final String TASK_TYPE_TIMED = "Timed";
+	private static final String TASK_TYPE_DEADLINE = "Deadline";
+	private static final String TASK_TYPE_GENERIC = "Generic";
+	private static final String TASK_TYPE_ARCHIVED_GENERIC = "Archived Generic";
+	private static final String TASK_TYPE_ARCHIVED_DEADLINE = "Archived Deadline";
+	private static final String TASK_TYPE_ARCHIVED_TIMED = "Archived Timed";
+	
+	private static final String JSON_KEY_DUEDATE = "DueDate";
+	private static final String JSON_KEY_ID = "ID";
+	private static final String JSON_KEY_WORKLOAD = "Workload";
+	private static final String JSON_KEY_END_TIME = "End Time";
+	private static final String JSON_KEY_START_TIME = "Start Time";
+	private static final String JSON_KEY_NAME = "Name";
+	private static final String JSON_KEY_TYPE = "Type";
+	
+	private CoreDatabase coreDatabase;
+	private ObservableList<GenericTask> observableGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> observableDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> observableTimedTL = FXCollections.observableArrayList();
+	private ObservableList<GenericTask> archivedGenericTL = FXCollections.observableArrayList();
+	private ObservableList<DeadlineTask> archivedDeadlineTL = FXCollections.observableArrayList();
+	private ObservableList<TimedTask> archivedTimedTL = FXCollections.observableArrayList();
+
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public Reader(CoreDatabase coreDatabase) {
+		this.coreDatabase = coreDatabase;
+	}
+	
+	//--------------//
+	// File Reading //
+	//--------------//
+
+	/**
+	 * Retrieves task lists in JSON array format from given data file.
+	 * 
+	 * @param dataFileName specified file to retrieve data from.
+	 * */
+	public JSONArray retrieveDataFromDataFile(String dataFileName) {
+		JSONArray jsonTaskArray = new JSONArray();
+
+		try {
+			File dataFile = new File(dataFileName);
+			if (!dataFile.exists()) {
+				dataFile.createNewFile();
+			} else {
+				JSONParser jsonParser = new JSONParser();
+				Object object = jsonParser.parse(new FileReader(dataFileName));
+				jsonTaskArray = (JSONArray) object;
+			}
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		return jsonTaskArray;
+		
+	}
+
+	/**
+	 * Populates all three task lists (generic, deadline, timed)
+	 * with their corresponding data obtained from the JSON file.
+	 * 
+	 * @param jsonTaskArray JSON array to retrieve task list from
+	 * */
+	public void populateTaskLists(JSONArray jsonTaskArray) {
+		
+		for (Object object : jsonTaskArray) {
+			JSONObject jsonTask = (JSONObject) object;
+			String taskType = (String) jsonTask.get(JSON_KEY_TYPE);
+			switch (taskType) {
+			case TASK_TYPE_GENERIC: 
+				addGenericTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_DEADLINE:
+				addDeadlineTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_TIMED:
+				addTimedTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_ARCHIVED_GENERIC:
+				addArchivedGenericTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_ARCHIVED_DEADLINE:
+				addArchivedDeadlineTaskToList(jsonTask);
+				break;
+			case TASK_TYPE_ARCHIVED_TIMED:
+				addArchivedTimedTaskToList(jsonTask);
+				break;
+			default:
+				// invalid entry; ignore and continue to the next entry
+				break;
+			}
+			
+			coreDatabase.setObservableGenericTl(observableGenericTL);
+			coreDatabase.setObservableDeadlineTl(observableDeadlineTL);
+			coreDatabase.setObservableTimedTl(observableTimedTL);
+			coreDatabase.setArchivedGenericTl(archivedGenericTL);
+			coreDatabase.setArchivedDeadlineTl(archivedDeadlineTL);
+			coreDatabase.setArchivedTimedTl(archivedTimedTL);
+		}
+		
+	}
+
+	//------------------//
+	// Populating Lists //
+	//------------------//
+
+
+	private void addGenericTaskToList(JSONObject jsonTask) {
+		
+		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
+		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableGenericTL.add(genericTask);
+		
+	}
+
+	private void addDeadlineTaskToList(JSONObject jsonTask) {
+		
+		DeadlineTask deadlineTask = new DeadlineTask ( 
+				(String)jsonTask.get(JSON_KEY_NAME), 
+				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
+				);
+		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableDeadlineTL.add(deadlineTask);
+		
+	}
+	
+	private void addTimedTaskToList(JSONObject jsonTask) {
+		
+		TimedTask timedTask = new TimedTask (
+				(String)jsonTask.get(JSON_KEY_NAME),
+				parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
+				parseDate((String)jsonTask.get(JSON_KEY_END_TIME))
+				);
+
+		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableTimedTL.add(timedTask);
+		
+	}
+	
+	private void addArchivedTimedTaskToList(JSONObject jsonTask) {
+		
+		TimedTask timedTask = new TimedTask (
+				(String)jsonTask.get(JSON_KEY_NAME),
+				parseDate((String)jsonTask.get(JSON_KEY_START_TIME)), 
+				parseDate((String)jsonTask.get(JSON_KEY_END_TIME))
+				);
+
+		timedTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		timedTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		archivedTimedTL.add(timedTask);
+		
+	}
+	
+	private void addArchivedDeadlineTaskToList(JSONObject jsonTask) {
+		
+		DeadlineTask deadlineTask = new DeadlineTask ( 
+				(String)jsonTask.get(JSON_KEY_NAME), 
+				parseDate((String)jsonTask.get(JSON_KEY_DUEDATE))
+				);
+		deadlineTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		deadlineTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		archivedDeadlineTL.add(deadlineTask);
+		
+	}
+	
+	private void addArchivedGenericTaskToList(JSONObject jsonTask) {
+		
+		GenericTask genericTask = new GenericTask((String)jsonTask.get(JSON_KEY_NAME));
+		genericTask.setWorkload(((Long)jsonTask.get(JSON_KEY_WORKLOAD)).intValue());
+		genericTask.setId((String)jsonTask.get(JSON_KEY_ID));
+		observableGenericTL.add(genericTask);
+		
+	}
+
+	//---------------------//
+	// Variable Conversion //
+	//---------------------//
+
+	/**
+	 * Re-formats a date represented as a String object
+	 * into a DateTime object.
+	 * 
+	 * @param date date in String format
+	 * @return date in DateTime format
+	 * */
+	private DateTime parseDate(String date) {
+		
+		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
+		DateTime dueDate = format.parseDateTime(date);
+		return dueDate;
+		
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Reader.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Writer.java
+	 */
+
+package com.nexus.simplify.database.core;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javafx.collections.ObservableList;
+
+import org.json.simple.JSONObject;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
+
+/**
+ * Represents an instance of a writer used to write to developer-specified file in JSON format.
+ * */
+
+public class Writer {
+
+	private static final String NEW_LINE = "\n";
+	private static final String JSON_ARRAY_CLOSE_BRACKET = "]";
+	private static final String JSON_ARRAY_OPEN_BRACKET = "[";
+	private static final String TASK_TYPE_TIMED = "Timed";
+	private static final String TASK_TYPE_DEADLINE = "Deadline";
+	private static final String TASK_TYPE_GENERIC = "Generic";
+	private static final String TASK_TYPE_ARCHIVED_GENERIC = "Archived Generic";
+	private static final String TASK_TYPE_ARCHIVED_DEADLINE = "Archived Deadline";
+	private static final String TASK_TYPE_ARCHIVED_TIMED = "Archived Timed";
+	
+	private static final String JSON_KEY_DUEDATE = "DueDate";
+	private static final String JSON_KEY_ID = "ID";
+	private static final String JSON_KEY_WORKLOAD = "Workload";
+	private static final String JSON_KEY_END_TIME = "End Time";
+	private static final String JSON_KEY_START_TIME = "Start Time";
+	private static final String JSON_KEY_NAME = "Name";
+	private static final String JSON_KEY_TYPE = "Type";
+
+	private CoreDatabase coreDatabase;
+	
+	private Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public Writer() {
+	}
+	
+	public Writer(CoreDatabase coreDatabase) {
+		this.coreDatabase = coreDatabase;
+	}
+	
+	//--------------//
+	// File Writing //
+	//--------------//
+	
+	/**
+	 * Writes lists to file by getting file from Core Database with file creation in method.
+	 * */
+	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric,
+							ObservableList<DeadlineTask> inputObservableDeadline,
+							ObservableList<TimedTask> inputObservableTimed,
+							ObservableList<GenericTask> inputArchivedGeneric,
+							ObservableList<DeadlineTask> inputArchivedDeadline,
+							ObservableList<TimedTask> inputArchivedTimed) {
+		
+		try {
+			String fileName = coreDatabase.getDataFilePath();
+			File outputFile = new File(fileName);
+			FileWriter fileWriter = new FileWriter(outputFile);
+			String stringOfTasks = JSON_ARRAY_OPEN_BRACKET;
+			
+			stringOfTasks = convertGenericTlToStore(inputObservableGeneric, stringOfTasks);
+			stringOfTasks = convertDeadlineTlToStore(inputObservableDeadline, stringOfTasks);
+			stringOfTasks = convertTimedTlToStore(inputObservableTimed, stringOfTasks);
+			stringOfTasks = convertArchivedGenericTlToStore(inputArchivedGeneric, stringOfTasks);
+			stringOfTasks = convertArchivedDeadlineTlToStore(inputArchivedDeadline, stringOfTasks);
+			stringOfTasks = convertArchivedTimedTlToStore(inputArchivedTimed, stringOfTasks);
+			stringOfTasks = stringOfTasks + JSON_ARRAY_CLOSE_BRACKET;
+			
+			fileWriter.write(stringOfTasks);
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+	
+	/**
+	 * Writes lists to file by getting file as parameter without file creation in method.
+	 * */
+	public void writeToFile(ObservableList<GenericTask> inputObservableGeneric,
+							ObservableList<DeadlineTask> inputObservableDeadline,
+							ObservableList<TimedTask> inputObservableTimed,
+							ObservableList<GenericTask> inputArchivedGeneric,
+							ObservableList<DeadlineTask> inputArchivedDeadline,
+							ObservableList<TimedTask> inputArchivedTimed, File outputFile) {
+		
+		try {
+			FileWriter fileWriter = new FileWriter(outputFile);
+			String stringOfTasks = JSON_ARRAY_OPEN_BRACKET;
+			
+			stringOfTasks = convertGenericTlToStore(inputObservableGeneric, stringOfTasks);
+			stringOfTasks = convertDeadlineTlToStore(inputObservableDeadline, stringOfTasks);
+			stringOfTasks = convertTimedTlToStore(inputObservableTimed, stringOfTasks);
+			stringOfTasks = convertArchivedGenericTlToStore(inputArchivedGeneric, stringOfTasks);
+			stringOfTasks = convertArchivedDeadlineTlToStore(inputArchivedDeadline, stringOfTasks);
+			stringOfTasks = convertArchivedTimedTlToStore(inputArchivedTimed, stringOfTasks);
+			stringOfTasks = stringOfTasks + JSON_ARRAY_CLOSE_BRACKET;
+			fileWriter.write(stringOfTasks);
+			fileWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+	}
+
+	//---------------------//
+	// Variable Conversion //
+	//---------------------//
+
+	private String convertGenericTlToStore(ObservableList<GenericTask> taskList,
+											String stringOfTasks) {
+		
+		if (!taskList.isEmpty()) {
+			for (int i = 0; i < taskList.size(); i++) {
+				GenericTask currentGenericTask = taskList.get(i);
+				JSONObject jsonTask = createGenericTaskAsJsonObject(currentGenericTask);
+				
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				
+				if (!isJsonArrayOpenBrace(stringOfTasks)) {
+					stringOfTasks = stringOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringOfTasks = stringOfTasks + taskInGsonFormat;
+				}
+				
+			}
+		} 
+		
+		return stringOfTasks;
+	}
+
+
+
+	private String convertDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList, 
+											String stringsOfTasks) {
+
+		if (!deadlineTaskList.isEmpty()) {
+			for (int i = 0; i < deadlineTaskList.size(); i++) {
+				DeadlineTask currentDeadlineTask = deadlineTaskList.get(i);
+				JSONObject jsonTask = createDeadlineTaskAsJsonObject(currentDeadlineTask);
+
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				if (!isJsonArrayOpenBrace(stringsOfTasks)) {
+					stringsOfTasks = stringsOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringsOfTasks = stringsOfTasks + taskInGsonFormat;
+				}
+			}
+		} 
+		return stringsOfTasks;
+		
+	}
+
+
+	private String convertTimedTlToStore(ObservableList<TimedTask> timedTaskList,
+										String stringOfTasks) {
+
+		if (!timedTaskList.isEmpty()) {
+			for (int i = 0; i < timedTaskList.size(); i++) {
+				TimedTask currentTimedTask = timedTaskList.get(i);
+				JSONObject jsonTask = createTimedTaskAsJsonObject(currentTimedTask);
+
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				if (!isJsonArrayOpenBrace(stringOfTasks)) {
+					stringOfTasks = stringOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringOfTasks = stringOfTasks + taskInGsonFormat;
+				}
+			}
+		}
+		return stringOfTasks;
+	}
+
+
+	private String convertArchivedGenericTlToStore(ObservableList<GenericTask> taskList,
+													String stringOfTasks) {
+		
+		if (!taskList.isEmpty()) {
+			for (int i = 0; i < taskList.size(); i++) {
+				GenericTask currentGenericTask = taskList.get(i);
+				JSONObject jsonTask = createArchivedGenericTaskAsJsonObject(currentGenericTask);
+
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				if (!isJsonArrayOpenBrace(stringOfTasks)) {
+					stringOfTasks = stringOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringOfTasks = stringOfTasks + taskInGsonFormat;
+				}
+			}
+		}
+		return stringOfTasks;
+	}
+
+	private String convertArchivedDeadlineTlToStore(ObservableList<DeadlineTask> deadlineTaskList,
+													String stringOfTasks) {
+
+		if (!deadlineTaskList.isEmpty()) {
+			for (int i = 0; i < deadlineTaskList.size(); i++) {
+				DeadlineTask currentDeadlineTask = deadlineTaskList.get(i);
+				JSONObject jsonTask = createArchivedDeadlineTaskAsJsonObject(currentDeadlineTask);
+
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				if (!isJsonArrayOpenBrace(stringOfTasks)) {
+					stringOfTasks = stringOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringOfTasks = stringOfTasks + taskInGsonFormat;
+				}
+			}
+		}
+		return stringOfTasks;
+	}
+
+
+	private String convertArchivedTimedTlToStore(ObservableList<TimedTask> timedTaskList,
+												String stringOfTasks) {
+
+		if (!timedTaskList.isEmpty()) {
+			for (int i = 0; i < timedTaskList.size(); i++) {
+				TimedTask currentTimedTask = timedTaskList.get(i);
+				JSONObject jsonTask = createArchivedTimedTaskAsJsonObject(currentTimedTask);
+
+				JsonParser jp = new JsonParser();
+				JsonElement jsonElement = jp.parse(jsonTask.toString());
+				String taskInGsonFormat = gson.toJson(jsonElement);
+				if (!isJsonArrayOpenBrace(stringOfTasks)) {
+					stringOfTasks = stringOfTasks + NEW_LINE + taskInGsonFormat;
+				} else {
+					stringOfTasks = stringOfTasks + taskInGsonFormat;
+				}
+			}
+		}
+		return stringOfTasks;
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	private JSONObject createDeadlineTaskAsJsonObject(DeadlineTask currentDeadlineTask) {
+		JSONObject jsonTask = new JSONObject();
+		jsonTask.put(JSON_KEY_NAME, currentDeadlineTask.getName());
+		jsonTask.put(JSON_KEY_DUEDATE, currentDeadlineTask.getReadableDeadline());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentDeadlineTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentDeadlineTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_DEADLINE);
+		return jsonTask;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject createTimedTaskAsJsonObject(TimedTask currentTimedTask) {
+		JSONObject jsonTask = new JSONObject();
+		
+		jsonTask.put(JSON_KEY_NAME, currentTimedTask.getName());
+		jsonTask.put(JSON_KEY_START_TIME, currentTimedTask.getReadableStartTime());
+		jsonTask.put(JSON_KEY_END_TIME, currentTimedTask.getReadableEndTime());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentTimedTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentTimedTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_TIMED);
+		
+		return jsonTask;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject createGenericTaskAsJsonObject(GenericTask currentGenericTask) {
+		JSONObject jsonTask = new JSONObject();
+		jsonTask.put(JSON_KEY_NAME, currentGenericTask.getName());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentGenericTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentGenericTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_GENERIC);
+		return jsonTask;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject createArchivedDeadlineTaskAsJsonObject(DeadlineTask currentDeadlineTask) {
+		JSONObject jsonTask = new JSONObject();
+		jsonTask.put(JSON_KEY_NAME, currentDeadlineTask.getName());
+		jsonTask.put(JSON_KEY_DUEDATE, currentDeadlineTask.getReadableDeadline());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentDeadlineTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentDeadlineTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_DEADLINE);
+		return jsonTask;
+	}
+
+	@SuppressWarnings("unchecked")
+	private JSONObject createArchivedGenericTaskAsJsonObject(GenericTask currentGenericTask) {
+		JSONObject jsonTask = new JSONObject();
+		jsonTask.put(JSON_KEY_NAME, currentGenericTask.getName());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentGenericTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentGenericTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_GENERIC);
+		return jsonTask;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JSONObject createArchivedTimedTaskAsJsonObject(TimedTask currentTimedTask) {
+		JSONObject jsonTask = new JSONObject();
+		jsonTask.put(JSON_KEY_NAME, currentTimedTask.getName());
+		jsonTask.put(JSON_KEY_START_TIME, currentTimedTask.getReadableStartTime());
+		jsonTask.put(JSON_KEY_END_TIME, currentTimedTask.getReadableEndTime());
+		jsonTask.put(JSON_KEY_WORKLOAD, currentTimedTask.getWorkload());
+		jsonTask.put(JSON_KEY_ID, currentTimedTask.getId());
+		jsonTask.put(JSON_KEY_TYPE, TASK_TYPE_ARCHIVED_TIMED);
+		return jsonTask;
+	}
+	
+	private boolean isJsonArrayOpenBrace(String tasksInGson) {
+		return tasksInGson.equals(JSON_ARRAY_OPEN_BRACKET);
+	}
+}
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Writer.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	 */
+
+	/**
+	 * Constructor without workload.
+	 * 
+	 * @param name name of task
+	 * @param deadline due date of task 
+	 * */
+	public DeadlineTask(String name, Date deadline) {
+		super(name);
+		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
+	}
+	
+	/**
+	 * Constructor without workload.
+	 * 
+	 * @param name name of task
+	 * @param deadline due date of task in DateTime 
+	 * */
+	public DeadlineTask(String name, DateTime deadline) {
+		super(name);
+		this.deadline = new SimpleObjectProperty<DateTime>(deadline);
+	}
+	
+	/**
+	 * Constructor with workload.
+	 * 
+	 * @param name name of task
+	 * @param deadline due date of task
+	 * @param workload amount of effort required to do the task ranging from 1 to 5. 
+	 * */
+	public DeadlineTask(String name, Date deadline, int workload) {
+		super(name, workload);
+		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
+	}
+	
+	//A0114887U
+	/**
+	 * Constructor with workload and id.
+	 * 
+	 * @param name name of task in StringProperty
+	 * @param deadline due date of task
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public DeadlineTask(StringProperty name, Date deadline, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		this.deadline = new SimpleObjectProperty<DateTime>(new DateTime(deadline));
+	}
+	
+	/**
+	 * Constructor with workload and id.
+	 * 
+	 * @param name name of task in StringProperty
+	 * @param deadline due date of task in DateTime format
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public DeadlineTask(StringProperty name, DateTime deadline, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		this.deadline = new SimpleObjectProperty<DateTime>(deadline);
+	}
+	//-------------------//
+	// Attribute Mutator //
+	//-------------------//
+	
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	 */
+
+	/**
+	 * Default setter for class attribute deadline.
+	 * 
+	 * @param deadline the new deadline for the task
+	 * */
+	public void setDeadline(Date deadline) {
+		this.deadline.set(new DateTime(deadline));
+	}
+	
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	/**
+	 * Returns the due date of the task formatted into a readable String Object.
+	 * 
+	 * @return due date of task as String Object
+	 * */
+	public String getReadableDeadline() {
+		DateTimeFormatter format = DateTimeFormat.forPattern(JAVA_DATE_FORMAT);
+		return format.print(deadline.get());
+	}
+	
+	/**
+	 * Default getter method for attribute deadline.
+	 * 
+	 * @return due date of task
+	 * */
+	public DateTime getDeadline() {
+		return deadline.get();
+	}
+
+	/**
+	 * Returns the due date of the task formatted as a StringProperty Object.
+	 * 
+	 * @return due date of task as StringProperty Object
+	 * */
+	public StringProperty getDateTimeAsStringProperty() {
+		return new SimpleStringProperty(this.getReadableDeadline());
+	}
+	
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\GenericTask.java
+	 */
+
+	/**
+	 * Default getter method for attribute id.
+	 * 
+	 * @return id of task
+	 * */
+	public String getId() {
+		return id.get();
+	}
+	
+	/**
+	 * Default getter method for attribute name.
+	 * 
+	 * @return name of task
+	 * */
+	public String getName() {
+		return name.get();
+	}
+	
+	/**
+	 * Default getter method for attribute workload.
+	 * 
+	 * @return workload of task
+	 * */
+	public int getWorkload() {
+		return workload.get();
+	}
+	
+	/**
+	 * Returns the id of the task formatted as a StringProperty Object.
+	 * 
+	 * @return id of task as StringProperty Object
+	 * */
+	public StringProperty getIDAsStringProperty() {
+		return id;
+	}
+	
+	/**
+	 * Returns the ID of the task in DateTime.
+	 * 
+	 * @return ID of task as DateTime
+	 * */
+	public DateTime getIDAsDateTime() {
+		DateTimeFormatter format = DateTimeFormat.forPattern(ID_FORMAT);
+		DateTime ID = format.parseDateTime(id.get());
+		return ID;
+	}
+	
+	/**
+	 * Returns the name of the task formatted as a StringProperty Object.
+	 * 
+	 * @return name of task as StringProperty Object
+	 * */
+	public StringProperty getNameAsStringProperty() {
+		return name;
+	}
+	
+	/**
+	 * Returns the workload of the task formatted as a IntegerProperty Object.
+	 * 
+	 * @return workload of task as IntegerProperty Object
+	 * */
+	public IntegerProperty getWorkloadAsIntegerProperty() {
+		return workload;
+	}
+	
+	//A0111035A
+	/**
+	 * Returns an exact copy of the task.
+	 * */
+	public GenericTask getCopy() {
+		StringProperty cName = new SimpleStringProperty(getName());
+		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
+		StringProperty cID = new SimpleStringProperty(getId());
+		GenericTask copy = new GenericTask(cName, cWorkload, cID);
+		return copy;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\GenericTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+	 */
+
+
+	private final ObjectProperty<DateTime> startTime;
+	private final ObjectProperty<DateTime> endTime;
+	
+	//--------------//
+	// Constructors //
+	//--------------//
+	
+	/**
+	 * Constructor for timed tasks with workload.
+	 * 
+	 * @param name name of task
+	 * @param startTime start time of task
+	 * @param endTime end time of task
+	 * @param workload amount of effort required to do the task ranging from 1 to 5
+	 * */
+	public TimedTask(String name, Date startTime, Date endTime, int workload) {
+		super(name, workload);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));
+		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
+	}
+	
+	/**
+	 * Constructor for timed tasks without workload.
+	 * 
+	 * @param name name of task
+	 * @param startTime start time of task
+	 * @param endTime end time of task
+	 * */
+	public TimedTask(String name, Date startTime, Date endTime) {
+		super(name);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));
+		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
+	}
+	
+	//A0114887U
+	/**
+	 * Constructor for timed tasks without workload.
+	 * 
+	 * @param name name of task
+	 * @param startTime start time of task in DateTime
+	 * @param endTime end time of task in DateTime
+	 * */
+	public TimedTask(String name, DateTime startTime, DateTime endTime) {
+		super(name);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(startTime);
+		this.endTime = new SimpleObjectProperty<DateTime>(endTime);
+	}
+	
+	/**
+	 * Constructor for timed tasks with workload, id and endTime in DateTime format.
+	 * 
+	 * @param name name of task in StringProperty format
+	 * @param startTime start time of task as Date 
+	 * @param endTime end time of task in DateTime format
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public TimedTask(StringProperty name, DateTime startTime, DateTime endTime, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(new DateTime(startTime));
+		this.endTime = new SimpleObjectProperty<DateTime>(endTime);
+	}
+	
+	/**
+	 * Constructor for timed tasks with workload, id and startTime in DateTime format.
+	 * 
+	 * @param name name of task in StringProperty format
+	 * @param startTime start time of task in DateTime format 
+	 * @param endTime end time of task as Date
+	 * @param workload amount of effort required to do the task ranging from 1 to 5 in StringProperty
+	 * @param id identification number of task in StringProperty
+	 * */
+	public TimedTask(StringProperty name, DateTime startTime, Date endTime, IntegerProperty workload, StringProperty id) {
+		super(name, workload, id);
+		assert(startTime != null || endTime != null);
+		this.startTime = new SimpleObjectProperty<DateTime>(startTime);
+		this.endTime = new SimpleObjectProperty<DateTime>(new DateTime(endTime));
+	}
+
+	//--------------------//
+	// Attribute Mutators //
+	//--------------------//
+	
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+	 */
+
+	/**
+	 * Default setter for class attribute startTime.
+	 * 
+	 * @param startTime the new start time for the task
+	 * */
+	public void setStartTime(Date startTime) {
+		this.startTime.set(new DateTime(startTime));
+	}
+	
+	/**
+	 * Default setter for class attribute endTime.
+	 * 
+	 * @param endTime the new end time for the task
+	 * */
+	public void setEndTime(Date endTime) {
+		this.endTime.set(new DateTime(endTime));
+	}
+	
+	//---------------------//
+	// Attribute Accessors //
+	//---------------------//
+	
+	/**
+	 * Returns the start time of the task formatted as a DateTimeProperty Object.
+	 * 
+	 * @return start time of task as a DateTimeProperty Object
+	 * */
+	public ObjectProperty<DateTime> getStartTime() {
+		return startTime;
+	}
+	
+	/**
+	 * Returns the end time of the task formatted as a DateTimeProperty Object.
+	 * 
+	 * @return end time of task as a DateTimeProperty Object
+	 * */
+	public ObjectProperty<DateTime> getEndTime() {
+		return endTime;
+	}
+	
+	/**
+	 * Default getter method for attribute startTime.
+	 * 
+	 * @return start time of task
+	 * */
+	public DateTime getStartTimeAsDateTime() {
+		return startTime.get();
+	}
+	
+	/**
+	 * Default getter method for attribute endTime.
+	 * 
+	 * @return end time of task
+	 * */
+	public DateTime getEndTimeAsDateTime() {
+		return endTime.get();
+	}
+	
+	/**
+	 * Returns the start time of the task formatted as a StringProperty Object.
+	 * 
+	 * @return start time of the task as StringProperty Object
+	 * */
+	public StringProperty getStartTimeAsStringProperty() {
+		return new SimpleStringProperty(this.getReadableStartTime());
+	}
+	
+	/**
+	 * Returns the end time of the task formatted as a StringProperty Object.
+	 * 
+	 * @return end time of task as StringProperty Object
+	 * */
+	public StringProperty getEndTimeAsStringProperty() {
+		return new SimpleStringProperty(this.getReadableEndTime());
+	}
+	
+	/**
+	 * Returns the start time of the task formatted into a readable String Object.
+	 * 
+	 * @return start time of task as String Object
+	 * */
+	public String getReadableStartTime() {
+		return format.print(startTime.get());
+	}
+	
+	/**
+	 * Returns the end time of the task formatted into a readable String Object.
+	 * 
+	 * @return end time of task as String Object
+	 * */
+	public String getReadableEndTime() {
+		return format.print(endTime.get());
+	}
+	
+	//A0111035A
+	/**
+	 * Returns an exact copy of the task.
+	 * */
+	public TimedTask getCopy() {
+		StringProperty cName = new SimpleStringProperty(getName());
+		IntegerProperty cWorkload = new SimpleIntegerProperty(getWorkload());
+		StringProperty cID = new SimpleStringProperty(getId());
+		DateTime cStart = getStartTimeAsDateTime();
+		DateTime cEnd = getEndTimeAsDateTime();
+		TimedTask copy = new TimedTask(cName, cStart, cEnd, cWorkload, cID);
+		return copy;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\MainApp.java
+	 */
+
+import java.io.IOException;
+
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.logic.api.Logic;
+import com.nexus.simplify.ui.controller.BillboardOverviewController;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+/**
+ * Main class for Simplify. 
+ * */
+public class MainApp extends Application {
+	
+	private static final String FILE_LOCATION_BILLBOARD_OVERVIEW_FXML = "ui/view/BillboardOverview.fxml";
+	private static final String FILE_LOCATION_ROOT_LAYOUT_FXML = "ui/view/RootLayout.fxml";
+	private static final String APP_TITLE = "Simplify";
+	
+	//-----------------//
+	// Class Variables //
+	//-----------------//
+	
+	private Stage primaryStage;
+	private BorderPane rootLayout;
+	
+	private Logic logic;
+	private static Database database;
+
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public MainApp() throws IOException {
+		logic = Logic.getInstance();
+		database = new Database();
+	}
+	
+	//--------------------------//
+	// Interface Initialization //
+	//--------------------------//
+	
+	/**
+	 * Initializes the root layout of the application (the canvas of the app)
+	 * 
+	 * */
+	private void initRootLayout() {
+		try {
+			// load root layout from FXML file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource(FILE_LOCATION_ROOT_LAYOUT_FXML));
+			rootLayout = (BorderPane) loader.load();
+
+			// Sets the scene containing the root layout.
+			Scene sceneRootLayout = new Scene(rootLayout);
+			primaryStage.setScene(sceneRootLayout);
+			primaryStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	/**
+	 * displays the scene of the billboard ('pasting' the display onto canvas)
+	 * 
+	 * */
+	public void showBillboardOverview() {
+		try {
+			// loads main interface from FXML file.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource(FILE_LOCATION_BILLBOARD_OVERVIEW_FXML));
+			AnchorPane billboardOverview = (AnchorPane) loader.load();
+
+			// sets main interface onto the center of root layout.
+			rootLayout.setCenter(billboardOverview);
+			
+			// gives the controller access to the main app.
+			BillboardOverviewController bbController = loader.getController();
+			bbController.setMainApp(this);
+			bbController.setDatabase(database);
+		    bbController.initBillboard();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+ 	//------------------//
+	// Driver Functions //
+	//------------------//
+	
+	/**
+	 * This main function serves as a fallback,
+	 * should the start() method fail.
+	 * */
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	/**
+	 * Main driver method to start the app.
+	 * */
+	@Override
+	public void start(Stage primaryStage) throws Exception {		
+		this.primaryStage = primaryStage;
+		this.primaryStage.initStyle(StageStyle.UNDECORATED);
+		this.primaryStage.setTitle(APP_TITLE);
+		
+		initRootLayout();
+		showBillboardOverview();
+	}
+	
+	//------------------//
+	// Attribute Access //
+	//------------------//
+	
+	/**
+	 * default getter for class attribute primaryStage.
+	 * @return primary stage of application.
+	 * */
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
+	
+	/**
+	 * @return reference to the instance of logic instantiated in the main app.
+	 * */
+	public Logic getLogic() {
+		return logic;
+	}
+	
+	/**
+	 * @return reference to the instance of database instantiated in the main app.
+	 * */
+	public static Database getDatabase() {
+		return database;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\MainApp.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
+	 */
+
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.util.Date;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.database.core.CoreDatabase;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+
+/**
+ * Provides a series of tests for the various methods found in the DatabaseConnector Class.
+ * */
+public class DatabaseTest {
+
+
+	//------------------//
+	// Class Attributes //
+	//------------------//
+	
+	private static CoreDatabase coreDatabase;
+	private static Database database;
+		
+	//----------------//
+	// Initialization //
+	//----------------//
+	
+	@BeforeClass
+	public static void initTestingEnvironment() throws Exception {
+		coreDatabase = new CoreDatabase();
+		database = new Database(coreDatabase);
+		database.modifyFileLocation("TestSavedData/");
+		coreDatabase.initDatabase();
+	}
+	
+	@Before
+	public void resetEnvironmentForTest() {
+		database.clearContent();
+	}
+	
+	//----------//
+	// Teardown //
+	//----------//
+	
+	@AfterClass
+	public static void resetDefaultDataPath() {
+		try {
+			database.modifyFileLocation("SavedData/");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//-------------------//
+	// List Manipulation //
+	//-------------------//
+	
+	@Test
+	public void testAddGenericTaskToList() {
+		// Test case 1a: adding a Generic task with workload
+		GenericTask expectedGenericTaskCase1 = new GenericTask("Generic Task Test 1a", 5);
+		database.addGenericTask("Generic Task Test 1a", 5);
+		GenericTask resultantGenericTaskCase1 = coreDatabase.getObservableGenericTl().get(0);
+		assertEquals(expectedGenericTaskCase1.getName(), resultantGenericTaskCase1.getName());
+		assertEquals(expectedGenericTaskCase1.getWorkload(), resultantGenericTaskCase1.getWorkload());
+		
+		database.clearContent();
+		
+		// Test case 1b: adding a Generic task with no workload
+		// adding a task with 0 workload will trigger the setting of default workload value 1
+		GenericTask expectedGenericTaskCase2 = new GenericTask("Generic Task Test 1b", 1);
+		database.addGenericTask("Generic Task Test 1b", 0);
+		GenericTask resultantGenericTaskCase2 = coreDatabase.getObservableGenericTl().get(0);
+		assertEquals(expectedGenericTaskCase2.getName(), resultantGenericTaskCase2.getName());
+		assertEquals(expectedGenericTaskCase2.getWorkload(), resultantGenericTaskCase2.getWorkload());	
+	}
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\ui\CommandHistoryTest.java
+	 */
+
+import static org.junit.Assert.*;
+
+import java.util.Deque;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.nexus.simplify.ui.commandhistory.CommandHistory;
+
+/**
+ * Provides a series of tests for the methods found in the CommandHistory class.
+ * */
+public class CommandHistoryTest {
+
+	private static final int EXPECTED_EMPTY_STACK_SIZE = 0;
+
+	private static final String EMPTY_STRING = "";
+	
+	private static final String TEST_STRING_FOUR = "test string 4";
+	private static final String TEST_STRING_THREE = "test string 3";
+	private static final String TEST_STRING_TWO = "test string 2";
+	private static final String TEST_STRING_ONE = "test string 1";
+
+	//------------------//
+	// Class Attributes //
+	//------------------//
+	
+	private static CommandHistory commandHistory;
+	
+	//----------------//
+	// Initialization //
+	//----------------//
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		commandHistory = new CommandHistory();
+	}
+	
+	@Before
+	public void setUp() throws Exception {
+		commandHistory.addCommandToHistory(TEST_STRING_ONE);
+		commandHistory.addCommandToHistory(TEST_STRING_TWO);
+		commandHistory.addCommandToHistory(TEST_STRING_THREE);
+		commandHistory.addCommandToHistory(TEST_STRING_FOUR);
+	}
+	
+	//----------//
+	// Teardown //
+	//----------//
+
+	@After
+	public void tearDown() throws Exception {
+		commandHistory.clearAllHistory();
+	}
+
+	@Test
+	public void testAddCommandToHistory() {
+		// test (a): trying to add duplicate command to history
+		commandHistory.addCommandToHistory(TEST_STRING_FOUR);
+		assertEquals(4, commandHistory.getUpStackSize());
+		
+		// test (b): test if commands added in setUp() method
+		// were in proper chronological order
+		Deque<String> upStackFromCommandHistory = commandHistory.getUpStack();
+		assertEquals(TEST_STRING_FOUR, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_THREE, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_TWO, upStackFromCommandHistory.pop());
+		assertEquals(TEST_STRING_ONE, upStackFromCommandHistory.pop());	
+	}
+	
+	@Test
+	public void testBrowsePreviousCommand() {
+		// test (a): test if correct command is returned from function if upStack is not empty
+		String expectedValueTestA = commandHistory.browsePreviousCommand();
+		assertEquals(TEST_STRING_FOUR, expectedValueTestA);
+		
+		// test (b): test if command is successfully pushed into downStack from upStack
+		String expectedValueTestB = commandHistory.getCommandOnTopOfDownStack();
+		assertEquals(TEST_STRING_FOUR, expectedValueTestB);
+		
+		// test (c): test if browsePreviousCommand handles situations when upStack is empty.
+		
+		// emptying upStack
+		commandHistory.browsePreviousCommand();
+		commandHistory.browsePreviousCommand();
+		commandHistory.browsePreviousCommand();
+		
+		String expectedValueTestC = commandHistory.browsePreviousCommand();
+		assertEquals(EMPTY_STRING, expectedValueTestC);
+	}
+	
+	@Test
+	public void testBrowseNextCommand() {
+		// test (a): test if correct command is returned from function if downStack is is not empty.
+		commandHistory.browsePreviousCommand();
+		commandHistory.browsePreviousCommand();
+		commandHistory.browsePreviousCommand();
+		commandHistory.browsePreviousCommand();
+		String expectedValueTestA = commandHistory.browseNextCommand();		
+		assertEquals(TEST_STRING_TWO, expectedValueTestA);
+		
+		// test (b): test if command is successfully pushed into upStack from downStack.
+		commandHistory.browseNextCommand();
+		String expectedValueTestB = commandHistory.getCommandOnTopOfUpStack();
+		assertEquals(TEST_STRING_TWO, expectedValueTestB);
+		
+		// test (c): test if browseNextCommand handles situations when downStack is empty.
+		
+		// emptying downStack
+		commandHistory.browseNextCommand();	
+		commandHistory.browseNextCommand();	
+		commandHistory.browseNextCommand();	
+		
+		String expectedValueTestC = commandHistory.browseNextCommand();
+		assertEquals(EMPTY_STRING, expectedValueTestC);
+	}
+
+	@Test
+	public void testClearAllHistory() {
+		// ensures that both upStack and downStack are non-empty.
+		commandHistory.browsePreviousCommand(); 
+		commandHistory.browsePreviousCommand();
+	
+		commandHistory.clearAllHistory();
+				
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getUpStackSize());
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getDownStackSize());
+		assertEquals(EXPECTED_EMPTY_STACK_SIZE, commandHistory.getCacheStackSize());
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\ui\CommandHistoryTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\commandhistory\CommandHistory.java
+	 */
+
+import java.util.Deque;
+import java.util.LinkedList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Serves as a cache to store commands previously entered by the user
+ * so that the user can access and modify them easily, rather
+ * than typing out the whole command. 
+ * 
+ * Functionality is similar to the Unix Terminal and Windows Command Prompt,
+ * the up and down arrow keys traverse the cache, with the up arrow key accessing up to the 
+ * earliest command, while the down arrow key navigates to the latest command.
+ * 
+ * Commands are stored in chronological order.
+ * */
+public class CommandHistory {
+	
+	private static final String LOGGER_INFO_ADD_COMMAND_TO_EMPTY_UPSTACK = "Adding command to empty upStack";
+	private static final String LOGGER_INFO_USER_COMMAND_ADDED = "User command added to command history: {}";
+	private static final String LOGGER_INFO_NEXT_COMMAND_ACCESSED = "Next command in command history accessed: {}";
+	private static final String LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED = "Previous command in command history accessed: {}";
+
+	private static final String LOGGER_WARNING_DOWNSTACK_EMPTY = "downStack is empty";
+	private static final String LOGGER_WARNING_UPSTACK_EMPTY = "upStack is empty";
+
+	private static final String EMPTY_STRING = "";
+	
+	//-----------------//
+	// Class Variables //
+	//-----------------//
+	
+	/**
+	 * Note: double-ended queues (Deque) are used in place of 
+	 *       the deprecated Stack class.
+	 * */
+	private Deque<String> upStack;
+	private Deque<String> downStack;
+	
+	// for storing the state of upStack after every addition of user command
+	private Deque<String> cacheStack;
+	
+	private Logger logger;
+	
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+	public CommandHistory() {
+		upStack = new LinkedList<String>();
+		downStack = new LinkedList<String>();
+		
+		cacheStack = new LinkedList<String>();
+		
+		logger = LoggerFactory.getLogger(CommandHistory.class.getName());
+	}
+	
+	//------------------//
+	// Attribute Access //
+	//------------------//
+	
+	public String getCommandOnTopOfUpStack() {
+		return upStack.peek();
+	}
+	
+	public String getCommandOnTopOfDownStack() {
+		return downStack.peek();
+	}
+		
+	public int getUpStackSize() {
+		return upStack.size();
+	}
+	
+	public int getDownStackSize() {
+		return downStack.size();
+	}
+	
+	public int getCacheStackSize() {
+		return cacheStack.size();
+	}
+	
+	public Deque<String> getUpStack() {
+		return upStack;
+	}
+		
+	//-----------------------//
+	// Storing User Commands //
+	//-----------------------//
+	
+	/**
+	 * Adds recently entered user command to the stack.
+	 * Consecutive identical commands are ignored.
+	 * */
+	public void addCommandToHistory(String userCommand) {
+		resetUpStackToPreviousState();
+		if (!upStack.isEmpty() && !isConsecutiveDuplicate(userCommand)) {
+			upStack.push(userCommand);
+			storeUpStackStateInCache();
+			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
+		} else if (upStack.isEmpty()) {
+			upStack.push(userCommand);
+			storeUpStackStateInCache();
+			logger.info(LOGGER_INFO_ADD_COMMAND_TO_EMPTY_UPSTACK);
+			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
+		}
+	}
+
+	/**
+	 * @return true if the specified user command is identical to 
+	 *         the command entered previously, false otherwise
+	 * @param userCommand the command to be added to history
+	 * */
+	private boolean isConsecutiveDuplicate(String userCommand) {
+		return userCommand.equals(upStack.peek());
+	}
+
+	/**
+	 * makes a copy of the current state of upStack.
+	 * */
+	private void storeUpStackStateInCache() {
+		cacheStack.clear();
+		cacheStack.addAll(upStack);
+	}
+
+	/**
+	 * returns upStack to its original state so that
+	 * user commands can be continued to be added to history
+	 * in proper chronological order.
+	 * */
+	private void resetUpStackToPreviousState() {
+		upStack.clear();
+		upStack.addAll(cacheStack);
+		downStack.clear();
+	}
+	
+	/**
+	 * Removes all stored user commands.
+	 * */
+	public void clearAllHistory() {
+		upStack.clear();
+		downStack.clear();
+		cacheStack.clear();
+	}
+	
+	//----------------------------//
+	// Command History Navigation //
+	//----------------------------//
+	
+	/**
+	 * Navigates to an earlier command in the archive with the up arrow key.
+	 * @return the previous user command entered (i.e. the command at the very top of upStack)
+	 *         if the stack is not empty, otherwise an empty string is returned.
+	 * */
+	public String browsePreviousCommand() {
+		if (!upStack.isEmpty()) {
+			String commandToBeShown = upStack.pop();
+			logger.info(LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED, commandToBeShown);
+			downStack.push(commandToBeShown);
+			return commandToBeShown;	
+		} else {
+			logger.warn(LOGGER_WARNING_UPSTACK_EMPTY);
+			return EMPTY_STRING;
+		}
+	}
+	
+	/**
+	 * Navigates to a later command in the archive with the down arrow key.
+	 * @return the next user command entered in the cache if downStack is not empty.
+	 * Note: the user command at the top of downStack is not returned to give a
+	 *       'pyramid' feel when navigating the cache. Instead, the command directly below
+	 *       will be returned.
+	 * */
+	public String browseNextCommand() {
+		if (!downStack.isEmpty()) {
+			upStack.push(downStack.pop());
+			if (!downStack.isEmpty()) {
+				String commandToBeShown = downStack.peek();
+				logger.info(LOGGER_INFO_NEXT_COMMAND_ACCESSED, commandToBeShown);
+				return downStack.peek();
+			} else  {
+				logger.warn(LOGGER_WARNING_DOWNSTACK_EMPTY);
+				return EMPTY_STRING;
+			}
+		} else {
+			logger.warn(LOGGER_WARNING_DOWNSTACK_EMPTY);
+			return EMPTY_STRING;
+		}
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\commandhistory\CommandHistory.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\controller\BillboardOverviewController.java
+	 */
+
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.database.tasktype.DeadlineTask;
+import com.nexus.simplify.database.tasktype.GenericTask;
+import com.nexus.simplify.database.tasktype.TimedTask;
+import com.nexus.simplify.logic.api.Logic;
+import com.nexus.simplify.ui.commandhistory.CommandHistory;
+
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+
+/**
+ * Controller class of fxml BillBoardOverview.
+ * BillboardOverview displays three tables for each type of task:
+ * 	- deadline-based tasks
+ * 	- timed tasks
+ *  - generic tasks
+ * */
+public class BillboardOverviewController implements Initializable {
+	private static final String LOGGER_ERROR_PROCESSING_FAILED = "Feedback from logic (input processing failed): {}";
+	private static final String LOGGER_INFO_PROCESSING_SUCCESSFUL = "Feedback from logic (input processing successful): {}";
+
+	private static final int INDEX_OF_FIRST_ROW_IN_TABLE = 0;
+	
+	private static final int GENERIC_TASK_TABLE_VISIBLE_ROW_SIZE = 15;
+	private static final int DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE = 7;
+	private static final int TIMED_TASK_TABLE_VISIBLE_ROW_SIZE = 7;
+	
+	private static final int LIST_INDEX_OFFSET = 1;
+	private static final int DEADLINE_TASK_COL_INDEX_OFFSET = 1;
+	
+	private static final String WARNING_SUPPRESSION_RAWTYPES = "rawtypes";
+	private static final String EMPTY_STRING = "";
+	private static final String MESSAGE_WELCOME = "Welcome to Simplify!";
+
+	
+	//------------------//
+	// Class Attributes //
+	//------------------//
+	
+	// References to main application
+	MainApp mainApp;
+	Database database;
+	
+	// Container to store user command history
+	CommandHistory commandHistory;
+	
+	// row index bookmarks for table traversal
+	int previousDeadlineTaskTableRowIndex;
+	int previousTimedTaskTableRowIndex;
+	int previousGenericTaskTableRowIndex;
+	
+	// logging purposes
+	Logger logger;
+	
+	
+	// Attributes of the table displaying deadline-based tasks.
+	@FXML
+	private TableView<DeadlineTask> deadlineTaskTable;
+	
+	@FXML
+	private TableColumn<DeadlineTask, Integer> deadlineTaskIndexColumn;
+	
+	@FXML
+	private TableColumn<DeadlineTask, String> deadlineTaskNameColumn;
+	
+	@FXML
+	private TableColumn<DeadlineTask, String> deadlineTaskDueDateColumn;
+	
+	@FXML
+	private TableColumn<DeadlineTask, Integer> deadlineTaskWorkloadColumn;
+	
+	// Attributes of the table displaying timed tasks.
+	@FXML
+	private TableView<TimedTask> timedTaskTable;
+	
+	@FXML
+	private TableColumn<TimedTask, Integer> timedTaskIndexColumn;
+	
+	@FXML
+	private TableColumn<TimedTask, String> timedTaskNameColumn;
+	
+	@FXML
+	private TableColumn<TimedTask, String> timedTaskStartTimeColumn;
+	
+	@FXML
+	private TableColumn<TimedTask, String> timedTaskEndTimeColumn;
+	
+	@FXML
+	private TableColumn<TimedTask, Integer> timedTaskWorkloadColumn;
+	
+
+	// Attributes of the table displaying generic tasks.
+	@FXML
+	private TableView<GenericTask> genericTaskTable;
+	
+	@FXML
+	private TableColumn<GenericTask, Integer> genericTaskIndexColumn;
+	
+	@FXML
+	private TableColumn<GenericTask, String> genericTaskNameColumn;
+	
+	@FXML
+	private TableColumn<GenericTask, Integer> genericTaskWorkloadColumn;
+	
+	
+	// Allows feedback to be displayed on the billboard.
+	@FXML
+	private Label feedbackDisplay;
+	
+	
+	// Retrieves user input from the keyboard.
+	@FXML
+	private TextField userInputField;
+	
+	//-------------//
+	// Constructor //
+	//-------------//
+	
+    /**
+     * The constructor is called before the initialize() method.
+     */
+	public BillboardOverviewController() {
+		// empty method
+	}
+	
+	//--------------------//
+	// Attribute Mutators //
+	//--------------------//
+		
+	/**
+	 * Called by the main application to give a reference back to itself.
+	 * 
+	 * @param mainApp the main class for the program
+	 * */	
+	public void setMainApp(MainApp mainApp) {
+		this.mainApp = mainApp;		
+	}
+	
+	/**
+	 * Called by the main application to reference its instance of database.
+	 * 
+	 * @param database2 the database instance from the main application
+	 * */
+	public void setDatabase(Database database2) {
+		this.database = database2;
+	}
+	
+	//----------------//
+	// Initialization //
+	//----------------//
+	
+    /**
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
+     * */
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		logger = LoggerFactory.getLogger(BillboardOverviewController.class.getName());
+		
+		setAllPreviousTaskTableIndexesToZero();
+		commandHistory = new CommandHistory();
+		initAllTables();
+		
+		// forces the user input field to gain focus 
+		// immediately after application starts.
+	    Platform.runLater(new Runnable() {
+	        @Override
+	        public void run() {
+	            userInputField.requestFocus();
+	        }
+	    });	
+	}
+
+	private void setAllPreviousTaskTableIndexesToZero() {
+		previousDeadlineTaskTableRowIndex = 0;
+		previousTimedTaskTableRowIndex = 0;
+		previousGenericTaskTableRowIndex = 0;
+	}
+
+	private void initAllTables() {
+		initDeadlineTaskTable();
+		initTimedTaskTable();
+		initGenericTaskTable();
+	}
+
+	/**
+	 * Initializes the 3 tables on the interface.
+	 * */
+	public void initBillboard() {
+		fillTablesWithData();
+		setTablesToListenForChanges();
+		displayWelcomeMessage();
+	}
+	
+	/**
+	 * Adds listeners to all three tables so that
+	 * any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setTablesToListenForChanges() {
+		setDeadlineTaskTableToListenForChanges();
+		setTimedTaskTableToListenForChanges();
+		setGenericTaskTableToListenForChanges();
+	}
+
+	/**
+	 * Adds a listener to the table displaying generic tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setGenericTaskTableToListenForChanges() {
+		genericTaskTable.getItems().addListener(
+			new ListChangeListener<GenericTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends GenericTask> change) {
+					change.next();		
+					
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
+						previousGenericTaskTableRowIndex = locationIndexOfChange;
+						genericTaskTable.scrollTo(locationIndexOfChange);
+						genericTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+			    } 						
+			}
+		);
+	}
+
+	/**
+	 * Adds a listener to the table displaying timed tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setTimedTaskTableToListenForChanges() {
+		timedTaskTable.getItems().addListener(
+			new ListChangeListener<TimedTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends TimedTask> change) {
+					change.next();
+						
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
+						previousTimedTaskTableRowIndex = locationIndexOfChange;
+						timedTaskTable.scrollTo(locationIndexOfChange);
+						timedTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+					
+			    } 				
+			}
+		);
+	}
+
+	/**
+	 * Adds a listener to the table displaying deadline-based tasks
+	 * so that any rows added or modified will be automatically
+	 * scrolled to and highlighted.
+	 * */
+	private void setDeadlineTaskTableToListenForChanges() {
+		deadlineTaskTable.getItems().addListener(
+			new ListChangeListener<DeadlineTask>() {
+				@Override
+				public void onChanged(javafx.collections.ListChangeListener.Change<? extends DeadlineTask> change) {
+					change.next(); // transit to the next instance of change
+					
+					if (change.wasAdded() || change.wasUpdated() || change.wasRemoved()) {
+						int locationIndexOfChange = change.getTo() - LIST_INDEX_OFFSET;
+						previousDeadlineTaskTableRowIndex = locationIndexOfChange;
+						deadlineTaskTable.scrollTo(locationIndexOfChange);
+						deadlineTaskTable.getSelectionModel().select(locationIndexOfChange);
+					} 
+			    } 				
+			}
+		);
+	}
+
+	/**
+	 * Initializes the table displaying generic tasks with columns representing each attribute of the task class.
+	 * */
+	private void initGenericTaskTable() {
+		genericTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		genericTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+	}
+
+	/**
+	 * Initializes the table displaying timed tasks with columns representing each attribute of the task class.
+	 * */
+	private void initTimedTaskTable() {
+		timedTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		timedTaskStartTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimeAsStringProperty());
+		timedTaskEndTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getEndTimeAsStringProperty());
+		timedTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+	}
+
+	/**
+	 * Initializes the table displaying deadline-based tasks with columns representing each attribute of the task class.
+	 * */
+	private void initDeadlineTaskTable() {
+		deadlineTaskNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameAsStringProperty());
+		deadlineTaskDueDateColumn.setCellValueFactory(cellData -> cellData.getValue().getDateTimeAsStringProperty());
+		deadlineTaskWorkloadColumn.setCellValueFactory(cellData -> cellData.getValue().getWorkloadAsIntegerProperty().asObject());
+	}
+	
+	/**
+	 * initializes the table columns displaying the indexes of the entries
+	 * such that they are updated based on the list sizes.
+	 * */
+	private void initAllTableIndexColumns() {
+		initDeadlineTaskIndexCol();
+		initTimedTaskIndexCol();
+		initGenericTaskIndexCol();
+	}
+
+	/**
+	 * initializes the index columns of the table displaying generic tasks.
+	 * the start index of the column is 1 after the last index of the table displaying 
+	 * timed tasks.
+	 * */
+	private void initGenericTaskIndexCol() {
+		genericTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<GenericTask, Integer>() {
+				@Override 
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle(EMPTY_STRING);
+					} else {
+						setText(String.valueOf(getIndex() 
+								               + DEADLINE_TASK_COL_INDEX_OFFSET 
+								               + deadlineTaskTable.getItems().size()
+								               + timedTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
+	}
+
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1 after the last index of the table 
+	 * displaying deadline-based tasks.
+	 * */
+	private void initTimedTaskIndexCol() {
+		timedTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<TimedTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle(EMPTY_STRING);
+					} else {
+						setText(String.valueOf(getIndex() 
+												+ DEADLINE_TASK_COL_INDEX_OFFSET 
+												+ deadlineTaskTable.getItems().size()));
+					}
+				}
+			};
+		});
+	}
+
+	/**
+	 * initializes the index columns of the table displaying timed tasks.
+	 * the start index of the column is 1.
+	 * */
+	private void initDeadlineTaskIndexCol() {
+		deadlineTaskIndexColumn.setCellFactory(column -> {
+			return new TableCell<DeadlineTask, Integer>() {
+				@Override
+				protected void updateItem(Integer index, boolean empty) {
+					if (index == null || empty) {
+						setText(null);
+						setStyle(EMPTY_STRING);
+					} else {
+						setText(String.valueOf(getIndex() + DEADLINE_TASK_COL_INDEX_OFFSET));
+					}
+				}
+			};
+		});
+	}
+	
+	//--------------------//
+	// Key Event Handling //
+	//--------------------//
+	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on user input field.
+	 * Valid key commands are as follows:
+	 * 
+	 * Enter key: sends input to logic component.
+	 * up/down arrow keys: navigate through user command history.
+	 * tab key: switches focus to a non-empty table.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
+	@FXML
+	private void processKeyCommandsFromUserInUserInputField(KeyEvent event) {
+		switch (event.getCode()) {
+			case ENTER:
+				processInputOnEnterKeyPressed();
+				break;
+			case UP:
+				browsePreviousCommand();
+				break;
+			case DOWN:
+				browseNextCommand();
+				break;
+			case TAB:
+				clearSelectionsInAllTables();
+				jumpToNonEmptyTable(null);
+				break;
+			default:
+				break;
+		}
+	}
+	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying deadline-based tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * 	Shift + tab arrow keys: toggles focus to the table displaying timed tasks.
+	 *  tab arrow key: toggles focus to the table displaying generic tasks. 
+	 * 	up/down arrow keys: navigate through table rows.
+	 *  left/right arrow keys: jump up/down multiple rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
+	@FXML
+	private void processKeyCommandsFromDeadlineTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+				break;
+			case TAB:
+				previousDeadlineTaskTableRowIndex = deadlineTaskTable.getSelectionModel().getSelectedIndex();
+				if (event.isShiftDown()) {
+					jumpToTimedTaskTable(deadlineTaskTable, previousTimedTaskTableRowIndex);
+				} else {
+					jumpToGenericTaskTable(deadlineTaskTable, previousGenericTaskTableRowIndex);
+				}
+				break;
+			case DOWN:
+				jumpToNextTableRow(deadlineTaskTable);
+				break;
+			case UP:
+				jumpToPrevTableRow(deadlineTaskTable);
+				break;
+			case LEFT:
+				jumpMultipleTableRows(deadlineTaskTable, Direction.UPWARDS, DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			case RIGHT:
+				jumpMultipleTableRows(deadlineTaskTable, Direction.DOWNWARDS, DEADLINE_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			default:
+				previousDeadlineTaskTableRowIndex = deadlineTaskTable.getSelectionModel().getSelectedIndex();
+				jumpToUserInputField(deadlineTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying timed tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * Shift + tab arrow keys: toggles focus to the table displaying generic tasks.
+	 * Tab arrow key: toggles focus to the table displaying deadline-based tasks. 
+	 * up/down arrow keys: navigate through table rows.
+	 * left/right arrow keys: jump up/down multiple rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
+	@FXML
+	private void processKeyCommandsFromTimedTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+				break;
+			case TAB:
+				previousTimedTaskTableRowIndex = timedTaskTable.getSelectionModel().getSelectedIndex();
+				if (event.isShiftDown()) {
+					jumpToGenericTaskTable(timedTaskTable, previousGenericTaskTableRowIndex);
+				} else {
+					jumpToDeadlineTaskTable(timedTaskTable, previousDeadlineTaskTableRowIndex);
+				}
+				break;
+			case UP:
+				jumpToPrevTableRow(timedTaskTable);
+				break;
+			case DOWN:
+				jumpToNextTableRow(timedTaskTable);
+				break;
+			case LEFT:
+				jumpMultipleTableRows(timedTaskTable, Direction.UPWARDS, TIMED_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			case RIGHT:
+				jumpMultipleTableRows(timedTaskTable, Direction.DOWNWARDS, TIMED_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			default:
+				previousTimedTaskTableRowIndex = timedTaskTable.getSelectionModel().getSelectedIndex();
+				jumpToUserInputField(timedTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	/**
+	 * Listens for any keys pressed by the user when
+	 * current focus is on the table displaying deadline-based tasks.
+	 * 
+	 * Valid key commands are as follows:
+	 * Shift + tab arrow keys: toggles focus to the table displaying deadline-based tasks.
+	 * tab arrow key: toggles focus to the table displaying timed tasks.	
+	 * up/down arrow keys: navigate through table rows.
+	 * left/right arrow keys: jump up/down multiple rows.
+	 * 
+	 * Any other key will return focus to the user input field.
+	 * 
+	 * @param event the event in which a key is pressed.
+	 * */
+	@FXML
+	private void processKeyCommandsFromGenericTaskTable(KeyEvent event) {
+		switch (event.getCode()) {
+			case SHIFT:
+				break;
+			case TAB:
+				previousGenericTaskTableRowIndex = genericTaskTable.getSelectionModel().getSelectedIndex();
+				if (event.isShiftDown()) {
+					jumpToDeadlineTaskTable(genericTaskTable, previousDeadlineTaskTableRowIndex);
+					break;
+				} else {
+					jumpToTimedTaskTable(genericTaskTable, previousTimedTaskTableRowIndex);
+				}
+				break;
+			case UP:
+				jumpToPrevTableRow(genericTaskTable);
+				break;
+			case DOWN:
+				jumpToNextTableRow(genericTaskTable);
+				break;
+			case LEFT:
+				jumpMultipleTableRows(genericTaskTable, Direction.UPWARDS, GENERIC_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			case RIGHT:
+				jumpMultipleTableRows(genericTaskTable, Direction.DOWNWARDS, GENERIC_TASK_TABLE_VISIBLE_ROW_SIZE);
+				break;
+			default:
+				previousGenericTaskTableRowIndex = genericTaskTable.getSelectionModel().getSelectedIndex();
+				jumpToUserInputField(genericTaskTable);
+				break;
+		}
+		event.consume();
+	}
+	
+	/**
+	 * Switches focus to a table that has at least one entry
+	 * when the tab key is pressed.
+	 * 
+	 * Pre-condition: Current focus is on the user input field. 
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * */
+	private void jumpToNonEmptyTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
+		if (!deadlineTaskTable.getItems().isEmpty()) {
+			jumpToDeadlineTaskTable(prevTable, previousDeadlineTaskTableRowIndex);
+		} else {
+			if (!timedTaskTable.getItems().isEmpty()) {
+				jumpToTimedTaskTable(prevTable, previousTimedTaskTableRowIndex);
+			} else {
+				jumpToGenericTaskTable(prevTable, previousGenericTaskTableRowIndex);
+			}
+		}
+	}
+
+	/**
+	 * Switches focus to the table displaying generic tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * @param previouslyHighlightedIndex the index of the row previously highlighted
+	 * */
+	private void jumpToGenericTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable, 
+			                            int previouslyHighlightedIndex) {
+		ObservableList<GenericTask> genericTaskList = genericTaskTable.getItems();
+		
+		if (!genericTaskList.isEmpty()) {
+			genericTaskTable.requestFocus();
+			
+			genericTaskTable.scrollTo(previouslyHighlightedIndex);
+			genericTaskTable.getSelectionModel().select(previouslyHighlightedIndex);
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
+		}
+	}
+
+	/**
+	 * Switches focus to the table displaying timed tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * @param previouslyHighlightedIndex the index of the row previously highlighted
+	 * */
+	private void jumpToTimedTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable, 
+			                          int previouslyHighlightedIndex) {
+		ObservableList<TimedTask> timedTaskList = timedTaskTable.getItems();
+		
+		if (!timedTaskList.isEmpty()) {
+			timedTaskTable.requestFocus();
+			
+			timedTaskTable.scrollTo(previouslyHighlightedIndex);
+			timedTaskTable.getSelectionModel().select(previouslyHighlightedIndex);
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
+		}
+	}
+
+	/**
+	 * Switches focus to the table displaying deadline-based tasks. 
+	 * The last row of the table will be highlighted.
+	 * 
+	 * Focus will not be shifted to the table if it is empty.
+	 * 
+	 * If the focus was switched from any other table, any highlighted row
+	 * of that particular table will be de-selected.
+	 * 
+	 * @param prevTable the previous table that had focus
+	 * @param previouslyHighlightedIndex the index of the row previously highlighted
+	 * */
+	private void jumpToDeadlineTaskTable(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable, 
+			                             int previouslyHighlightedIndex) {
+		ObservableList<DeadlineTask> deadlineTaskList = deadlineTaskTable.getItems();
+		
+		if (!deadlineTaskList.isEmpty()) {
+			deadlineTaskTable.requestFocus();
+			
+			deadlineTaskTable.scrollTo(previouslyHighlightedIndex);
+			deadlineTaskTable.getSelectionModel().select(previouslyHighlightedIndex);
+			
+			if (!(prevTable == null)) {
+				prevTable.getSelectionModel().clearSelection();
+			}
+		}
+
+	}
+	
+	/**
+	 * Highlights the next table row.
+	 * */
+	private void jumpToNextTableRow(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView table) {
+		table.getSelectionModel().selectBelowCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
+	}
+	
+	/**
+	 * Highlights the previous table row.
+	 * */
+	private void jumpToPrevTableRow(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView table) {
+		table.getSelectionModel().selectAboveCell();
+		table.scrollTo(table.getSelectionModel().getSelectedIndex());
+	}
+	
+	/**
+	 * Highlights the next/previous row after/before an interval of rows.
+	 * @param table the table that currently has focus
+	 * @param direction determines if navigation is upwards or downwards
+	 * @param numRows the row interval
+	 * */
+	private void jumpMultipleTableRows(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView table, 
+			                           Direction direction, int numRows) {
+		int currentRowIndex = table.getSelectionModel().getSelectedIndex();
+		int destinationRowIndex;
+		switch (direction) {
+			case UPWARDS:
+				destinationRowIndex = currentRowIndex - numRows;
+				if (destinationRowIndex < INDEX_OF_FIRST_ROW_IN_TABLE) {
+					destinationRowIndex = INDEX_OF_FIRST_ROW_IN_TABLE;
+				}
+				table.getSelectionModel().select(destinationRowIndex);
+				table.scrollTo(destinationRowIndex);
+				break;
+			case DOWNWARDS:
+				destinationRowIndex = currentRowIndex + numRows;
+				int indexOfLastRowInTable = table.getItems().size() - LIST_INDEX_OFFSET;
+				if (destinationRowIndex > indexOfLastRowInTable) {
+					destinationRowIndex = indexOfLastRowInTable;
+				}
+				table.getSelectionModel().select(destinationRowIndex);
+				table.scrollTo(destinationRowIndex);
+				break;
+		}
+	}
+	
+	/**
+	 * Switches focus to the user input field.
+	 * All highlighted rows in any table will be de-selected.
+	 * */
+	private void jumpToUserInputField(@SuppressWarnings(WARNING_SUPPRESSION_RAWTYPES) TableView prevTable) {
+		if (!userInputField.isFocused()) {
+			userInputField.requestFocus();
+			prevTable.getSelectionModel().clearSelection();
+		}
+	}
+	
+	//-----------------------//
+	// Processing User Input //
+	//-----------------------//
+	
+	/**
+	 * Sends input to the Logic component upon the action
+	 * when the user presses Enter on the keyboard.
+	 * */
+	private void processInputOnEnterKeyPressed() {
+		clearSelectionsInAllTables();
+		
+		String userCommand = userInputField.getText().trim();
+		commandHistory.addCommandToHistory(userCommand);
+		
+		String feedback = processInputAndReceiveFeedback(mainApp.getLogic(), userCommand);
+		feedbackDisplay.setText(feedback);
+		
+		fillTableIndexes();
+		userInputField.clear();
+	}
+
+	/**
+	 * De-selects all highlighted rows for all three tables.
+	 * */
+	private void clearSelectionsInAllTables() {
+		deadlineTaskTable.getSelectionModel().clearSelection();
+		timedTaskTable.getSelectionModel().clearSelection();
+		genericTaskTable.getSelectionModel().clearSelection();
+	}
+	
+	/**
+	 * Navigates through user command history and displays the 
+	 * previous command typed into the user input field.
+	 * */
+	private void browsePreviousCommand() {
+		String previousCommandHistory = commandHistory.browsePreviousCommand();
+		if (!previousCommandHistory.equals(EMPTY_STRING)) {
+			userInputField.setText(previousCommandHistory);
+		}
+	}
+	
+	/**
+	 * Navigates through user command history and displays the 
+	 * next command typed into the user input field.
+	 * */
+	private void browseNextCommand() {
+		String nextCommandHistory = commandHistory.browseNextCommand();
+		userInputField.setText(nextCommandHistory);
+	}
+	
+	
+	/**
+	 * passes user input to the Logic component to process
+	 * it as a command.
+	 * 
+	 * @param logic reference to the logic component
+	 * @param userInput command entered by the user
+	 * @return feedback from the logic component after processing the input.
+	 * */
+	private String processInputAndReceiveFeedback(Logic logic, String userInput) {
+		String resultantFeedback;
+		try {
+			resultantFeedback = logic.executeCommand(userInput);
+			logger.info(LOGGER_INFO_PROCESSING_SUCCESSFUL, resultantFeedback);
+			return resultantFeedback;
+		} catch (Exception e) {
+			String exceptionFeedback = e.getMessage();
+			logger.error(LOGGER_ERROR_PROCESSING_FAILED, exceptionFeedback);
+			return exceptionFeedback;
+		}
+	}
+	
+	//-----------------//
+	// Display Methods //
+	//-----------------//
+	
+	/**
+	 * displays a welcome message to the user during a new session.
+	 * */
+	private void displayWelcomeMessage() {
+		feedbackDisplay.setText(MESSAGE_WELCOME);
+	}
+	
+	//-----------------------------------------//
+	// Data Observation and Table Manipulation //
+	//-----------------------------------------//
+	
+
+	/**
+	 * Populates all three tables with data from the three Observable task lists
+	 * found in the instance of Database.
+	 * 
+	 * This method will only be called once as the tables will continue to listen to
+	 * any changes to the three task lists.
+	 * */
+	private void fillTablesWithData() {
+		ObservableList<DeadlineTask> deadlineTaskList = database.getObservableDeadlineTL();
+		ObservableList<TimedTask> timedTaskList = database.getObservableTimedTL();
+		ObservableList<GenericTask> genericTaskList = database.getObservableGenericTL();
+		
+		deadlineTaskTable.setItems(deadlineTaskList);
+		timedTaskTable.setItems(timedTaskList);
+		genericTaskTable.setItems(genericTaskList);
+		
+		fillTableIndexes();
+	}
+	
+	/**
+	 * Populates the Index columns of each table, based on the updated entries.
+	 * */
+	private void fillTableIndexes() {		
+		initAllTableIndexColumns();
+		fillDeadlineTaskTableIndexes();
+		fillTimedTaskTableIndexes(); 
+		fillGenericTaskTableIndexes();
+	}
+
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1 after the last index
+	 * of the task table displaying timed tasks.
+	 * */
+	private void fillGenericTaskTableIndexes() {
+		genericTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																	  genericTaskTable.getItems().indexOf(column.getValue()) 
+																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
+																	  + deadlineTaskTable.getItems().size()
+																	  + timedTaskTable.getItems().size()
+																 )
+												  );
+	}
+
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1 after the last index
+	 * of the task table displaying deadline-based tasks.
+	 * */
+	private void fillTimedTaskTableIndexes() {
+		timedTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																	  timedTaskTable.getItems().indexOf(column.getValue()) 
+																	  + DEADLINE_TASK_COL_INDEX_OFFSET 
+																	  + deadlineTaskTable.getItems().size()
+															   )
+												);
+	}
+
+	/**
+	 * Populates the index columns of the task table displaying generic tasks.
+	 * The starting index of this task table is 1.
+	 * */
+	private void fillDeadlineTaskTableIndexes() {
+		deadlineTaskIndexColumn.setCellValueFactory(column -> new ReadOnlyObjectWrapper<Integer> (
+																      		deadlineTaskTable.getItems().indexOf(column.getValue())
+																      		+ DEADLINE_TASK_COL_INDEX_OFFSET
+																  )
+												   );
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\controller\BillboardOverviewController.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\controller\Direction.java
+	 */
+
+public enum Direction {
+	UPWARDS, DOWNWARDS
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\ui\controller\Direction.java
+
+
+
+
+
