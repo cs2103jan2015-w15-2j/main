@@ -21,13 +21,10 @@ import org.slf4j.LoggerFactory;
 public class CommandHistory {
 	
 	private static final String LOGGER_INFO_USER_COMMAND_ADDED = "User command added to command history: {}";
-
 	private static final String LOGGER_INFO_NEXT_COMMAND_ACCESSED = "Next command in command history accessed: {}";
-
 	private static final String LOGGER_INFO_PREVIOUS_COMMAND_ACCESSED = "Previous command in command history accessed: {}";
 
 	private static final String LOGGER_WARNING_DOWNSTACK_EMPTY = "downStack is empty";
-
 	private static final String LOGGER_WARNING_UPSTACK_EMPTY = "upStack is empty";
 
 	private static final String EMPTY_STRING = "";
@@ -43,6 +40,9 @@ public class CommandHistory {
 	private Deque<String> upStack;
 	private Deque<String> downStack;
 	
+	// for storing the state of upStack after every addition of user command
+	private Deque<String> cacheStack;
+	
 	private Logger logger;
 	
 	//-------------//
@@ -52,6 +52,8 @@ public class CommandHistory {
 	public CommandHistory() {
 		upStack = new LinkedList<String>();
 		downStack = new LinkedList<String>();
+		
+		cacheStack = new LinkedList<String>();
 		
 		logger = LoggerFactory.getLogger(CommandHistory.class.getName());
 	}
@@ -78,15 +80,44 @@ public class CommandHistory {
 	 * Consecutive identical commands are ignored.
 	 * */
 	public void addCommandToHistory(String userCommand) {
-		if (!upStack.isEmpty()) {
-			if (!userCommand.equals(upStack.peek())) {
-				upStack.push(userCommand);
-				logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
-			}
-		} else {
+		resetUpStackToPreviousState();
+		if (!upStack.isEmpty() && !isConsecutiveDuplicate(userCommand)) {
 			upStack.push(userCommand);
+			storeUpStackStateInCache();
+			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
+		} else if (upStack.isEmpty()) {
+			upStack.push(userCommand);
+			storeUpStackStateInCache();
 			logger.info(LOGGER_INFO_USER_COMMAND_ADDED, userCommand);
 		}
+	}
+
+	/**
+	 * @return true if the specified user command is identical to 
+	 *         the command entered previously, false otherwise
+	 * @param userCommand the command to be added to history
+	 * */
+	private boolean isConsecutiveDuplicate(String userCommand) {
+		return userCommand.equals(upStack.peek());
+	}
+
+	/**
+	 * makes a copy of the current state of upStack.
+	 * */
+	private void storeUpStackStateInCache() {
+		cacheStack.clear();
+		cacheStack.addAll(upStack);
+	}
+
+	/**
+	 * returns upStack to its original state so that
+	 * user commands can be continued to be added to history
+	 * in proper chronological order.
+	 * */
+	private void resetUpStackToPreviousState() {
+		upStack.clear();
+		upStack.addAll(cacheStack);
+		downStack.clear();
 	}
 	
 	/**
