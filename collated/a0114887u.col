@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\api\Database.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\api\Database.java
 	 */
 
 package com.nexus.simplify.database.api;
@@ -726,14 +726,14 @@ public class Database implements IDatabase {
 	};
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\api\Database.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\api\Database.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\api\IDatabase.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\api\IDatabase.java
 	 */
 
 package com.nexus.simplify.database.api;
@@ -761,14 +761,14 @@ public interface IDatabase {
 	
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\api\IDatabase.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\api\IDatabase.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\CoreDatabase.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\CoreDatabase.java
 	 */
 
 
@@ -970,14 +970,14 @@ public class CoreDatabase {
 		
 	}
 }
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\CoreDatabase.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\CoreDatabase.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\Search.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Search.java
 	 */
 
 package com.nexus.simplify.database.core;
@@ -1310,14 +1310,14 @@ public class Search {
 	
 	}
 }
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\Search.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\Search.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
 	 */
 
 package com.nexus.simplify.database.tasktype;
@@ -1345,14 +1345,14 @@ public class TimedTask extends GenericTask {
 	// Class Attribute //
 	//-----------------//
 	
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\TimedTask.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
 	 */
 
 	@SuppressWarnings("deprecation")
@@ -1398,7 +1398,7 @@ public class TimedTask extends GenericTask {
 
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\database\DatabaseTest.java
 
 
 

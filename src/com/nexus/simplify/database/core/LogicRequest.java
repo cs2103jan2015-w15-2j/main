@@ -12,10 +12,8 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 /**
  * Helper class for testing purposes. Allows to track the method and parameters that
  * Logic calls on Database
- *  
- * @author Davis
- *
- */
+ * 
+ *  */
 public class LogicRequest {
 	OperationType _operation;
 	Object[] _parameter;

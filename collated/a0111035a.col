@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
 	 */
 
 package com.nexus.simplify.database.core;
@@ -19,15 +19,262 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 /**
  * Helper class for testing purposes. Allows to track the method and parameters that
  * Logic calls on Database
- *  
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
+ * 
+ *  */
+public class LogicRequest {
+	OperationType _operation;
+	Object[] _parameter;
+	OperationType _displayOp = OperationType.DISPLAY;
+	OperationType _addOp = OperationType.ADD;
+	OperationType _modifyOp = OperationType.MODIFY;
+	OperationType _deleteOp = OperationType.DELETE;
+	OperationType _doneOp = OperationType.DONE;
+	OperationType _clearOp = OperationType.CLEAR;
+	OperationType _undoOp = OperationType.UNDO;
+	OperationType _searchOp = OperationType.SEARCH;
+	OperationType _invalidOp = OperationType.INVALID;
+	Logger LOGGER = LoggerFactory.getLogger(LogicRequest.class.getName());
+	
+	public LogicRequest() {
+		_operation = OperationType.INVALID;
+		_parameter = new Object[ParameterType.MAX_SIZE];
+	}
+	
+	public void reset() {
+		_operation = OperationType.INVALID;
+		_parameter = new Object[ParameterType.MAX_SIZE];
+	}
+
+	/**
+	 * Track the parameter called onto addTimedTask in Database
+	 * 
+	 * @param name name of task
+	 * @param startTime time and date when task starts
+	 * @param endTime time and date when task ends
+	 * @param workload amount of effort to be put into the task from a range of 1 - 5
+	 */
+	public void addTimedTask(String name, Date startTime, Date endTime, int workload) {
+		LOGGER.info("addTimedTasked is called. Name: {}, StartTime: {}, EndTime: {}, Workload: {}",
+				name, startTime, endTime, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setStartTime(startTime);
+		setEndTime(endTime);
+		setWorkload(workload);
+	}
+	
+	/**
+	 * Track the parameter called onto addDeadlineTask in Database.
+	 * 
+	 * @param name name of task
+	 * @param deadline time and date when task ends
+	 * @param workload amount of effort to be put into the task from a range of 1 - 5
+	 * 
+	 */
+	public void addDeadlineTask(String name, Date deadline, int workload) {
+		LOGGER.info("addDeadlineTask is called. Name: {}, Deadline: {}, Workload: {}",
+				name, deadline, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setStartTime(deadline);
+		setEndTime(deadline);
+		setWorkload(workload);
+	}
+	
+	/**
+	 * Track the parameter called onto addGenericTask in Database.
+	 * 
+	 * @param name name of task
+	 * @param workload amount of effort to be put into the task from a range of 1 - 5
+	 *
+	 */
+	public void addGenericTask(String name, int workload) {
+		LOGGER.info("addGenericTask is called. Name: {}, Workload: {}",
+				name, workload);
+		setOperationType(_addOp);
+		setName(name);
+		setWorkload(workload);
+	}
+	
+	/**
+	 * Track the parameter called onto deleteTaskByIndex() in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @throws IndexOutOfBoundsException if index is not within range of 1 - 15 inclusive.
+	 * 
+	 */
+	public void deleteTaskByIndex(int index) {
+		LOGGER.info("deleteTaskByIndex is called. Index: {}", index);
+		setOperationType(_deleteOp);
+		setIndex(index);
+	}
+	
+	/**
+	 * Track the parameter called onto clearContent in Database.
+	 */
+	public void clearContent() {
+		LOGGER.info("clearContent is called.");
+		setOperationType(_clearOp);
+	}
+	
+	// Not implemented yet
+//	public void searchDatabase(String[] parameter, boolean[] searchField) {
+//		setOperationType(_searchOp);
+//	}
+	
+	// Not implemented yet
+//	/**
+//	 * Track the parameter called onto toggleDisplay in Database.
+//	 * 
+//	 * @param option toggles the sorting order of the task lists
+//	 * */
+//	public void toggleDisplay(String option) {
+//		setOperationType(_displayOp);
+//	}
+	
+	/**
+	 * Track the parameter called onto modifyName in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newName new name to be written to the task
+	 *  
+	 * */
+	public void modifyName(int index, String newName) {
+		LOGGER.info("modifyName is called. Index: {}, Name: {}", index, newName);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setName(newName);
+	}
+	
+	/**
+	 * Track the parameter called onto modifyWorkload in Database.
+	 * 
+	 * @param index index of task with respect to the billboard
+	 * @param newWorkloadValue new value of workload to be written to the task
+	 *
+	 * */
+	public void modifyWorkload(int index, int newWorkloadValue) {
+		LOGGER.info("modifyWorkload is called. Index: {}, Workload: {}", index, newWorkloadValue);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setWorkload(newWorkloadValue);
+	}
+	
+	/**
+	 * Track the parameter called onto modifyStartTime in Database.
+	 *  
+	 * @param index index of task with respect to the billboard
+	 * @param newStartTime new value of start time to be written to the task
+	 * @param newEndTime new value of end time to be written to the task
+	 * @throws Exception if the start time is later than the end time
+	 * */
+	public void modifyStartEnd(int index, Date newStartTime, Date newEndTime) throws Exception {
+		LOGGER.info("modifyStartTime is called. Index: {}, StartTime: {}, EndTime: {}", index, newStartTime, newEndTime);
+		setOperationType(_modifyOp);
+		setIndex(index);
+		setStartTime(newStartTime);
+		setEndTime(newEndTime);
+	}
+	
+	/**
+	 * Track the parameter called onto markTaskDone in Database.
+	 * 
+	 */
+	public void markTaskDone(int indexToMarkDone) {
+		LOGGER.info("markTaskDone is called. Index: {}", indexToMarkDone);
+		setOperationType(_doneOp);
+	}
+	
+	// check if there is missing backslash
+	public void modifyFileLocation(String newFileLocation) {
+		setOperationType(_modifyOp);
+		setFileLocation(newFileLocation);
+	}
+
+	
+	// Getters and Setters
+	
+	public void setOperationType(OperationType op) {
+		_operation = op;
+	}
+	
+	public void setIndex(int index) {
+		_parameter[ParameterType.INDEX_POS] = index;
+	}
+	
+	public void setName(String name) {
+		_parameter[ParameterType.NEW_NAME_POS] = name;
+	}
+	public void setStartTime(Date startTime) {
+		_parameter[ParameterType.NEW_STARTTIME_POS] = startTime;
+	}
+	public void setEndTime(Date endTime) {
+		_parameter[ParameterType.NEW_ENDTIME_POS] = endTime;
+	}
+	public void setWorkload(int workload) {
+		_parameter[ParameterType.NEW_WORKLOAD_POS] = workload;
+	}
+	public void setFileLocation(String fileLocation) {
+		_parameter[ParameterType.NEW_FILELOCATION_POS] = fileLocation;
+	}
+	
+	public OperationType getOperationType(){
+		return _operation;
+	}
+
+	public Object[] getParameter(){
+		return _parameter;
+	}
+
+	public Object getIndex() {
+		if (_parameter[ParameterType.INDEX_POS] == null) {
+			return null;
+		} else {
+			int index = (int) _parameter[ParameterType.INDEX_POS];
+			return index;
+		}
+		
+	}
+	
+	public String getName() {
+		String index = (String) _parameter[ParameterType.NEW_NAME_POS];
+		return index;
+	}
+	
+	public Date getStartTime() {
+		Date startTime = (Date) _parameter[ParameterType.NEW_STARTTIME_POS];
+		return startTime;
+	}
+	
+	public Date getEndTime() {
+		Date endTime = (Date) _parameter[ParameterType.NEW_ENDTIME_POS];
+		return endTime;
+	}
+	
+	public int getWorkload() {
+		if (_parameter[ParameterType.NEW_WORKLOAD_POS] == null) {
+			return 0;
+		} else {
+			int workload = (int) _parameter[ParameterType.NEW_WORKLOAD_POS];
+			return workload;
+		}
+		
+	}
+	
+	public String getFileLocation() {
+		String fileLocation = (String) _parameter[ParameterType.NEW_FILELOCATION_POS];
+		return fileLocation;
+	}	
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
 	 */
 
 	/**
@@ -43,14 +290,14 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
 	 */
 
 
@@ -61,14 +308,26 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
 /**
  * Interface class for facade of Parser component.
  * 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
+ */
+public interface IParser {
+	/**
+	 * Returns the the user's command in terms of the operation type and parameters specified.
+	 * 
+	 * @param userInput		User command string.
+	 * @return 				Operation type and parameters specified.
+	 * @throws Exception 	When user input fail to parse.
+	 */
+	public UserCommand parseInput(String userInput) throws Exception;
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
 	 */
 
 
@@ -94,14 +353,78 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  * ://docs.google.com/a/nuscomputing.com/document/pub?id=1
  * iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp}
  * 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
+ */
+
+public class Parser implements IParser {
+	private static final String ERROR_PARSING__COMMAND = "Error parsing command: %1$s. "
+			+ "/n" + "Please specify parameters as clear as possible";
+
+	private static final String LOG_USER_INPUT = "Parsing user input: {}";
+
+	private static Logger LOGGER = LoggerFactory.getLogger(CoreParser.class.getName());
+	private static String _input;
+	private static Tokeniser _tokeniser = new Tokeniser();
+	private static CoreParser _parser = new CoreParser();
+	private static CommandData _commandData = CommandData.getInstance();
+	private static String[] _userTokens;
+
+	/**
+	 * Takes in user string input and returns corresponding requested operation
+	 * and given parameters stored in UserCommand
+	 */
+	@Override
+	public UserCommand parseInput(String userInput) throws Exception {
+		try {
+			_input = userInput;
+			LOGGER.info(LOG_USER_INPUT, _input);
+			_userTokens = _tokeniser.tokenise(_input);
+			_parser.parseTokens(_userTokens);
+
+			// The individual parser classes update the commandData singleton
+			// with the operation and parameters
+			UserCommand userCommand = _commandData.createCommand();
+
+			return userCommand;
+		} catch (Exception e) {
+			throw new Exception(String.format(ERROR_PARSING__COMMAND, _input));
+		}
+	}
+
+	/**
+	 * Returns user input string that was given to Parser object through
+	 * {@link parseInput}
+	 * 
+	 * 
+	 * @return User Input String
+	 * 
+	 */
+	public String getGivenInput() {
+		return _input;
+	}
+
+	// main function to run white-box texting with console input
+	public static void main(String[] args) {
+		InputStreamReader inStream = new InputStreamReader(System.in);
+		BufferedReader br = new java.io.BufferedReader(inStream);
+		Parser test = new Parser();
+		while (true) {
+			try {
+				test.parseInput(br.readLine());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
 	 */
 
 
@@ -136,14 +459,14 @@ public class CoreParser extends TokenParser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
 	 */
 
 
@@ -165,15 +488,383 @@ import com.joestelmach.natty.Parser;
  * 
  * This DateTime parser relies heavily on Natty library @
  * http://natty.joestelmach.com}
- * 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
+ *
+ */
+public class DateTimeParser extends TokenParser {
+
+	private static final int MIN_NUMBER_OF_DATEGROUP = 0;
+	private static final int MAX_NUMBER_OF_DATEGROUP = 1;
+	private static final int MAX_NUMBER_OF_DATETIME = 2;
+	private static final int SIZE_OF_SINGLE_DATETIME = 1;
+	private static final int SIZE_OF_RANGED_DATETIME = 2;
+
+	private static final String ERROR_TOO_MANY_TEMPORAL_ELEMENTS = "Too many groups of temporal elements provided.";
+	private static final String ERROR_TOO_MANY_TEMPORAL_ELEMENTS_TIMERANGE = "Too many temporal elements in specifed time range";
+	private static final String ERROR_PARTIAL_TOKEN_NOT_FOUND = "Partial token given is not found in the provided token list";
+	private static final String LOG_NATTY_STRING_PARSED = "String parsed by natty: {}";
+
+	private static final String REGEX_ONE_OR_MORE_WHITESPACE = "\\s+";
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(DateTimeParser.class.getName());
+	private static final CommandData _commandData = CommandData.getInstance();
+
+	// Key strings to search for in user input parse tree
+	// Used to identify what aspect of time the user is searching for
+	private final String YEAR = "YEAR_OF";
+	private final String MONTH = "MONTH_OF_YEAR";
+	private final String DAY_OF_MONTH = "DAY_OF_MONTH";
+	private final String DAY_OF_WEEK = "DAY_OF_WEEK";
+	private final String HOURS = "HOURS_OF_DAY";
+
+	private Parser natty = new Parser();
+
+	@Override
+	public String[] parseTokens(String[] tokenList) throws Exception {
+		if (isTokenListEmpty(tokenList)) {
+			return tokenList;
+		} else {
+			String[] remainingValid = tokenList.clone();
+
+			while (isEnclosedInDoubleQuotes(remainingValid)) {
+				remainingValid = trimTokensInQuotes(remainingValid);
+			}
+			// Convert remaingValid tokens to string to use natty library.
+			String tokenString = tokenListToStr(remainingValid);
+			List<DateGroup> groupList = natty.parse(tokenString);
+
+			// Do not proceed with parsing if no DateTime is parsed from
+			// tokenString
+			if (groupList.size() < 1) {
+				// Natty has cornercase bug where it does not detect DateTime
+				// elements that
+				// follows a word containing timezone letters and IN token
+				// for example, add testing 1600, where EST is a timezone and IN
+				// is a valid token
+				// other examples are psting 1800, cstin
+				String invalidTokens = "";
+				boolean retrySuccess = false;
+
+				for (int i = 0; i < remainingValid.length; i++) {
+					String string = remainingValid[i];
+					groupList = natty.parse(string);
+					if (groupList.size() > MIN_NUMBER_OF_DATEGROUP) {
+						retrySuccess = true;
+						invalidTokens = invalidTokens.trim();
+						remainingValid = getRemainingTokens(invalidTokens,
+								remainingValid);
+						break;
+					} else {
+						invalidTokens += " " + remainingValid[i];
+					}
+				}
+
+				if (!retrySuccess) {
+					LOGGER.info("No DateTime is parsed.");
+					return tokenList;
+				}
+			}
+
+			// Gets a list of all dates in the only group of dates parsed.
+			DateGroup dateGroup = groupList.get(0);
+			List<Date> dates = groupList.get(0).getDates();
+			String stringParsed = dateGroup.getText();
+			LOGGER.info(LOG_NATTY_STRING_PARSED, stringParsed);
+
+			// Ensure that we proceed setting time elements for fully parsed
+			// words.
+			// This is because Natty will try to guess the date and time for
+			// tokens that "appear" to be valid
+			// We do not second guess the user's input. If an entire word is not
+			// parsed by natty, we reject it as a DateTime element
+			while (!isParsedValid(stringParsed, remainingValid)) {
+				// need retrieve the actual correct stringParsed variable
+				String misparsedToken = findFullToken(stringParsed,
+						remainingValid);
+				remainingValid = getRemainingTokens(misparsedToken,
+						remainingValid);
+				String remainingString = tokenListToStr(remainingValid);
+				groupList = natty.parse(remainingString);
+				if (groupList.size() < 1) {
+					// no actual correct DateTime token is found
+					LOGGER.info("No valid DateTime token is found");
+					return tokenList;
+				}
+				dateGroup = groupList.get(0);
+				stringParsed = dateGroup.getText();
+				dates = dateGroup.getDates();
+
+			}
+
+			// Proceed with parsing of DateTime...
+
+			// Throw exception when user includes too many groups of dates.
+			// e.g ... from 03/04 to 03/05 starting tomorrow
+			if (groupList.size() > MAX_NUMBER_OF_DATEGROUP) {
+				throw new Exception(ERROR_TOO_MANY_TEMPORAL_ELEMENTS);
+				// Throw exception when user input a range with too many
+				// temporal elements
+				// e.g ... from 03/04 to 03/05 to 03/06
+			} else if (dates.size() > MAX_NUMBER_OF_DATETIME) {
+				throw new Exception(ERROR_TOO_MANY_TEMPORAL_ELEMENTS_TIMERANGE);
+			} else {
+				// Finally, depending on the operation, we process the dates
+				// (which should be the correct by now...)
+				if (dates.size() == SIZE_OF_SINGLE_DATETIME) {
+					// DateTime parsing for search
+					if (_commandData.getUserOp() == OperationType.SEARCH) {
+						// natty does not support user specifying the year only
+						// we have to support simple "search year XXXX" and
+						// "search XXXX year"
+						if (containsYear(tokenList)) {
+							doSearchYear(stringParsed);
+							// add "year" to list of used tokens
+							stringParsed += " " + "year";
+						} else {
+							doSearchDateTime(dateGroup);
+						}
+					} else {
+						// Parsing single non-search DateTime.
+						_commandData.setTime(dates.get(0).toString());
+					}
+				} else if (dates.size() == SIZE_OF_RANGED_DATETIME) {
+					// Parsing single non-search DateTime.
+					_commandData.setTime(dates.get(0).toString(), dates.get(1)
+							.toString());
+				}
+				return getRemainingTokens(stringParsed, tokenList);
+			}
+		}
+	}
+
+	/**
+	 * Processes the search for year values.
+	 * 
+	 * @param stringParsed
+	 */
+	private void doSearchYear(String stringParsed) {
+		List<DateGroup> groupList;
+		List<Date> dates;
+		String yearDigits = stringParsed;
+		// "1 Jan" is prefixed so that natty can parse
+		// yearDigits as year value
+		String forcedFormalDate = "1 Jan " + yearDigits;
+		groupList = natty.parse(forcedFormalDate);
+		dates = groupList.get(0).getDates();
+		_commandData.setTime(dates.get(0).toString());
+		_commandData.setYearSearch();
+	}
+
+	/**
+	 * Processses the search for temporal search terms that appears in DateGroup
+	 * syntax tree.
+	 * 
+	 * @param dateGroup
+	 *            DateGroup of Temporal search terms.
+	 * @param dates
+	 */
+	private void doSearchDateTime(DateGroup dateGroup) {
+		// By searching the syntax tree produced by natty
+		// parser, we can identity what kind
+		// of date or time was explicitly specified by the
+		// user
+		String syntaxTree = dateGroup.getSyntaxTree().toStringTree();
+		List<Date> dates = dateGroup.getDates();
+
+		if (syntaxTree.contains(YEAR)) {
+			_commandData.setTime(dates.get(0).toString());
+			_commandData.setYearSearch();
+		}
+
+		if (syntaxTree.contains(MONTH)) {
+			_commandData.setTime(dates.get(0).toString());
+			_commandData.setMonthSearch();
+		}
+
+		if (syntaxTree.contains(DAY_OF_MONTH)) {
+			_commandData.setTime(dates.get(0).toString());
+			_commandData.setDayOfMonthSearch();
+		}
+
+		if (syntaxTree.contains(DAY_OF_WEEK)) {
+			_commandData.setTime(dates.get(0).toString());
+			_commandData.setDayOfWeekSearch();
+		}
+
+		if (syntaxTree.contains(HOURS)) {
+			_commandData.setTime(dates.get(0).toString());
+			_commandData.setHourSearch();
+		}
+	}
+
+	/**
+	 * Return false if natty parser parsed a word partially. E.g "CS3230" is
+	 * parsed into "230"
+	 * 
+	 * @param stringParsed
+	 * @param tokenList
+	 * @return
+	 */
+	protected boolean isParsedValid(String stringParsed, String[] tokenList) {
+		String[] parsedArray = stringParsed.split(REGEX_ONE_OR_MORE_WHITESPACE);
+		boolean found = false;
+
+		for (int i = 0; i < parsedArray.length; i++) {
+			for (int j = 0; j < tokenList.length; j++) {
+				found = false;
+
+				if (parsedArray[i].equals(tokenList[j])) {
+					found = true;
+					break;
+				}
+			}
+
+			if (found) {
+				continue;
+			} else {
+				return false;
+			}
+		}
+		return found;
+	}
+
+	/**
+	 * Return the full word of a partial word. This is a helper function used
+	 * when natty parsed a partial word.
+	 * 
+	 * @param partialToken
+	 *            A substring of a token from tokenList parsed by natty.
+	 * @param tokenList
+	 *            List of tokens containing partialToken.
+	 * @return Full token containing partialToken
+	 * @throws Exception
+	 *             Exception occurs when partialTokens is not found in
+	 *             tokenList.
+	 */
+	protected String findFullToken(String partialTokens, String[] tokenList)
+			throws Exception {
+		String[] partialArray = partialTokens.trim().split(
+				REGEX_ONE_OR_MORE_WHITESPACE);
+
+		for (int i = 0; i < tokenList.length; i++) {
+			for (int j = 0; j < partialArray.length; j++) {
+				String currentToken = tokenList[i];
+				String currentPartial = partialArray[j];
+				if (currentToken.equals(currentPartial)) {
+					continue;
+				} else if (currentToken.contains(currentPartial)) {
+					return currentToken;
+				}
+			}
+		}
+
+		LOGGER.warn("findFullToken failed on {} and {}", partialTokens,
+				tokenList);
+
+		throw new Exception(ERROR_PARTIAL_TOKEN_NOT_FOUND);
+	}
+
+	/**
+	 * getRemainingTokens method for DateTimeParser is modified to ignore tokens
+	 * enclosed in double quotation marks.
+	 * 
+	 * @param tokenList
+	 *            List of tokens.
+	 * @return tokenList with tokens in usedTokens removed, ignoring tokens
+	 *         between double quotation marks.
+	 */
+	@Override
+	protected String[] getRemainingTokens(String usedTokens, String[] tokenList) {
+		// Specified token list cannot be a null object, else there is nothing
+		// to remove tokens from.
+		assert (usedTokens != null);
+
+		if (usedTokens.equals("")) {
+			return tokenList;
+		}
+
+		String[] usedTokenList = strToTokenList(usedTokens);
+		// You cannot use up more tokens than it is provided.
+		assert (usedTokenList.length <= tokenList.length);
+
+		String[] newTokenList = new String[tokenList.length
+				- usedTokenList.length];
+		String[] tempTokenList = replaceTokensWithNullIgnoreQuotes(tokenList,
+				usedTokenList);
+		String[] remainingTokens = removeNullTokens(newTokenList, tempTokenList);
+		return remainingTokens;
+	}
+
+	/**
+	 * Clones the specified token list and replacing tokens found in used token
+	 * list with {@code null}. Ignores tokens enclosed in double quotes.
+	 * 
+	 * @param tokenList
+	 * @param usedTokenList
+	 * @return
+	 */
+	private String[] replaceTokensWithNullIgnoreQuotes(String[] tokenList,
+			String[] usedTokenList) {
+		String[] tempTokenList = tokenList.clone();
+		boolean ignoreToken = false;
+
+		for (int i = 0; i < tempTokenList.length; i++) {
+			String currentUserToken = tempTokenList[i];
+
+			// case where single word within double quotes
+			if (currentUserToken.charAt(0) == DOUBLE_QUOTE
+					&& currentUserToken.charAt(currentUserToken.length() - 1) == DOUBLE_QUOTE) {
+				continue;
+			}
+
+			// case where single word within double quotes
+			if (currentUserToken.charAt(0) == DOUBLE_QUOTE
+					|| currentUserToken.charAt(currentUserToken.length() - 1) == DOUBLE_QUOTE) {
+				ignoreToken = !ignoreToken;
+			}
+
+			if (!ignoreToken) {
+
+				for (int j = 0; j < usedTokenList.length; j++) {
+					if (usedTokenList[j].equals(tempTokenList[i])) {
+						tempTokenList[i] = null;
+					}
+				}
+			}
+		}
+		return tempTokenList;
+	}
+
+	/**
+	 * A helper function for search operation. Searches for a "year" (ignore
+	 * case) token and change that token to lower case.
+	 * 
+	 * @param tokenList
+	 *            List of tokens.
+	 * @return {@code true} if tokenList contains "year" (ignore case).
+	 */
+	private boolean containsYear(String[] tokenList) {
+		final String year = "year";
+
+		for (int i = 0; i < tokenList.length; i++) {
+			String string = tokenList[i];
+			if (string.equalsIgnoreCase(year)) {
+				tokenList[i] = year;
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
 	 */
 
 
@@ -185,14 +876,36 @@ import com.nexus.simplify.parser.data.CommandData;
  * Parses display preference string. This parser is called immediately when
  * display command is parsed.
  * 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
+ *
+ */
+public class DisplayParser extends TokenParser {
+	CommandData commandData = CommandData.getInstance();
+
+	/**
+	 * Parses tokenList for display preference string.
+	 */
+	@Override
+	public String[] parseTokens(String[] tokenList) throws Exception {
+		if (isTokenListEmpty(tokenList)) {
+			return tokenList;
+		} else {
+			String displayPref = tokenList[0];
+			commandData.setDisplay(displayPref);
+			return getRemainingTokens(displayPref, tokenList);
+		}
+
+	}
+
+}
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
 	 */
 
 
@@ -229,14 +942,14 @@ public class FileLocationParser extends TokenParser {
 
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
 	 */
 
 
@@ -265,14 +978,14 @@ public class IndexParser extends TokenParser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
 	 */
 
 
@@ -306,14 +1019,14 @@ public class NameParser extends TokenParser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
 	 */
 
 
@@ -393,14 +1106,14 @@ public class OperationParser extends TokenParser {
 		}
 	}
 }
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
 	 */
 
 
@@ -447,14 +1160,14 @@ public class ParamParser extends TokenParser {
 
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
 	 */
 
 
@@ -738,14 +1451,14 @@ public abstract class TokenParser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
 	 */
 
 
@@ -794,14 +1507,14 @@ public class WorkloadParser extends TokenParser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
 	 */
 
 
@@ -1079,14 +1792,14 @@ public class CommandData {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
 	 */
 
 
@@ -1116,14 +1829,14 @@ public class Tokeniser {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
 	 */
 
 
@@ -1338,14 +2051,14 @@ public abstract class AbstractIntegrationTest {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AllTests.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AllTests.java
 	 */
 
 
@@ -1387,14 +2100,14 @@ import com.nexus.simplify.test.ui.CommandHistoryTest;
 })
 
 public class AllTests {}
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AllTests.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AllTests.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
 	 */
 
 
@@ -1458,14 +2171,14 @@ public class MultipleIntegrationsTest extends AbstractIntegrationTest {
 
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
 	 */
 
 
@@ -1776,7 +2489,7 @@ public class ParserTest extends AbstractIntegrationTest {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
 
 
 

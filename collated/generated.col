@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
 	 */
 
 package com.nexus.simplify.logic.api;
@@ -13,14 +13,14 @@ import com.nexus.simplify.logic.usercommand.OperationType;
 import com.nexus.simplify.logic.usercommand.UserCommand;
 import com.nexus.simplify.parser.api.Parser;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -34,14 +34,14 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -49,14 +49,14 @@ package com.nexus.simplify.logic.core;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -68,14 +68,14 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.OperationType;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -83,30 +83,14 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Display.java
-	 */
-
-package com.nexus.simplify.logic.core;
-
-import com.nexus.simplify.MainApp;
-import com.nexus.simplify.database.api.Database;
-import com.nexus.simplify.logic.usercommand.ParameterType;
-
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Display.java
-
-
-
-
-
-	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -115,26 +99,42 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
 	 */
 
 package com.nexus.simplify.logic.core;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+import com.nexus.simplify.MainApp;
+import com.nexus.simplify.database.api.Database;
+import com.nexus.simplify.logic.usercommand.ParameterType;
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+	 */
+
+package com.nexus.simplify.logic.core;
+
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -145,14 +145,14 @@ import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 import com.nexus.simplify.logic.usercommand.ParameterType;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -162,14 +162,14 @@ import java.text.ParseException;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
 	 */
 
 package com.nexus.simplify.logic.core;
@@ -177,38 +177,38 @@ package com.nexus.simplify.logic.core;
 import com.nexus.simplify.MainApp;
 import com.nexus.simplify.database.api.Database;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
 	 */
 
 package com.nexus.simplify.logic.usercommand;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
 	 */
 
 package com.nexus.simplify.logic.usercommand;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
 	 */
 
 package com.nexus.simplify.test.logic;
@@ -218,14 +218,14 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.core.Add;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
 	 */
 
 package com.nexus.simplify.test.logic;
@@ -235,14 +235,14 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.core.Delete;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
 	 */
 
 package com.nexus.simplify.test.logic;
@@ -252,14 +252,14 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.core.Display;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
 	 */
 
 package com.nexus.simplify.test.logic;
@@ -269,14 +269,14 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.core.Done;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
 
 
 
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
 	 */
 
 package com.nexus.simplify.test.logic;
@@ -286,7 +286,7 @@ import org.junit.Test;
 
 import com.nexus.simplify.logic.core.Modify;
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
 
 
 

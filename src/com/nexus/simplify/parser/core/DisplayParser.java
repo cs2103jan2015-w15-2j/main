@@ -8,7 +8,6 @@ import com.nexus.simplify.parser.data.CommandData;
  * Parses display preference string. This parser is called immediately when
  * display command is parsed.
  * 
- * @author Davis
  *
  */
 public class DisplayParser extends TokenParser {

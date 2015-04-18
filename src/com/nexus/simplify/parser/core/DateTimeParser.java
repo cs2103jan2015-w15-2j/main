@@ -18,8 +18,6 @@ import com.joestelmach.natty.Parser;
  * 
  * This DateTime parser relies heavily on Natty library @
  * http://natty.joestelmach.com}
- * 
- * @author Davis
  *
  */
 public class DateTimeParser extends TokenParser {

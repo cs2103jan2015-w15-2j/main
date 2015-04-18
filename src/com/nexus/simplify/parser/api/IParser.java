@@ -7,8 +7,6 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
 /**
  * Interface class for facade of Parser component.
  * 
- * @author Davis
- *
  */
 public interface IParser {
 	/**

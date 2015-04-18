@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\MainApp.java
+	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\MainApp.java
 	 */
 
 import java.io.IOException;
@@ -148,7 +148,7 @@ public class MainApp extends Application {
 	}
 }
 
-	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\MainApp.java
+	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\MainApp.java
 
 
 

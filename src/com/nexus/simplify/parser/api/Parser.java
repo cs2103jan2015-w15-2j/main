@@ -22,8 +22,6 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  * ://docs.google.com/a/nuscomputing.com/document/pub?id=1
  * iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp}
  * 
- * @author davis
- * 
  */
 
 public class Parser implements IParser {
