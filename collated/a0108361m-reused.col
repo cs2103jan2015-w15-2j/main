@@ -1,6 +1,11 @@
-package com.nexus.simplify;
+//@author: a0108361m-reused
 
-//@author A0108361M-reused
+
+
+	/**
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\MainApp.java
+	 */
+
 import java.io.IOException;
 
 import com.nexus.simplify.database.api.Database;
@@ -142,3 +147,10 @@ public class MainApp extends Application {
 		return database;
 	}
 }
+
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\MainApp.java
+
+
+
+
+

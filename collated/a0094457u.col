@@ -3,21 +3,21 @@
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
 	 */
 
 public interface ILogic {
 	public String executeCommand(String command) throws Exception;
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\ILogic.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
 	 */
 
 /*
@@ -60,14 +60,14 @@ public class Logic implements ILogic {
 		return command;
 	}
 }
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\api\Logic.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Add.java
 	 */
 
 /*
@@ -185,14 +185,14 @@ public class Add {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Add.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Add.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
 	 */
 
 /*
@@ -210,14 +210,14 @@ public class Clear {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Clear.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
 	 */
 
 /*
@@ -320,14 +320,14 @@ public class CoreLogic {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\CoreLogic.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
 	 */
 
 /*
@@ -382,14 +382,14 @@ public class Delete {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Delete.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Display.java
 	 */
 
 /*
@@ -519,14 +519,14 @@ public class Display {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Display.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Display.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Done.java
 	 */
 
 /*
@@ -580,14 +580,14 @@ public class Done {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Done.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Done.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
 	 */
 
 /*
@@ -601,14 +601,14 @@ public class Exit {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Exit.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
 	 */
 
 /*
@@ -781,14 +781,14 @@ public class Modify {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Modify.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Search.java
 	 */
 
 /*
@@ -811,14 +811,14 @@ public class Search {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Search.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Search.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
 	 */
 
 /*
@@ -836,14 +836,14 @@ public class Undo {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\core\Undo.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
 	 */
 
 /*
@@ -854,14 +854,14 @@ public enum OperationType {
 };
 
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\OperationType.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
 	 */
 
 public class ParameterType {
@@ -884,14 +884,14 @@ public class ParameterType {
 	public final static int SEARCH_MAX_SIZE = 5;
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\ParameterType.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
 	 */
 
 /*
@@ -965,14 +965,14 @@ public class UserCommand {
 	}	
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\logic\usercommand\UserCommand.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
 	 */
 
 public class TestAdd {
@@ -1015,14 +1015,14 @@ public class TestAdd {
 		assertEquals(feedback,"Successfully added deadline task \"finish game XYZ\" with deadline Tue Feb 22 10:00 and workload of 3.");
 	}
 }
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestAdd.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
 	 */
 
 public class TestDelete {
@@ -1046,14 +1046,14 @@ public class TestDelete {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDelete.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
 	 */
 
 public class TestDisplay {
@@ -1101,14 +1101,14 @@ public class TestDisplay {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDisplay.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
 	 */
 
 public class TestDone {
@@ -1131,14 +1131,14 @@ public class TestDone {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestDone.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
 	 */
 
 public class TestModify {
@@ -1182,7 +1182,7 @@ public class TestModify {
 		}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\logic\TestModify.java
 
 
 

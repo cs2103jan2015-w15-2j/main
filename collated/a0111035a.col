@@ -3,7 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
 	 */
 
 package com.nexus.simplify.database.core;
@@ -20,14 +20,14 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
  * Helper class for testing purposes. Allows to track the method and parameters that
  * Logic calls on Database
  *  
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\core\LogicRequest.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
 	 */
 
 	/**
@@ -43,14 +43,14 @@ import com.nexus.simplify.logic.usercommand.ParameterType;
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\database\tasktype\DeadlineTask.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
 	 */
 
 
@@ -61,14 +61,14 @@ import com.nexus.simplify.logic.usercommand.UserCommand;
 /**
  * Interface class for facade of Parser component.
  * 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\IParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
 	 */
 
 
@@ -94,14 +94,14 @@ import com.nexus.simplify.parser.tokeniser.Tokeniser;
  * ://docs.google.com/a/nuscomputing.com/document/pub?id=1
  * iAESIXM0zSxEa5OY7dFURam_SgLiSMhPQtU0drQagrs&amp}
  * 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\api\Parser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
 	 */
 
 
@@ -136,14 +136,14 @@ public class CoreParser extends TokenParser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\CoreParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
 	 */
 
 
@@ -166,14 +166,14 @@ import com.joestelmach.natty.Parser;
  * This DateTime parser relies heavily on Natty library @
  * http://natty.joestelmach.com}
  * 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DateTimeParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
 	 */
 
 
@@ -185,14 +185,14 @@ import com.nexus.simplify.parser.data.CommandData;
  * Parses display preference string. This parser is called immediately when
  * display command is parsed.
  * 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\DisplayParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
 	 */
 
 
@@ -229,14 +229,14 @@ public class FileLocationParser extends TokenParser {
 
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\FileLocationParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
 	 */
 
 
@@ -265,14 +265,14 @@ public class IndexParser extends TokenParser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\IndexParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
 	 */
 
 
@@ -306,14 +306,14 @@ public class NameParser extends TokenParser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\NameParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
 	 */
 
 
@@ -393,14 +393,14 @@ public class OperationParser extends TokenParser {
 		}
 	}
 }
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\OperationParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
 	 */
 
 
@@ -447,14 +447,14 @@ public class ParamParser extends TokenParser {
 
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\ParamParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
 	 */
 
 
@@ -738,14 +738,14 @@ public abstract class TokenParser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\TokenParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
 	 */
 
 
@@ -794,14 +794,14 @@ public class WorkloadParser extends TokenParser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\core\WorkloadParser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
 	 */
 
 
@@ -1079,14 +1079,14 @@ public class CommandData {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\data\CommandData.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
 	 */
 
 
@@ -1116,14 +1116,14 @@ public class Tokeniser {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\parser\tokeniser\Tokeniser.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
 	 */
 
 
@@ -1338,14 +1338,14 @@ public abstract class AbstractIntegrationTest {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AbstractIntegrationTest.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AllTests.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AllTests.java
 	 */
 
 
@@ -1387,14 +1387,14 @@ import com.nexus.simplify.test.ui.CommandHistoryTest;
 })
 
 public class AllTests {}
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\AllTests.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\AllTests.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
 	 */
 
 
@@ -1458,14 +1458,14 @@ public class MultipleIntegrationsTest extends AbstractIntegrationTest {
 
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\MultipleIntegrationsTest.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
+	 * origin: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
 	 */
 
 
@@ -1776,7 +1776,7 @@ public class ParserTest extends AbstractIntegrationTest {
 	}
 }
 
-	// End of segment: C:\Users\Davis\workspace\CS2103-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
+	// End of segment: M:\Documents\GitHub\CS2103T-NEXUS\src\com\nexus\simplify\test\parser\ParserTest.java
 
 
 
